@@ -82,9 +82,7 @@ public class JsonKeyLocatorTest {
    }//End Method
    
    @Test public void shouldFindKeyInFurtherChildren(){
-      jsonObject.put( CHILD_A, childObjectA );
-      childObjectA.put( CHILD_B, childObjectB );
-      childObjectB.put( CHILD_C, childObjectC );
+      jsonObjectContainsChildrenPath();
       childObjectC.put( KEY, VALUE );
       
       systemUnderTest.child( CHILD_A ).child( CHILD_B ).child( CHILD_C ).key( KEY );
@@ -93,13 +91,24 @@ public class JsonKeyLocatorTest {
    }//End Method
    
    @Test public void shouldSafelyIgnoreMissingKeyInFurtherChildren(){
-      jsonObject.put( CHILD_A, childObjectA );
-      childObjectA.put( CHILD_B, childObjectB );
-      childObjectB.put( CHILD_C, childObjectC );
+      jsonObjectContainsChildrenPath();
       
       systemUnderTest.child( CHILD_A ).child( CHILD_B ).child( CHILD_C ).key( KEY );
       
       assertThat( systemUnderTest.find( jsonObject ), is( nullValue() ) );
+   }//End Method
+
+   /** Setup method for creating the children path A to C.**/
+   private void jsonObjectContainsChildrenPath() {
+      jsonObject.put( CHILD_A, childObjectA );
+      childObjectA.put( CHILD_B, childObjectB );
+      childObjectB.put( CHILD_C, childObjectC );
+   }//End Method
+   
+   /** Setup method for creating the children path A to C, with the key present in C.**/
+   private void jsonObjectContainsChildrenPathAndKey(){
+      jsonObjectContainsChildrenPath();
+      childObjectC.put( KEY, VALUE );
    }//End Method
    
    @Test public void shouldSafelyIgnoreMissingChildren(){
@@ -109,6 +118,55 @@ public class JsonKeyLocatorTest {
       systemUnderTest.child( CHILD_A ).child( CHILD_B ).child( CHILD_C ).key( KEY );
       
       assertThat( systemUnderTest.find( jsonObject ), is( nullValue() ) );
+   }//End Method
+   
+   @Test( expected = IllegalStateException.class ) public void putShouldNotPermitMissingKey(){
+      systemUnderTest.put( jsonObject, "anything" );
+   }//End Method
+   
+   @Test( expected = IllegalArgumentException.class ) public void putShouldNotPermitNullObject(){
+      systemUnderTest.put( null, "anything" );
+   }//End Method
+   
+   @Test public void shouldSetKeyWhenNotPresent(){
+      jsonObjectContainsChildrenPath();
+      
+      systemUnderTest.child( CHILD_A ).child( CHILD_B ).child( CHILD_C ).key( KEY );
+      
+      systemUnderTest.put( jsonObject, VALUE );
+      assertThat( childObjectC.get( KEY ), is( VALUE ) );
+   }//End Method
+   
+   @Test public void shouldSetKeyWhenPresent(){
+      jsonObjectContainsChildrenPathAndKey();
+      assertThat( childObjectC.get( KEY ), is( VALUE ) );
+      
+      systemUnderTest.child( CHILD_A ).child( CHILD_B ).child( CHILD_C ).key( KEY );
+      
+      final String anotherValue = "anything else in the world";
+      systemUnderTest.put( jsonObject, anotherValue );
+      assertThat( childObjectC.get( KEY ), is( anotherValue ) );
+   }//End Method
+   
+   @Test public void shouldSetKeyToDifferentValueType(){
+      jsonObjectContainsChildrenPathAndKey();
+      assertThat( childObjectC.get( KEY ), is( VALUE ) );
+      
+      systemUnderTest.child( CHILD_A ).child( CHILD_B ).child( CHILD_C ).key( KEY );
+      
+      final Double anotherValue = 348576.0;
+      systemUnderTest.put( jsonObject, anotherValue );
+      assertThat( childObjectC.get( KEY ), is( anotherValue ) );
+   }//End Method
+   
+   @Test public void shouldSetKeyToNull(){
+      jsonObjectContainsChildrenPathAndKey();
+      assertThat( childObjectC.get( KEY ), is( VALUE ) );
+      
+      systemUnderTest.child( CHILD_A ).child( CHILD_B ).child( CHILD_C ).key( KEY );
+      
+      systemUnderTest.put( jsonObject, null );
+      assertThat( childObjectC.has( KEY ), is( false ) );
    }//End Method
    
 }//End Class

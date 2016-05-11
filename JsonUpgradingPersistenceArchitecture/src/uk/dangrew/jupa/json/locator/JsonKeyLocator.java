@@ -51,22 +51,13 @@ public class JsonKeyLocator {
       children.add( child );
       return this;
    }//End Method
-
+   
    /**
-    * Method to find the value of the key given the path configured. Note that the key must be
-    * set for this operation to work.
-    * @param object the {@link JSONObject} to look in, must not be null.
-    * @return the {@link Object} found, can be null if not found for path not found.
+    * Method to navigate through children to the leaf of the {@link JSONObject} tree.
+    * @param object the {@link JSONObject} to navigate through.
+    * @return the {@link JSONObject} and the end of the path, or null if can't be found.
     */
-   public Object find( JSONObject object ) {
-      if ( object == null ) {
-         throw new IllegalArgumentException( "Cannot find key with null input." );
-      }
-      
-      if ( key == null ) {
-         throw new IllegalStateException( "Key cannot be found because it has not been set." );
-      }
-      
+   private JSONObject navigate( JSONObject object ) {
       JSONObject subject = object;
       
       for ( String child : children ) {
@@ -75,8 +66,62 @@ public class JsonKeyLocator {
             return null;
          }
       }
+      return subject;
+   }//End Method
+
+   /**
+    * Method to find the value of the key given the path configured. Note that the key must be
+    * set for this operation to work.
+    * @param object the {@link JSONObject} to look in, must not be null.
+    * @return the {@link Object} found, can be null if not found for path not found.
+    */
+   public Object find( JSONObject object ) {
+      verifyInput( object );
+      verifyKeyNotNull();
+      
+      JSONObject subject = navigate( object );
+      if ( subject == null ) {
+         return null;
+      }
       
       return subject.opt( key );
+   }//End Method
+   
+   /**
+    * Method to put the value of the associated key in the {@link JSONObject} at the end of the 
+    * configured path.
+    * @param jsonObject the {@link JSONObject} root, must not be null.
+    * @param value the value to put. Can be null to remove the key. Can be different data type.
+    */
+   public void put( JSONObject jsonObject, Object value ) {
+      verifyInput( jsonObject );
+      verifyKeyNotNull();
+      
+      JSONObject subject = navigate( jsonObject );
+      if ( subject == null ) {
+         return;
+      }
+      
+      subject.put( key, value );
+   }//End Method
+   
+   /**
+    * Method to verify that the given input is suitable for locating.
+    * @param input the {@link JSONObject} to locate a key in.
+    */
+   private void verifyInput( JSONObject input ) {
+      if ( input == null ) {
+         throw new IllegalArgumentException( "Operation failed: null input." );
+      }
+   }//End Method
+   
+   /**
+    * Method to verify that the associated key is not null.
+    */
+   private void verifyKeyNotNull(){
+      if ( key == null ) {
+         throw new IllegalStateException( "Operation failed: key has not been set." );
+      }  
    }//End Method
    
    /**
