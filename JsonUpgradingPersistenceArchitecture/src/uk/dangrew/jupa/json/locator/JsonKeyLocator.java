@@ -22,13 +22,13 @@ import org.json.JSONObject;
 public class JsonKeyLocator {
 
    private String key;
-   private List< String > children;
+   private List< JsonNavigable > path;
    
    /**
     * Constructs a new {@link JsonKeyLocator}.
     */
    public JsonKeyLocator() {
-      children = new ArrayList<>();
+      path = new ArrayList<>();
    }//End Constructor
    
    /**
@@ -42,13 +42,24 @@ public class JsonKeyLocator {
    }//End Method
    
    /**
-    * Method to append a child to the path. In this case the child is specifically another
-    * {@link JSONObject}.
+    * Method to append a child to the path. This should be used when the child is a mapping of key to 
+    * value, i.e. arrays are not appropriate.
     * @param child the key associated with the child.
     * @return this {@link JsonKeyLocator}.
     */
    public JsonKeyLocator child( String child ) {
-      children.add( child );
+      path.add( new JsonNavigableObjectImpl( child ) );
+      return this;
+   }//End Method
+   
+   /**
+    * Method to append an element of an array. This should only be used when the path leads to a
+    * {@link org.json.JSONArray}.
+    * @param arrayIndex the array index of the object to append.
+    * @return the {@link JsonKeyLocator}.
+    */
+   public JsonKeyLocator array( int arrayIndex ) {
+      path.add( new JsonNavigableArrayImpl( arrayIndex ) );
       return this;
    }//End Method
    
@@ -58,15 +69,20 @@ public class JsonKeyLocator {
     * @return the {@link JSONObject} and the end of the path, or null if can't be found.
     */
    private JSONObject navigate( JSONObject object ) {
-      JSONObject subject = object;
+      Object subject = object;
       
-      for ( String child : children ) {
-         subject = subject.optJSONObject( child );
+      for ( JsonNavigable navigable : path ) {
+         subject = navigable.navigate( subject );
          if ( subject == null ) {
             return null;
          }
       }
-      return subject;
+      
+      if ( subject instanceof JSONObject ) {
+         return ( JSONObject )subject;
+      } else {
+         return null;
+      }
    }//End Method
 
    /**

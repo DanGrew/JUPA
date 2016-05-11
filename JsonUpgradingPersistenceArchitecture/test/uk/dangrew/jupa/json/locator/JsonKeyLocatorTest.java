@@ -13,6 +13,9 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 
+import java.util.Arrays;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,12 +29,15 @@ public class JsonKeyLocatorTest {
    private static final String CHILD_A = "ChildA";
    private static final String CHILD_B = "ChildB";
    private static final String CHILD_C = "ChildC";
+   private static final String ARRAY_A = "ArrayA";
+   private static final String ARRAY_B = "ArrayB";
    private static final String VALUE = "VALUE";
    
    private JSONObject jsonObject;
    private JSONObject childObjectA;
    private JSONObject childObjectB;
    private JSONObject childObjectC;
+   private JSONArray array;
    private JsonKeyLocator systemUnderTest;
    
    @Before public void initialiseSystemUnderTest(){
@@ -39,6 +45,10 @@ public class JsonKeyLocatorTest {
       childObjectA = new JSONObject();
       childObjectB = new JSONObject();
       childObjectC = new JSONObject();
+      array = new JSONArray();
+      for ( int i = 0; i < 5; i++ ) {
+         array.put( new JSONObject() );
+      }
       systemUnderTest = new JsonKeyLocator();
    }//End Method
    
@@ -137,6 +147,15 @@ public class JsonKeyLocatorTest {
       assertThat( childObjectC.get( KEY ), is( VALUE ) );
    }//End Method
    
+   @Test public void shouldNotSetKeyWhenPathNotValid(){
+      jsonObjectContainsChildrenPath();
+      
+      systemUnderTest.child( CHILD_A ).child( CHILD_B ).child( "anything" ).key( KEY );
+      
+      systemUnderTest.put( jsonObject, VALUE );
+      assertThat( childObjectC.has( KEY ), is( false ) );
+   }//End Method
+   
    @Test public void shouldSetKeyWhenPresent(){
       jsonObjectContainsChildrenPathAndKey();
       assertThat( childObjectC.get( KEY ), is( VALUE ) );
@@ -167,6 +186,45 @@ public class JsonKeyLocatorTest {
       
       systemUnderTest.put( jsonObject, null );
       assertThat( childObjectC.has( KEY ), is( false ) );
+   }//End Method
+   
+   /** Setup method for creating the array path A -> array with 5 -> array with 2.**/
+   private void jsonObjectContainsArrayPath() {
+      jsonObject.put( CHILD_A, childObjectA );
+      childObjectA.put( ARRAY_A, array );
+      for ( int i = 0; i < 3; i++ ) {
+         JSONObject first = new JSONObject();
+         first.put( KEY, VALUE );
+         
+         array.getJSONObject( i ).put( 
+                  ARRAY_B, 
+                  new JSONArray( Arrays.asList( first, new JSONObject() ) ) 
+         );
+      }
+   }//End Method
+   
+   @Test public void shouldNavigateThroughArrayToKeyAtIndex(){
+      jsonObjectContainsArrayPath();
+      
+      systemUnderTest.child( CHILD_A ).child( ARRAY_A ).array( 0 ).child( ARRAY_B ).array( 0 ).key( KEY );
+      
+      assertThat( systemUnderTest.find( jsonObject ), is( VALUE ) );
+   }//End Method
+   
+   @Test public void shouldSafelyIgnoreMissingKeyInArray(){
+      jsonObjectContainsArrayPath();
+      
+      systemUnderTest.child( CHILD_A ).child( ARRAY_A ).array( 0 ).child( ARRAY_B ).array( 1 ).key( KEY );
+      
+      assertThat( systemUnderTest.find( jsonObject ), is( nullValue() ) );
+   }//End Method
+   
+   @Test public void shouldNotFindWherePathDoesNotEndOnJsonObject(){
+      jsonObjectContainsArrayPath();
+      
+      systemUnderTest.child( CHILD_A ).child( ARRAY_A ).key( KEY );
+      
+      assertThat( systemUnderTest.find( jsonObject ), is( nullValue() ) );
    }//End Method
    
 }//End Class
