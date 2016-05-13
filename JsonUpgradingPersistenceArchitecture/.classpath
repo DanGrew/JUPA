@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8/"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/Users/Amelia/.gradle/caches/modules-2/files-2.1/org.json/json/20151123/1675d5c1142000dedd6627a73af26a8b885ef0e1/json-20151123.jar" sourcepath="/Users/Amelia/.gradle/caches/modules-2/files-2.1/org.json/json/20151123/9c179a1becb79c6af729c89f7b212b1cb5e68da3/json-20151123-sources.jar"/>
 	<classpathentry kind="lib" path="/Users/Amelia/.gradle/caches/modules-2/files-2.1/junit/junit/4.12/2973d150c0dc1fefe998f834810d68f278ea58ec/junit-4.12.jar" sourcepath="/Users/Amelia/.gradle/caches/modules-2/files-2.1/junit/junit/4.12/a6c32b40bf3d76eca54e3c601e5d1470c86fcdfa/junit-4.12-sources.jar"/>
 	<classpathentry kind="lib" path="/Users/Amelia/.gradle/caches/modules-2/files-2.1/pl.pragmatists/JUnitParams/0.3.6/e7ee089b8f4aae2f669f44e245778c6563f34fa2/JUnitParams-0.3.6.jar" sourcepath="/Users/Amelia/.gradle/caches/modules-2/files-2.1/pl.pragmatists/JUnitParams/0.3.6/823ac304125cd84683eded8deaf112e9ff20cdf7/JUnitParams-0.3.6-sources.jar"/>
