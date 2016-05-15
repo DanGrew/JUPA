@@ -1,0 +1,22 @@
+{
+  "firstName" : Dan,
+  "lastName" : Grew,
+  "skills" : [
+    Java, Testing, Maven, Gradle
+  ],
+  "projects" : [
+    {
+      "projectName" : JenkinsTestTracker,
+      "vcs" : GitHub
+    },
+    {
+      "projectName" : SystemDigest,
+      "vcs" : GitHub
+    },
+    {
+      "projectName" : JUPA,
+      "projectFullName" : JsonUpgradingPersistenceArchitecture,
+      "vcs" : GitHub
+    }
+  ]
+}
