@@ -18,6 +18,8 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import uk.dangrew.jupa.json.parse.handle.type.JsonParseHandle;
+
 /**
  * The {@link JsonParser} provides a method of parsing a {@link JSONObject} notifying
  * {@link JsonParseHandle}s whenever keys are encountered.
@@ -58,9 +60,7 @@ public class JsonParser {
       keys.sort( ALPHABETICAL );
       
       for ( String key : keys ) {
-         Object value = jsonObject.get( key );
-         
-         handleFoundKey( key, value );
+         handleKey( key, jsonObject );
       }
    }//End Method
    
@@ -69,34 +69,140 @@ public class JsonParser {
     * and trigger it if appropriate. It will also then navigate along the branches of
     * the given object.
     * @param key the key encountered.
-    * @param value the object associated with the key.
+    * @param parent the parent of the key.
     */
-   private void handleFoundKey( String key, Object value ){
-      if ( !handles.containsKey( key ) ) {
-         return;
-      }
-    
-      JsonParseHandle handle = handles.get( key );
+   private void handleKey( String key, JSONObject parent ){
+      invokeHandleForObject( key, parent );
+      
+      Object value = parent.get( key );
       
       boolean isJsonObject = value instanceof JSONObject;
       boolean isJsonArray = value instanceof JSONArray;
       
       if ( isJsonObject ) {
-         handle.handle( key, null );
-         navigateObject( ( JSONObject ) value );
+         navigateObject( key, ( JSONObject ) value );
       } else if ( isJsonArray ) {
          navigateArray( key, ( JSONArray ) value );
       } else {
-         handle.handle( key, value );
+         //nothing to navigate - hit value
       }
    }//End Method
    
    /**
+    * Method to invoke the handle for the given key.
+    * @param key the key to invoke the handle for.
+    * @param parent the {@link JSONObject} parent for the handle to extract from.
+    */
+   private void invokeHandleForObject( String key, JSONObject parent ) {
+      if ( !handles.containsKey( key ) ) {
+         return;
+      }
+    
+      if ( shouldNotHandleObject( parent.get( key ) ) ) {
+         return;
+      }
+      
+      JsonParseHandle handle = handles.get( key );
+      handle.handle( key, parent );
+   }//End Method
+   
+   /**
+    * Method to invoke the handle for the given key.
+    * @param key the key to invoke the handle for.
+    * @param array the {@link JSONObject} parent for the handle to extract from.
+    * @param index the index of the item in the array to extract.
+    */
+   private void invokeHandleForArray( String key, JSONArray array, int index ) {
+      if ( !handles.containsKey( key ) ) {
+         return;
+      }
+
+      if ( shouldNotHandleObject( array.get( index ) ) ) {
+         return;
+      }
+      
+      JsonParseHandle handle = handles.get( key );
+      handle.handle( key, array, index );
+   }//End Method
+   
+   /**
+    * Method to determine whether to handle the given {@link Object}.
+    * @param object the {@link Object} in question.
+    * @return true if anything other than a {@link JSONObject} or {@link JSONArray}.
+    */
+   private boolean shouldNotHandleObject( Object object ) {
+      if ( object instanceof JSONArray ) {
+         return true;
+      }
+      
+      if ( object instanceof JSONObject ) {
+         return true;
+      }
+      
+      return false;
+   }//End Method
+   
+   /**
+    * Method to process the starting of an object for the given key.
+    * @param key the key in question.
+    */
+   private void objectStarted( String key ) {
+      if ( !handles.containsKey( key ) ) {
+         return;
+      }
+      
+      JsonParseHandle handle = handles.get( key );
+      handle.startedObject( key );
+   }//End Method
+   
+   /**
+    * Method to process the finishing of an object for the given key.
+    * @param key the key in question.
+    */
+   private void objectFinished( String key ) {
+      if ( !handles.containsKey( key ) ) {
+         return;
+      }
+      
+      JsonParseHandle handle = handles.get( key );
+      handle.finishedObject( key );
+   }//End Method
+   
+   /**
+    * Method to process the starting of an array for the given key.
+    * @param key the key in question.
+    */
+   private void arrayStarted( String key ) {
+      if ( !handles.containsKey( key ) ) {
+         return;
+      }
+      
+      JsonParseHandle handle = handles.get( key );
+      handle.startedArray( key );
+   }//End Method
+   
+   /**
+    * Method to process the finishing of an array for the given key.
+    * @param key the key in question.
+    */
+   private void arrayFinised( String key ) {
+      if ( !handles.containsKey( key ) ) {
+         return;
+      }
+      
+      JsonParseHandle handle = handles.get( key );
+      handle.finishedArray( key );
+   }//End Method
+   
+   /**
     * Method to navigate through the given {@link JSONObject} to the next set of keys.
+    * @param key the key the object is navigating from.
     * @param jsonObject the {@link JSONObject} to navigate through.
     */
-   private void navigateObject( JSONObject jsonObject ) {
+   private void navigateObject( String key, JSONObject jsonObject ) {
+      objectStarted( key );
       parse( jsonObject );
+      objectFinished( key );
    }//End Method
    
    /**
@@ -106,9 +212,19 @@ public class JsonParser {
     * @param jsonArray the {@link JSONArray} navigate through.
     */
    private void navigateArray( String key, JSONArray jsonArray ) {
-      for ( Object arrayObject : jsonArray ) {
-         handleFoundKey( key, arrayObject );
+      arrayStarted( key );
+      for ( int i = 0; i < jsonArray.length(); i++ ) {
+         invokeHandleForArray( key, jsonArray, i );
+         
+         Object arrayObject = jsonArray.get( i );
+         if ( arrayObject instanceof JSONArray ) {
+            navigateArray( key, ( JSONArray ) arrayObject );
+            
+         } else if ( arrayObject instanceof JSONObject ) {
+            navigateObject( key, ( JSONObject )arrayObject );
+         }
       }
+      arrayFinised( key );
    }//End Method
 
 }//End Class

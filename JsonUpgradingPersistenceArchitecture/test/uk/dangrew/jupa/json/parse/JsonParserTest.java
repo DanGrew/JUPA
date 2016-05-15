@@ -9,23 +9,22 @@
  */
 package uk.dangrew.jupa.json.parse;
 
-import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThan;
-import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
-
-import java.util.ArrayList;
-import java.util.List;
+import static uk.dangrew.jupa.json.parse.DefaultKeyRecorder.ARRAY_FINISHED;
+import static uk.dangrew.jupa.json.parse.DefaultKeyRecorder.ARRAY_STARTED;
+import static uk.dangrew.jupa.json.parse.DefaultKeyRecorder.OBJECT_FINISHED;
+import static uk.dangrew.jupa.json.parse.DefaultKeyRecorder.OBJECT_STARTED;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
-import javafx.util.Pair;
+import uk.dangrew.jupa.json.parse.handle.type.JsonParseHandle;
+import uk.dangrew.jupa.json.parse.handle.type.StringTypeHandle;
 
 /**
  * {@link JsonParser} test.
@@ -39,21 +38,14 @@ public class JsonParserTest {
    private static final String KEY_C = "KeyC";
    private static final String VALUE_C = "ValueC";
    
-   private List< Pair< String, Object > > recordedKeys;
+   private JsonParseHandle handle;
+   private DefaultKeyRecorder keyRecorder;
    private JsonParser systemUnderTest;
    
    @Before public void initialiseSystemUnderTest(){
-      recordedKeys = new ArrayList<>();
+      keyRecorder = new DefaultKeyRecorder();
+      handle = new StringTypeHandle( keyRecorder );
       systemUnderTest = new JsonParser();
-   }//End Method
-   
-   /**
-    * Method to record a key when encountered.
-    * @param key th key found.
-    * @param value the value found.
-    */
-   private void recordKey( String key, Object value ){
-      recordedKeys.add( new Pair<>( key, value ) );
    }//End Method
    
    @Test( expected = IllegalArgumentException.class ) public void shouldNotAcceptNull(){
@@ -61,73 +53,68 @@ public class JsonParserTest {
    }//End Method
 
    @Test public void whenShouldNotCallThroughWhenNothingEncountered() {
-      systemUnderTest.when( KEY_A, this::recordKey );
+      systemUnderTest.when( KEY_A, handle );
       systemUnderTest.parse( new JSONObject() );
-      assertThat( recordedKeys, is( empty() ) );
+      keyRecorder.expectKeysFound();
    }//End Method
    
    @Test public void whenShouldCallThroughToHandlerForSingle() {
-      systemUnderTest.when( KEY_A, this::recordKey );
+      systemUnderTest.when( KEY_A, handle );
       
       JSONObject object = new JSONObject();
       object.put( KEY_A, VALUE_A );
       systemUnderTest.parse( object );
-      
-      assertThat( recordedKeys, hasSize( 1 ) );
-      assertThat( recordedKeys.get( 0 ).getKey(), is( KEY_A ) );
-      assertThat( recordedKeys.get( 0 ).getValue(), is( VALUE_A ) );
+
+      keyRecorder.expect( KEY_A, VALUE_A );
+      keyRecorder.expectKeysFound();
    }//End Method
    
    @Test public void whenShouldCallThroughToHandlerForSingleAndIgnoreOtherKey() {
-      systemUnderTest.when( KEY_A, this::recordKey );
+      systemUnderTest.when( KEY_A, handle );
       
       JSONObject object = new JSONObject();
       object.put( KEY_A, VALUE_A );
       object.put( KEY_B, VALUE_B );
       systemUnderTest.parse( object );
       
-      assertThat( recordedKeys, hasSize( 1 ) );
-      assertThat( recordedKeys.get( 0 ).getKey(), is( KEY_A ) );
-      assertThat( recordedKeys.get( 0 ).getValue(), is( VALUE_A ) );
+      keyRecorder.expect( KEY_A, VALUE_A );
+      keyRecorder.expectKeysFound();
    }//End Method
    
    @Test public void whenShouldCallThroughToHandlerForMultiple() {
-      systemUnderTest.when( KEY_A, this::recordKey );
-      systemUnderTest.when( KEY_B, this::recordKey );
+      systemUnderTest.when( KEY_A, handle );
+      systemUnderTest.when( KEY_B, handle );
       
       JSONObject object = new JSONObject();
       object.put( KEY_A, VALUE_A );
       object.put( KEY_B, VALUE_B );
       systemUnderTest.parse( object );
       
-      assertThat( recordedKeys, hasSize( 2 ) );
-      assertThat( recordedKeys.get( 0 ).getKey(), is( KEY_A ) );
-      assertThat( recordedKeys.get( 0 ).getValue(), is( VALUE_A ) );
-      assertThat( recordedKeys.get( 1 ).getKey(), is( KEY_B ) );
-      assertThat( recordedKeys.get( 1 ).getValue(), is( VALUE_B ) );
+      keyRecorder.expect( KEY_A, VALUE_A );
+      keyRecorder.expect( KEY_B, VALUE_B );
+      keyRecorder.expectKeysFound();
    }//End Method
    
    @Test public void whenShouldCallThroughToHandlerForNested() {
-      systemUnderTest.when( KEY_A, this::recordKey );
-      systemUnderTest.when( KEY_B, this::recordKey );
+      systemUnderTest.when( KEY_A, handle );
+      systemUnderTest.when( KEY_B, handle );
       
       JSONObject object = new JSONObject();
       JSONObject nested = new JSONObject();
       object.put( KEY_A, nested );
       nested.put( KEY_B, VALUE_B );
       systemUnderTest.parse( object );
-      
-      assertThat( recordedKeys, hasSize( 2 ) );
-      assertThat( recordedKeys.get( 0 ).getKey(), is( KEY_A ) );
-      assertThat( recordedKeys.get( 0 ).getValue(), is( nullValue() ) );
-      assertThat( recordedKeys.get( 1 ).getKey(), is( KEY_B ) );
-      assertThat( recordedKeys.get( 1 ).getValue(), is( VALUE_B ) );
+
+      keyRecorder.expect( KEY_A, OBJECT_STARTED );
+      keyRecorder.expect( KEY_B, VALUE_B );
+      keyRecorder.expect( KEY_A, OBJECT_FINISHED );
+      keyRecorder.expectKeysFound();
    }//End Method
    
    @Test public void whenShouldNavigateThroughArraysToObjectsAndProcessAllFieldsInTurn() {
-      systemUnderTest.when( KEY_A, this::recordKey );
-      systemUnderTest.when( KEY_B, this::recordKey );
-      systemUnderTest.when( KEY_C, this::recordKey );
+      systemUnderTest.when( KEY_A, handle );
+      systemUnderTest.when( KEY_B, handle );
+      systemUnderTest.when( KEY_C, handle );
       
       JSONObject object = new JSONObject();
       JSONArray nested = new JSONArray();
@@ -140,23 +127,22 @@ public class JsonParserTest {
       }
       systemUnderTest.parse( object );
       
-      assertThat( recordedKeys, hasSize( 15 ) );
-      for ( int i = 0; i < 15; i++ ) {
-         assertThat( recordedKeys.get( i ).getKey(), is( KEY_A ) );
-         assertThat( recordedKeys.get( i ).getValue(), is( nullValue() ) );
-         
+      keyRecorder.expect( KEY_A, ARRAY_STARTED );
+      for ( int i = 1; i < 21; i++ ) {
+         keyRecorder.expect( KEY_A, OBJECT_STARTED );
          i++;
-         assertThat( recordedKeys.get( i ).getKey(), is( KEY_B ) );
-         assertThat( recordedKeys.get( i ).getValue(), is( VALUE_B ) );
-         
+         keyRecorder.expect( KEY_B, VALUE_B );
          i++;
-         assertThat( recordedKeys.get( i ).getKey(), is( KEY_C ) );
-         assertThat( recordedKeys.get( i ).getValue(), is( VALUE_C ) );
+         keyRecorder.expect( KEY_C, VALUE_C );
+         i++;
+         keyRecorder.expect( KEY_A, OBJECT_FINISHED );
       }
+      keyRecorder.expect( KEY_A, ARRAY_FINISHED );
+      keyRecorder.expectKeysFound();
    }//End Method
    
    @Test public void whenShouldNavigateThroughArraysToValues() {
-      systemUnderTest.when( KEY_A, this::recordKey );
+      systemUnderTest.when( KEY_A, handle );
       
       JSONObject object = new JSONObject();
       JSONArray nested = new JSONArray();
@@ -169,19 +155,44 @@ public class JsonParserTest {
       nested.put( VALUE_C );
       systemUnderTest.parse( object );
       
-      assertThat( recordedKeys, hasSize( 6 ) );
-      assertThat( recordedKeys.get( 0 ).getKey(), is( KEY_A ) );
-      assertThat( recordedKeys.get( 0 ).getValue(), is( VALUE_A ) );
-      assertThat( recordedKeys.get( 1 ).getKey(), is( KEY_A ) );
-      assertThat( recordedKeys.get( 1 ).getValue(), is( VALUE_A ) );
-      assertThat( recordedKeys.get( 2 ).getKey(), is( KEY_A ) );
-      assertThat( recordedKeys.get( 2 ).getValue(), is( VALUE_B ) );
-      assertThat( recordedKeys.get( 3 ).getKey(), is( KEY_A ) );
-      assertThat( recordedKeys.get( 3 ).getValue(), is( VALUE_C ) );
-      assertThat( recordedKeys.get( 4 ).getKey(), is( KEY_A ) );
-      assertThat( recordedKeys.get( 4 ).getValue(), is( VALUE_C ) );
-      assertThat( recordedKeys.get( 5 ).getKey(), is( KEY_A ) );
-      assertThat( recordedKeys.get( 5 ).getValue(), is( VALUE_C ) );
+      keyRecorder.expect( KEY_A, ARRAY_STARTED );
+      keyRecorder.expect( KEY_A, VALUE_A );
+      keyRecorder.expect( KEY_A, VALUE_A );
+      keyRecorder.expect( KEY_A, VALUE_B );
+      keyRecorder.expect( KEY_A, VALUE_C );
+      keyRecorder.expect( KEY_A, VALUE_C );
+      keyRecorder.expect( KEY_A, VALUE_C );
+      keyRecorder.expect( KEY_A, ARRAY_FINISHED );
+      keyRecorder.expectKeysFound();
+   }//End Method
+   
+   @Test public void shouldSkipOverObjectWhenNoHandle() {
+      systemUnderTest.when( KEY_B, handle );
+      
+      JSONObject object = new JSONObject();
+      JSONObject nested = new JSONObject();
+      object.put( KEY_A, nested );
+      nested.put( KEY_B, VALUE_B );
+      systemUnderTest.parse( object );
+      
+      keyRecorder.expect( KEY_B, VALUE_B );
+      keyRecorder.expectKeysFound();
+   }//End Method
+   
+   @Test public void shouldSkipOverArrayWhenNoHandle() {
+      systemUnderTest.when( KEY_B, handle );
+      
+      JSONObject object = new JSONObject();
+      JSONArray nested = new JSONArray();
+      object.put( KEY_A, nested );
+      
+      JSONObject arrayObject = new JSONObject();
+      nested.put( arrayObject );
+      arrayObject.put( KEY_B, VALUE_B );
+      systemUnderTest.parse( object );
+      
+      keyRecorder.expect( KEY_B, VALUE_B );
+      keyRecorder.expectKeysFound();
    }//End Method
    
    @Test public void alphabeticalKeySorterShouldSortCorrectly(){
@@ -191,5 +202,82 @@ public class JsonParserTest {
       assertThat( JsonParser.ALPHABETICAL.compare( "b", "a" ), is ( greaterThan( 0 ) ) );
       assertThat( JsonParser.ALPHABETICAL.compare( "something", "something" ), is ( 0 ) );
    }//End Method
+   
+   @Test public void shouldIdentifyNestedArraysUsngDepthFirst(){
+      systemUnderTest.when( KEY_A, handle );
+      
+      JSONArray root = new JSONArray();
+      
+      for ( int i = 0; i < 2; i++ ) {
+         JSONArray firstLevel = new JSONArray();
+         
+         for ( int j = 0; j < 2; j++ ) {
+            JSONArray secondLevel = new JSONArray();
 
+            secondLevel.put( VALUE_A );
+            secondLevel.put( VALUE_B );
+            secondLevel.put( VALUE_C );
+            
+            firstLevel.put( secondLevel );
+         }
+         
+         root.put( firstLevel );
+      }
+      
+      JSONObject input = new JSONObject();
+      input.put( KEY_A, root );
+      systemUnderTest.parse( input );
+      
+      //begin root
+      keyRecorder.expect( KEY_A, ARRAY_STARTED );
+      
+      //begin first                 
+      keyRecorder.expect( KEY_A, ARRAY_STARTED );
+                                    
+      //begin second                
+      keyRecorder.expect( KEY_A, ARRAY_STARTED );
+                                    
+      //second 1  
+      keyRecorder.expect( KEY_A, VALUE_A );
+      keyRecorder.expect( KEY_A, VALUE_B );
+      keyRecorder.expect( KEY_A, VALUE_C );
+                                    
+      //begin next second     
+      keyRecorder.expect( KEY_A, ARRAY_FINISHED );
+      keyRecorder.expect( KEY_A, ARRAY_STARTED );
+                                    
+      //second 2                    
+      keyRecorder.expect( KEY_A, VALUE_A );
+      keyRecorder.expect( KEY_A, VALUE_B );
+      keyRecorder.expect( KEY_A, VALUE_C );
+      
+      //begin next first              
+      keyRecorder.expect( KEY_A, ARRAY_FINISHED );
+      keyRecorder.expect( KEY_A, ARRAY_FINISHED );
+      keyRecorder.expect( KEY_A, ARRAY_STARTED );
+                                    
+      //begin second                
+      keyRecorder.expect( KEY_A, ARRAY_STARTED );
+                                    
+      //second 1  
+      keyRecorder.expect( KEY_A, VALUE_A );
+      keyRecorder.expect( KEY_A, VALUE_B );
+      keyRecorder.expect( KEY_A, VALUE_C );
+                                    
+      //begin next second           
+      keyRecorder.expect( KEY_A, ARRAY_FINISHED );
+      keyRecorder.expect( KEY_A, ARRAY_STARTED );
+                                    
+      //second 2                    
+      keyRecorder.expect( KEY_A, VALUE_A );
+      keyRecorder.expect( KEY_A, VALUE_B );
+      keyRecorder.expect( KEY_A, VALUE_C );
+      
+      keyRecorder.expect( KEY_A, ARRAY_FINISHED );
+      keyRecorder.expect( KEY_A, ARRAY_FINISHED );
+      keyRecorder.expect( KEY_A, ARRAY_FINISHED );
+      
+      keyRecorder.expectKeysFound();
+   }//End Method
+   
 }//End Class
