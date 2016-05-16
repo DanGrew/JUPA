@@ -1,9 +1,55 @@
-apply plugin: 'java'
-apply plugin: 'eclipse'
+/*
+ * PLUGINS: apply all plugins needed for the build
+ */
+plugins {
+    id "com.jfrog.bintray" version "1.6"
+}
+
+allprojects { 
+	apply plugin: 'java'
+	apply plugin: 'maven'
+	apply plugin: 'maven-publish'
+	apply plugin: 'eclipse'
+}
+
+/*
+ * VERSIONING: describe build and calculate build number
+ */
+description = """JUPA"""
+group = 'jupa'
+
+def buildNumberFromEnvironment = System.getenv()[ 'VERSION_NUMBER' ]
+def buildNumberForThisEnvironment = ( buildNumberFromEnvironment != null ? buildNumberFromEnvironment : 'WORKSPACE' ) 
+version = buildNumberForThisEnvironment
+
+/*
+ * SOURCE: source specific configuration
+ */
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+        resources {
+			srcDir 'src'
+        }
+    }
+    test {
+        java {
+            srcDir 'test'
+        }
+        resources {
+//resources are dotted through the folder - arguably against conventions
+			srcDir 'src'
+        	srcDir 'test'
+        }
+    }
+}
 
 repositories {
-    // Use 'jcenter' for resolving your dependencies.
-    // You can declare any Maven/Ivy/file repository here.
     jcenter()
 }
 
@@ -14,3 +60,79 @@ dependencies {
     testCompile group: 'org.hamcrest', name: 'hamcrest-all', version:'1.3'
     testCompile group: 'org.mockito', name: 'mockito-all', version:'1.9.5'
 }
+
+/*
+ * TESTS: provide output when running unit tests
+ */
+test {
+    testLogging {
+        events "passed", "skipped", "failed", "standardOut", "standardError"
+    }
+    reports {
+	    junitXml.enabled = true
+	    html.enabled = false
+    }
+}
+
+/*
+ * TEST PACKAGING: package tests into a separate jar
+ */
+task packageTests(type: Jar) {
+  from sourceSets.test.output
+  classifier = 'tests'
+}
+artifacts.archives packageTests
+
+/*
+ * LOCAL ARCHIVING: define where and how the artifacts should be published
+ */
+uploadArchives {
+	repositories.mavenDeployer {
+		repository( url: 'http://192.168.0.15:14445/repository/jupa/' ) {
+			authentication ( userName: repoUser, password: repoPass )
+		}
+		
+		pom.version = version
+		pom.artifactId = 'jupa'
+		pom.groupId = 'jupa'
+	}
+}	
+
+/*
+ * REMOTE ARCHIVING: publish release candidates to bintray
+ */
+bintray {
+    user = bintrayUser
+    key = bintrayKey
+    configurations = ['archives']
+    publications = ['MyPublication'] 
+    
+    publish = true //auto publish everything
+    
+    pkg {
+        repo = 'JsonUpgradingPersistenceArchitecture'
+        name = 'jupa'
+        userOrg = bintrayUser
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/DanGrew/JUPA.git'
+        
+        version {
+                name = buildNumberForThisEnvironment
+                desc = 'Continuous Delivery rolling version'
+                released  = new Date()
+        }
+    }
+}
+
+publishing {
+    publications {
+        MyPublication(MavenPublication) {
+            from components.java
+            groupId 'jupa'
+            artifactId 'JsonUpgradingPersistenceArchitecture'
+            version version
+        }
+    }
+}
+
+
