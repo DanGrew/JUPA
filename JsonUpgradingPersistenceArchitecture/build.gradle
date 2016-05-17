@@ -66,6 +66,7 @@ dependencies {
 pitest {
     targetClasses = ['uk.dangrew.jupa.*']
     threads = 4
+    outputFormats = ['XML', 'HTML']
 }
 
 /*
