@@ -9,6 +9,8 @@
  */
 package uk.dangrew.jupa.json.parse.handle.type;
 
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
@@ -75,6 +77,30 @@ public abstract class JsonParseHandleImplTest< HandledTypeT > {
       systemUnderTest.handle( KEY, array, index );
       verify( handle ).handle( KEY, null );
       verifyNoMoreInteractions( handle );
+   }//End Method
+   
+   @Test public void objectHasKeyShouldCheckObjectForKey(){
+      JSONObject object = new JSONObject();
+      assertThat( systemUnderTest.objectHasKey( KEY, object ), is( false ) );
+      
+      object.put( KEY, "anything" );
+      assertThat( systemUnderTest.objectHasKey( KEY, object ), is( true ) );
+      
+      object.put( KEY, ( String )null );
+      assertThat( systemUnderTest.objectHasKey( KEY, object ), is( false ) );
+   }//End Method
+   
+   @Test public void arrayHasIndexShouldCheckIndexWithinRange(){
+      JSONArray array = new JSONArray();
+      array.put( true );
+      array.put( false );
+      array.put( false );
+      array.put( true );
+      
+      assertThat( systemUnderTest.arrayHasIndex( 0, array ), is( true ) );
+      assertThat( systemUnderTest.arrayHasIndex( 3, array ), is( true ) );
+      assertThat( systemUnderTest.arrayHasIndex( 4, array ), is( false ) );
+      assertThat( systemUnderTest.arrayHasIndex( -1, array ), is( false ) );
    }//End Method
    
    @Test public abstract void handleShouldForwardToKeyHandle();

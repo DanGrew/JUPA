@@ -24,9 +24,11 @@ import org.junit.Test;
 public class JsonNavigableObjectImplTest {
    
    private static final String KEY = "KEY";
+   private JSONObject parent;
    private JsonNavigableObjectImpl systemUnderTest;
    
    @Before public void initialiseSystemUnderTest(){
+      parent = new JSONObject();
       systemUnderTest = new JsonNavigableObjectImpl( KEY );
    }//End Method
 
@@ -44,19 +46,51 @@ public class JsonNavigableObjectImplTest {
       assertThat( systemUnderTest.navigate( input ), is( nullValue() ) );
    }//End Method
    
-   @Test( expected = IllegalArgumentException.class ) public void shouldNotAcceptObjectOtherThanJsonObject(){
+   @Test public void shouldIgnoreObjectOtherThanJsonObject(){
       systemUnderTest.navigate( new Object() );
+      systemUnderTest.put( new Object(), "anything" );
    }//End Method
    
    @Test public void shouldAcceptJsonObject(){
       assertThat( systemUnderTest.navigate( new JSONObject() ), is( nullValue() ) );
    }//End Method
    
-   @Test( expected = IllegalArgumentException.class ) public void shouldNotAcceptJsonArray(){
+   @Test public void shouldIgnoreJsonArray(){
       systemUnderTest.navigate( new JSONArray() );
+      systemUnderTest.put( new JSONArray(), "anything" );
    }//End Method
 
-   @Test( expected = IllegalArgumentException.class ) public void shouldNotAcceptNull(){
+   @Test public void shouldIgnoreNull(){
       systemUnderTest.navigate( null );
+      systemUnderTest.put( null, "anything" );
+   }//End Method
+   
+   @Test public void shouldPutNullValueIntoParent(){
+      systemUnderTest.put( parent, null );
+      assertThat( parent.opt( KEY ), is( nullValue() ) );
+      
+      parent.put( KEY, "anything" );
+      assertThat( parent.opt( KEY ), is( "anything" ) );
+      
+      systemUnderTest.put( parent, null );
+      assertThat( parent.opt( KEY ), is( nullValue() ) );
+   }//End Method
+   
+   @Test public void shouldPutSpecificValueTypeIntoParent(){
+      final String value = "something special";
+      systemUnderTest.put( parent, value );
+      assertThat( parent.opt( KEY ), is( value ) );
+   }//End Method
+   
+   @Test public void shouldPutNestedJsonObjectIntoParent(){
+      final JSONObject value = new JSONObject();
+      systemUnderTest.put( parent, value );
+      assertThat( parent.opt( KEY ), is( value ) );
+   }//End Method
+   
+   @Test public void shouldPutJsonArrayIntoParent(){
+      final JSONArray value = new JSONArray();
+      systemUnderTest.put( parent, value );
+      assertThat( parent.opt( KEY ), is( value ) );
    }//End Method
 }//End Class

@@ -15,6 +15,19 @@ import org.junit.Assert;
 
 public class TestCommon {
 
+   private TestCommon(){}
+   
+   /**
+    * Method to read the given {@link Scanner} and extract a {@link String}.
+    * @param scanner the {@link Scanner} to read.
+    * @return the {@link String} containing all text from the {@link Scanner}.
+    */
+   static final String readScannerContentAndClose( Scanner scanner ) {
+      String content = scanner.useDelimiter( "//Z" ).next();
+      scanner.close();
+      return content;
+   }//End Method
+   
    /**
     * Method to read a text file into a {@link String}.
     * @param locationClass the {@link Class} in the package to load the {@link File} from.
@@ -26,9 +39,7 @@ public class TestCommon {
       Assert.assertNotNull( stream );
       
       Scanner scanner = new Scanner( stream );
-      String content = scanner.useDelimiter( "//Z" ).next();
-      scanner.close();
-      return content;
+      return readScannerContentAndClose( scanner );
    }//End Method
    
 }//End Class

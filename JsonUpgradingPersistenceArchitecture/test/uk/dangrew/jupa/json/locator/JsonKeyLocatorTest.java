@@ -52,32 +52,24 @@ public class JsonKeyLocatorTest {
       systemUnderTest = new JsonKeyLocator();
    }//End Method
    
-   @Test( expected = IllegalStateException.class ) public void findShouldNotPermitMissingKey(){
-      systemUnderTest.find( jsonObject );
+   @Test public void findShouldIgnoreMissingKey(){
+      assertThat( systemUnderTest.find( jsonObject ), is( nullValue() ) );
    }//End Method
    
-   @Test( expected = IllegalArgumentException.class ) public void findShouldNotPermitNullObject(){
+   @Test( expected = NullPointerException.class ) public void findShouldNotPermitNullObject(){
       systemUnderTest.find( null );
-   }//End Method
-   
-   @Test( expected = IllegalArgumentException.class ) public void keyShouldNotAcceptNullValue(){
-      systemUnderTest.key( null );
-   }//End Method
-   
-   @Test( expected = IllegalArgumentException.class ) public void keyShouldNotAcceptInvalidValue(){
-      systemUnderTest.key( "   " );
    }//End Method
 
    @Test public void shouldFindKeyInTopLevelObject() {
       jsonObject.put( KEY, VALUE );
       
-      systemUnderTest.key( KEY );
+      systemUnderTest.child( KEY );
       
       assertThat( systemUnderTest.find( jsonObject ), is( VALUE ) );
    }//End Method
    
    @Test public void shouldSafelyIgnoreMissingKeyInTopLevelObject() {
-      systemUnderTest.key( KEY );
+      systemUnderTest.child( KEY );
       
       assertThat( systemUnderTest.find( jsonObject ), is( nullValue() ) );
    }//End Method
@@ -86,7 +78,7 @@ public class JsonKeyLocatorTest {
       jsonObject.put( CHILD_A, childObjectA );
       childObjectA.put( KEY, VALUE );
       
-      systemUnderTest.child( CHILD_A ).key( KEY );
+      systemUnderTest.child( CHILD_A ).child( KEY );
       
       assertThat( systemUnderTest.find( jsonObject ), is( VALUE ) );
    }//End Method
@@ -95,7 +87,7 @@ public class JsonKeyLocatorTest {
       jsonObjectContainsChildrenPath();
       childObjectC.put( KEY, VALUE );
       
-      systemUnderTest.child( CHILD_A ).child( CHILD_B ).child( CHILD_C ).key( KEY );
+      systemUnderTest.child( CHILD_A ).child( CHILD_B ).child( CHILD_C ).child( KEY );
       
       assertThat( systemUnderTest.find( jsonObject ), is( VALUE ) );
    }//End Method
@@ -103,7 +95,7 @@ public class JsonKeyLocatorTest {
    @Test public void shouldSafelyIgnoreMissingKeyInFurtherChildren(){
       jsonObjectContainsChildrenPath();
       
-      systemUnderTest.child( CHILD_A ).child( CHILD_B ).child( CHILD_C ).key( KEY );
+      systemUnderTest.child( CHILD_A ).child( CHILD_B ).child( CHILD_C ).child( KEY );
       
       assertThat( systemUnderTest.find( jsonObject ), is( nullValue() ) );
    }//End Method
@@ -125,23 +117,19 @@ public class JsonKeyLocatorTest {
       jsonObject.put( CHILD_A, childObjectA );
       childObjectA.put( CHILD_B, childObjectB );
       
-      systemUnderTest.child( CHILD_A ).child( CHILD_B ).child( CHILD_C ).key( KEY );
+      systemUnderTest.child( CHILD_A ).child( CHILD_B ).child( CHILD_C ).child( KEY );
       
       assertThat( systemUnderTest.find( jsonObject ), is( nullValue() ) );
    }//End Method
    
-   @Test( expected = IllegalStateException.class ) public void putShouldNotPermitMissingKey(){
-      systemUnderTest.put( jsonObject, "anything" );
-   }//End Method
-   
-   @Test( expected = IllegalArgumentException.class ) public void putShouldNotPermitNullObject(){
+   @Test( expected = NullPointerException.class ) public void putShouldNotPermitNullObject(){
       systemUnderTest.put( null, "anything" );
    }//End Method
    
    @Test public void shouldSetKeyWhenNotPresent(){
       jsonObjectContainsChildrenPath();
       
-      systemUnderTest.child( CHILD_A ).child( CHILD_B ).child( CHILD_C ).key( KEY );
+      systemUnderTest.child( CHILD_A ).child( CHILD_B ).child( CHILD_C ).child( KEY );
       
       systemUnderTest.put( jsonObject, VALUE );
       assertThat( childObjectC.get( KEY ), is( VALUE ) );
@@ -150,7 +138,7 @@ public class JsonKeyLocatorTest {
    @Test public void shouldNotSetKeyWhenPathNotValid(){
       jsonObjectContainsChildrenPath();
       
-      systemUnderTest.child( CHILD_A ).child( CHILD_B ).child( "anything" ).key( KEY );
+      systemUnderTest.child( CHILD_A ).child( CHILD_B ).child( "anything" ).child( KEY );
       
       systemUnderTest.put( jsonObject, VALUE );
       assertThat( childObjectC.has( KEY ), is( false ) );
@@ -160,7 +148,7 @@ public class JsonKeyLocatorTest {
       jsonObjectContainsChildrenPathAndKey();
       assertThat( childObjectC.get( KEY ), is( VALUE ) );
       
-      systemUnderTest.child( CHILD_A ).child( CHILD_B ).child( CHILD_C ).key( KEY );
+      systemUnderTest.child( CHILD_A ).child( CHILD_B ).child( CHILD_C ).child( KEY );
       
       final String anotherValue = "anything else in the world";
       systemUnderTest.put( jsonObject, anotherValue );
@@ -171,7 +159,7 @@ public class JsonKeyLocatorTest {
       jsonObjectContainsChildrenPathAndKey();
       assertThat( childObjectC.get( KEY ), is( VALUE ) );
       
-      systemUnderTest.child( CHILD_A ).child( CHILD_B ).child( CHILD_C ).key( KEY );
+      systemUnderTest.child( CHILD_A ).child( CHILD_B ).child( CHILD_C ).child( KEY );
       
       final Double anotherValue = 348576.0;
       systemUnderTest.put( jsonObject, anotherValue );
@@ -182,7 +170,7 @@ public class JsonKeyLocatorTest {
       jsonObjectContainsChildrenPathAndKey();
       assertThat( childObjectC.get( KEY ), is( VALUE ) );
       
-      systemUnderTest.child( CHILD_A ).child( CHILD_B ).child( CHILD_C ).key( KEY );
+      systemUnderTest.child( CHILD_A ).child( CHILD_B ).child( CHILD_C ).child( KEY );
       
       systemUnderTest.put( jsonObject, null );
       assertThat( childObjectC.has( KEY ), is( false ) );
@@ -206,7 +194,7 @@ public class JsonKeyLocatorTest {
    @Test public void shouldNavigateThroughArrayToKeyAtIndex(){
       jsonObjectContainsArrayPath();
       
-      systemUnderTest.child( CHILD_A ).child( ARRAY_A ).array( 0 ).child( ARRAY_B ).array( 0 ).key( KEY );
+      systemUnderTest.child( CHILD_A ).child( ARRAY_A ).array( 0 ).child( ARRAY_B ).array( 0 ).child( KEY );
       
       assertThat( systemUnderTest.find( jsonObject ), is( VALUE ) );
    }//End Method
@@ -214,7 +202,7 @@ public class JsonKeyLocatorTest {
    @Test public void shouldSafelyIgnoreMissingKeyInArray(){
       jsonObjectContainsArrayPath();
       
-      systemUnderTest.child( CHILD_A ).child( ARRAY_A ).array( 0 ).child( ARRAY_B ).array( 1 ).key( KEY );
+      systemUnderTest.child( CHILD_A ).child( ARRAY_A ).array( 0 ).child( ARRAY_B ).array( 1 ).child( KEY );
       
       assertThat( systemUnderTest.find( jsonObject ), is( nullValue() ) );
    }//End Method
@@ -222,9 +210,43 @@ public class JsonKeyLocatorTest {
    @Test public void shouldNotFindWherePathDoesNotEndOnJsonObject(){
       jsonObjectContainsArrayPath();
       
-      systemUnderTest.child( CHILD_A ).child( ARRAY_A ).key( KEY );
+      systemUnderTest.child( CHILD_A ).child( ARRAY_A ).child( KEY );
       
       assertThat( systemUnderTest.find( jsonObject ), is( nullValue() ) );
+   }//End Method
+   
+   @Test public void shouldNavigateThroughMultipleArraysWithNoIntermediateObjects(){
+      JSONArray arrayRoot = new JSONArray();
+      jsonObject.put( CHILD_A, arrayRoot );
+      
+      for ( int i = 0; i < 5; i++ ) {
+         JSONArray array = new JSONArray();
+         arrayRoot.put( array );
+         
+         for ( int j = 0; j < 5; j++ ) {
+            JSONArray nested = new JSONArray();
+            array.put( nested );
+            
+            JSONObject object = new JSONObject();
+            object.put( KEY, "" + i + "," + j );
+            nested.put( object );
+         }
+      }
+      
+      systemUnderTest.child( CHILD_A ).array( 2 ).array( 3 ).array( 0 ).child( KEY );
+      
+      assertThat( systemUnderTest.find( jsonObject ), is( "2,3" ) );
+   }//End Method
+   
+   @Test public void shouldPutValueIntoArrayIndex(){
+      jsonObjectContainsArrayPath();
+      
+      systemUnderTest.child( CHILD_A ).child( ARRAY_A ).array( 2 ).child( ARRAY_B ).array( 1 ).child( KEY );
+      assertThat( systemUnderTest.find( jsonObject ), is( nullValue() ) );
+      
+      final String value = "anything"; 
+      systemUnderTest.put( jsonObject, value );
+      assertThat( systemUnderTest.find( jsonObject ), is( value ) );
    }//End Method
    
 }//End Class

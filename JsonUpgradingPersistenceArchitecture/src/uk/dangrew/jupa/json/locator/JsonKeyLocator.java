@@ -11,6 +11,7 @@ package uk.dangrew.jupa.json.locator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiFunction;
 
 import org.json.JSONObject;
 
@@ -21,7 +22,8 @@ import org.json.JSONObject;
  */
 public class JsonKeyLocator {
 
-   private String key;
+   static final BiFunction< JsonNavigable, Object, Object > NAVIGATE = ( navigable, parent ) -> navigable.navigate( parent );
+   
    private List< JsonNavigable > path;
    
    /**
@@ -30,16 +32,6 @@ public class JsonKeyLocator {
    public JsonKeyLocator() {
       path = new ArrayList<>();
    }//End Constructor
-   
-   /**
-    * Method to specify the key value to look for in the {@link JSONObject} structure.
-    * Note that this can be reset but it is not recommended - set only once.
-    * @param key the {@link String} key, must not be null or empty.
-    */
-   public void key( String key ) {
-      verifyKey( key );
-      this.key = key;
-   }//End Method
    
    /**
     * Method to append a child to the path. This should be used when the child is a mapping of key to 
@@ -64,92 +56,23 @@ public class JsonKeyLocator {
    }//End Method
    
    /**
-    * Method to navigate through children to the leaf of the {@link JSONObject} tree.
-    * @param object the {@link JSONObject} to navigate through.
-    * @return the {@link JSONObject} and the end of the path, or null if can't be found.
-    */
-   private JSONObject navigate( JSONObject object ) {
-      Object subject = object;
-      
-      for ( JsonNavigable navigable : path ) {
-         subject = navigable.navigate( subject );
-         if ( subject == null ) {
-            return null;
-         }
-      }
-      
-      if ( subject instanceof JSONObject ) {
-         return ( JSONObject )subject;
-      } else {
-         return null;
-      }
-   }//End Method
-
-   /**
     * Method to find the value of the key given the path configured. Note that the key must be
     * set for this operation to work.
-    * @param object the {@link JSONObject} to look in, must not be null.
+    * @param object the root of the json structure to look in, must not be null.
     * @return the {@link Object} found, can be null if not found for path not found.
     */
-   public Object find( JSONObject object ) {
-      verifyInput( object );
-      verifyKeyNotNull();
-      
-      JSONObject subject = navigate( object );
-      if ( subject == null ) {
-         return null;
-      }
-      
-      return subject.opt( key );
+   public Object find( Object object ) {
+      return new JsonPathNavigator( object, path, NAVIGATE, NAVIGATE ).navigate();
    }//End Method
    
    /**
     * Method to put the value of the associated key in the {@link JSONObject} at the end of the 
     * configured path.
-    * @param jsonObject the {@link JSONObject} root, must not be null.
+    * @param object the root of the json structure, must not be null.
     * @param value the value to put. Can be null to remove the key. Can be different data type.
     */
-   public void put( JSONObject jsonObject, Object value ) {
-      verifyInput( jsonObject );
-      verifyKeyNotNull();
-      
-      JSONObject subject = navigate( jsonObject );
-      if ( subject == null ) {
-         return;
-      }
-      
-      subject.put( key, value );
-   }//End Method
-   
-   /**
-    * Method to verify that the given input is suitable for locating.
-    * @param input the {@link JSONObject} to locate a key in.
-    */
-   private void verifyInput( JSONObject input ) {
-      if ( input == null ) {
-         throw new IllegalArgumentException( "Operation failed: null input." );
-      }
-   }//End Method
-   
-   /**
-    * Method to verify that the associated key is not null.
-    */
-   private void verifyKeyNotNull(){
-      if ( key == null ) {
-         throw new IllegalStateException( "Operation failed: key has not been set." );
-      }  
-   }//End Method
-   
-   /**
-    * Method to verify that the key is valid.
-    * @param key the key to verify.
-    */
-   private void verifyKey( String key ) {
-      if ( key == null ) {
-         throw new IllegalArgumentException( "Key is null which is not permitted." );
-      } else if ( key.trim().length() == 0 ) {
-         throw new IllegalArgumentException( "Key is empty which is not permitted." );
-      }
+   public void put( Object object, Object value ) {
+      new JsonPathNavigator( object, path, NAVIGATE, new JsonValueSetterFunction( value ) ).navigate();
    }//End Method
 
 }//End Class

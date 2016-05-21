@@ -31,17 +31,35 @@ class JsonNavigableArrayImpl implements JsonNavigable {
    /**
     * {@inheritDoc}
     */
-   @Override public Object navigate( Object object ) {
-      if ( object instanceof JSONArray ) {
-         JSONArray array = ( JSONArray )object;
-         return array.opt( index );
+   @Override public Object navigate( Object parent ) {
+      JSONArray extracted = extractArray( parent );
+      if ( extracted == null ){
+         return null;
       }
-      
-      if ( object instanceof JSONObject ) {
-         throw new IllegalArgumentException( "Json Object found where Json Array expected." );
-      } else {
-         throw new IllegalArgumentException( "Unknown Object found where Json Array expected." );
+      return extracted.opt( index );
+   }//End Method
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override public void put( Object parent, Object value ) {
+      JSONArray extracted = extractArray( parent );
+      if ( extracted == null ) {
+         return;
       }
+      extracted.put( index, value );
+   }//End Method
+   
+   /**
+    * Method o extract the {@link JSONArray} from the given generic parent.
+    * @param parent the {@link Object} that may be a {@link JSONArray}.
+    * @return the {@link JSONArray} or null if not one.
+    */
+   private JSONArray extractArray( Object parent ) {
+      if ( parent instanceof JSONArray ) {
+         return ( JSONArray )parent;
+      }
+      return null;
    }//End Method
 
 }//End Class

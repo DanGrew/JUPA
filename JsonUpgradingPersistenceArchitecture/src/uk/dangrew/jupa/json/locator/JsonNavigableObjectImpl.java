@@ -31,17 +31,38 @@ class JsonNavigableObjectImpl implements JsonNavigable {
    /**
     * {@inheritDoc}
     */
-   @Override public Object navigate( Object object ) {
-      if ( object instanceof JSONObject ) {
-         JSONObject jsonObject = ( JSONObject )object;
-         return jsonObject.opt( key );
+   @Override public Object navigate( Object parent ) {
+      JSONObject extracted = extractJsonObject( parent );
+      if ( extracted == null ) {
+         return null;
       }
       
-      if ( object instanceof JSONArray ) {
-         throw new IllegalArgumentException( "JsonArray found where JsonObject expected for " + key + "." );
-      } else {
-         throw new IllegalArgumentException( "Unknown object found where JsonObject expected for " + key + "." );
+      return extracted.opt( key );
+   }//End Method
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override public void put( Object parent, Object value ) {
+      JSONObject extracted = extractJsonObject( parent );
+      if ( extracted == null ) {
+         return;
       }
+      
+      extracted.put( key, value );
+   }//End Method
+   
+   /**
+    * Method o extract the {@link JSONObject} from the given generic parent.
+    * @param parent the {@link Object} that may be a {@link JSONObject}.
+    * @return the {@link JSONObject} or null if not one.
+    */
+   private JSONObject extractJsonObject( Object parent ){
+      if ( parent instanceof JSONObject ) {
+         return ( JSONObject )parent;
+      }
+      
+      return null;
    }//End Method
 
 }//End Class

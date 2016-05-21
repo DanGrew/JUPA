@@ -11,6 +11,7 @@ package uk.dangrew.jupa.json.parse;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 
@@ -56,6 +57,7 @@ public class DefaultKeyRecorder implements JsonKeyHandle< String > {
     * @param value the expected value.
     */
    void expect( String key, String value ) {
+      assertThat( recordCount, lessThan( recordedKeys.size() ) );
       assertThat( recordedKeys.get( recordCount ).getKey(), is( key ) );
       
       if ( value == null ) {

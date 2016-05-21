@@ -89,7 +89,7 @@ public abstract class JsonParseHandleImpl< HandledTypeT > implements JsonParseHa
     * @return true if the index is present.
     */
    protected final boolean arrayHasIndex( int index, JSONArray array ) {
-      return index < array.length();
+      return index >= 0 && index < array.length();
    }//End Method
    
    /**

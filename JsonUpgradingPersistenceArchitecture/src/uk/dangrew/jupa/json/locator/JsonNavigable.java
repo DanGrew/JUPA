@@ -17,9 +17,16 @@ public interface JsonNavigable {
    
    /**
     * Method to navigate through the given object according to the associated constraints.
-    * @param object the {@link Object} to navigate through. 
+    * @param parent the {@link Object} to navigate through. 
     * @return the {@link Object} navigated to, or null.
     */
-   public Object navigate( Object object );
+   public Object navigate( Object parent );
+   
+   /**
+    * Method to put the value given into the parent object.
+    * @param parent the parent to put the value in.
+    * @param value the value to put.
+    */
+   public void put( Object parent, Object value );
 
 }//End Interface

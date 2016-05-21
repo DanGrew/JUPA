@@ -24,9 +24,11 @@ import org.junit.Test;
 public class JsonNavigableArrayImplTest {
    
    private static final int INDEX = 2;
+   private JSONArray parent;
    private JsonNavigableArrayImpl systemUnderTest;
    
    @Before public void initialiseSystemUnderTest(){
+      parent = new JSONArray();
       systemUnderTest = new JsonNavigableArrayImpl( INDEX );
    }//End Method
 
@@ -48,16 +50,48 @@ public class JsonNavigableArrayImplTest {
       assertThat( systemUnderTest.navigate( array ), is( nullValue() ) );
    }//End Method
    
-   @Test( expected = IllegalArgumentException.class ) public void shouldNavigateJsonArray(){
+   @Test public void shouldIgnoreJsonObject(){
       systemUnderTest.navigate( new JSONObject() );
+      systemUnderTest.put( new JSONObject(), "anything" );
    }//End Method
    
-   @Test( expected = IllegalArgumentException.class ) public void shouldNotAcceptAnyObject(){
+   @Test public void shouldIgnoreAnyObject(){
       systemUnderTest.navigate( new Object() );
+      systemUnderTest.put( new Object(), "anything" );
    }//End Method
    
-   @Test( expected = IllegalArgumentException.class ) public void shouldNotAcceptNull(){
+   @Test public void shouldIgnoreNull(){
       systemUnderTest.navigate( null );
+      systemUnderTest.put( null, "anything" );
+   }//End Method
+   
+   @Test public void shouldPutNullValueIntoParent(){
+      systemUnderTest.put( parent, null );
+      assertThat( parent.opt( INDEX ), is( nullValue() ) );
+      
+      parent.put( INDEX, "anything" );
+      assertThat( parent.opt( INDEX ), is( "anything" ) );
+      
+      systemUnderTest.put( parent, null );
+      assertThat( parent.opt( INDEX ), is( nullValue() ) );
+   }//End Method
+   
+   @Test public void shouldPutSpecificValueTypeIntoParent(){
+      final String value = "something special";
+      systemUnderTest.put( parent, value );
+      assertThat( parent.opt( INDEX ), is( value ) );
+   }//End Method
+   
+   @Test public void shouldPutNestedJsonObjectIntoParent(){
+      final JSONObject value = new JSONObject();
+      systemUnderTest.put( parent, value );
+      assertThat( parent.opt( INDEX ), is( value ) );
+   }//End Method
+   
+   @Test public void shouldPutJsonArrayIntoParent(){
+      final JSONArray value = new JSONArray();
+      systemUnderTest.put( parent, value );
+      assertThat( parent.opt( INDEX ), is( value ) );
    }//End Method
    
 }//End Class
