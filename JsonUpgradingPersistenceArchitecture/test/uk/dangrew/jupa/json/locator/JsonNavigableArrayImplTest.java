@@ -9,7 +9,9 @@
  */
 package uk.dangrew.jupa.json.locator;
 
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 
@@ -92,6 +94,12 @@ public class JsonNavigableArrayImplTest {
       final JSONArray value = new JSONArray();
       systemUnderTest.put( parent, value );
       assertThat( parent.opt( INDEX ), is( value ) );
+   }//End Method
+   
+   @Test public void shouldGenerateArrayRepeatedly(){
+      Object structure = systemUnderTest.generateStructure();
+      assertThat( structure, is( instanceOf( JSONArray.class ) ) );
+      assertThat( systemUnderTest.generateStructure(), is( not( structure ) ) );
    }//End Method
    
 }//End Class

@@ -51,6 +51,13 @@ class JsonNavigableArrayImpl implements JsonNavigable {
    }//End Method
    
    /**
+    * {@inheritDoc}
+    */
+   @Override public Object generateStructure() {
+      return new JSONArray();
+   }//End Method
+   
+   /**
     * Method o extract the {@link JSONArray} from the given generic parent.
     * @param parent the {@link Object} that may be a {@link JSONArray}.
     * @return the {@link JSONArray} or null if not one.

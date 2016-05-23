@@ -74,5 +74,14 @@ public class JsonKeyLocator {
    public void put( Object object, Object value ) {
       new JsonPathNavigator( object, path, NAVIGATE, new JsonValueSetterFunction( value ) ).navigate();
    }//End Method
+   
+   /**
+    * Method to populate the missing elements in the associated path.
+    * @param object the root of the json structure, must not be null.
+    */
+   public void populate( Object object ) {
+      JsonPathPopulator populator = new JsonPathPopulator();
+      new JsonPathNavigator( object, path, populator, populator ).navigate();
+   }//End Method
 
 }//End Class

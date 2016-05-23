@@ -53,6 +53,13 @@ class JsonNavigableObjectImpl implements JsonNavigable {
    }//End Method
    
    /**
+    * {@inheritDoc}
+    */
+   @Override public Object generateStructure() {
+      return new JSONObject();
+   }//End Method
+   
+   /**
     * Method o extract the {@link JSONObject} from the given generic parent.
     * @param parent the {@link Object} that may be a {@link JSONObject}.
     * @return the {@link JSONObject} or null if not one.

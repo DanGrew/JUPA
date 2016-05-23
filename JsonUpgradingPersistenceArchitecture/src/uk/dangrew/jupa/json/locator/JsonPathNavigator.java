@@ -73,9 +73,6 @@ public class JsonPathNavigator {
       for ( int i = 0; i < path.size() - 1; i++ ) {
          JsonNavigable navigable = path.get( i );
          subject = navigationHandler.apply( navigable, subject );
-         if ( subject == null ) {
-            return null;
-         }
       }
       
       return subject;
@@ -87,7 +84,7 @@ public class JsonPathNavigator {
     * @return the result of handling the destination with the associated function.
     */
    private Object handleDestination( Object destination ) {
-      if ( destination == null ) {
+      if ( path.isEmpty() ) {
          return null;
       }
       

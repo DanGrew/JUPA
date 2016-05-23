@@ -106,7 +106,7 @@ public class JsonPathNavigatorTest {
       verify( destinationHandler ).apply( fourth, thirdNested );
    }//End Method
 
-   @Test public void shouldNavigateThroughMultipleButNotReachDestination(){
+   @Test public void shouldNavigateThroughMultipleAndReachDestinationRegardlessOfResult(){
       path.add( first );
       path.add( second );
       path.add( third );
@@ -122,7 +122,7 @@ public class JsonPathNavigatorTest {
       verify( navigationHandler ).apply( first, jsonObject );
       verify( navigationHandler ).apply( second, firstNested );
       verify( navigationHandler ).apply( third, secondNested );
-      verifyNoMoreInteractions( destinationHandler );
+      verify( destinationHandler ).apply( fourth, null );
    }//End Method
    
    @Test public void desintationShouldProvideResult(){

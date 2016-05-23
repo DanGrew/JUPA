@@ -29,4 +29,10 @@ public interface JsonNavigable {
     */
    public void put( Object parent, Object value );
 
+   /**
+    * Method to generate the structure associated with the {@link JsonNavigable}.
+    * @return the structure such as {@link org.json.JSONObject} or {@link org.json.JSONArray}.
+    */
+   public Object generateStructure();
+
 }//End Interface

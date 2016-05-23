@@ -9,6 +9,7 @@
  */
 package uk.dangrew.jupa.json.locator;
 
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -247,6 +248,37 @@ public class JsonKeyLocatorTest {
       final String value = "anything"; 
       systemUnderTest.put( jsonObject, value );
       assertThat( systemUnderTest.find( jsonObject ), is( value ) );
+   }//End Method
+   
+   @Test public void shouldPopulateChain(){
+      systemUnderTest.child( CHILD_A ).child( CHILD_B ).array( 1 ).array( 1 ).child( CHILD_C ).child( KEY );
+      systemUnderTest.populate( jsonObject );
+      
+      assertChainIsPresent();
+   }//End Method
+   
+   @Test public void shouldPopulateChainWhenPartAlreadyExists(){
+      systemUnderTest.child( CHILD_A ).child( CHILD_B ).array( 1 ).array( 1 ).child( CHILD_C ).child( KEY );
+      
+      jsonObject.put( CHILD_A, new JSONObject() );
+      jsonObject.getJSONObject( CHILD_A ).put( CHILD_B, new JSONArray() );
+      jsonObject.getJSONObject( CHILD_A ).getJSONArray( CHILD_B ).put( 1, new JSONArray() );
+      systemUnderTest.populate( jsonObject );
+      
+      assertChainIsPresent();
+   }//End Method
+
+   /**
+    * Method to prove that a chain of elements is present as expected.
+    */
+   private void assertChainIsPresent() {
+      assertThat( jsonObject.has( CHILD_A ), is( true ) );
+      JSONObject childA = jsonObject.getJSONObject( CHILD_A );
+      JSONArray childB = childA.getJSONArray( CHILD_B );
+      JSONArray arrayA = childB.getJSONArray( 1 );
+      JSONObject arrayB = arrayA.getJSONObject( 1 );
+      JSONObject childC = arrayB.getJSONObject( CHILD_C );
+      assertThat( childC.keySet(), is( empty() ) );
    }//End Method
    
 }//End Class
