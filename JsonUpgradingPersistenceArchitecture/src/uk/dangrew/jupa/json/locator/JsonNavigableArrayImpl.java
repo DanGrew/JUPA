@@ -10,7 +10,6 @@
 package uk.dangrew.jupa.json.locator;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 /**
  * {@link JsonNavigableArrayImpl} provides an implementation for navigating to an index in

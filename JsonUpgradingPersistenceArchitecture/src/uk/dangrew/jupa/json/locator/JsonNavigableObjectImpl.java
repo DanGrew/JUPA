@@ -9,7 +9,6 @@
  */
 package uk.dangrew.jupa.json.locator;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
