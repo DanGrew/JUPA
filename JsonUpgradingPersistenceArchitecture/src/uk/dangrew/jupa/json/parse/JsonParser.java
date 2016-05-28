@@ -18,16 +18,16 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import uk.dangrew.jupa.json.parse.handle.type.JsonParseHandle;
+import uk.dangrew.jupa.json.JsonHandle;
 
 /**
  * The {@link JsonParser} provides a method of parsing a {@link JSONObject} notifying
- * {@link JsonParseHandle}s whenever keys are encountered.
+ * {@link JsonHandle}s whenever keys are encountered.
  */
 public class JsonParser {
    
    static final Comparator< String > ALPHABETICAL = ( a, b ) -> a.compareTo( b );
-   private Map< String, JsonParseHandle > handles;
+   private Map< String, JsonHandle > handles;
    
    /**
     * Constructs a new {@link JsonParser}.
@@ -37,17 +37,17 @@ public class JsonParser {
    }//End Constructor
 
    /**
-    * Method to define the {@link JsonParseHandle} to trigger when the given key has
+    * Method to define the {@link JsonHandle} to trigger when the given key has
     * been found.
     * @param key the key to encounter.
-    * @param handle the {@link JsonParseHandle} to trigger.
+    * @param handle the {@link JsonHandle} to trigger.
     */
-   public void when( String key, JsonParseHandle handle ) {
+   public void when( String key, JsonHandle handle ) {
       handles.put( key, handle );
    }//End Method
 
    /**
-    * Method to parse the given {@link JSONObject} according to the {@link #when(String, JsonParseHandle)}
+    * Method to parse the given {@link JSONObject} according to the {@link #when(String, JsonHandle)}
     * instructions provided.
     * @param jsonObject the {@link JSONObject} to parse.
     */
@@ -65,7 +65,7 @@ public class JsonParser {
    }//End Method
    
    /**
-    * Method to handle a key when found. This will identify the {@link JsonParseHandle} 
+    * Method to handle a key when found. This will identify the {@link JsonHandle} 
     * and trigger it if appropriate. It will also then navigate along the branches of
     * the given object.
     * @param key the key encountered.
@@ -102,7 +102,7 @@ public class JsonParser {
          return;
       }
       
-      JsonParseHandle handle = handles.get( key );
+      JsonHandle handle = handles.get( key );
       handle.handle( key, parent );
    }//End Method
    
@@ -121,7 +121,7 @@ public class JsonParser {
          return;
       }
       
-      JsonParseHandle handle = handles.get( key );
+      JsonHandle handle = handles.get( key );
       handle.handle( key, array, index );
    }//End Method
    
@@ -151,7 +151,7 @@ public class JsonParser {
          return;
       }
       
-      JsonParseHandle handle = handles.get( key );
+      JsonHandle handle = handles.get( key );
       handle.startedObject( key );
    }//End Method
    
@@ -164,7 +164,7 @@ public class JsonParser {
          return;
       }
       
-      JsonParseHandle handle = handles.get( key );
+      JsonHandle handle = handles.get( key );
       handle.finishedObject( key );
    }//End Method
    
@@ -177,7 +177,7 @@ public class JsonParser {
          return;
       }
       
-      JsonParseHandle handle = handles.get( key );
+      JsonHandle handle = handles.get( key );
       handle.startedArray( key );
    }//End Method
    
@@ -190,7 +190,7 @@ public class JsonParser {
          return;
       }
       
-      JsonParseHandle handle = handles.get( key );
+      JsonHandle handle = handles.get( key );
       handle.finishedArray( key );
    }//End Method
    

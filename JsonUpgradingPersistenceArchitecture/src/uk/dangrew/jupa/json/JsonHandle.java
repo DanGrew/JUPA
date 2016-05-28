@@ -7,16 +7,16 @@
  *                 2016
  * ----------------------------------------
  */
-package uk.dangrew.jupa.json.parse.handle.type;
+package uk.dangrew.jupa.json;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
- * {@link JsonParseHandle} provides a functional interface for defining how a key
+ * {@link JsonHandle} provides a functional interface for defining how a key
  * should be handled when found by the {@link JsonParser}.
  */
-public interface JsonParseHandle {
+public interface JsonHandle {
 
    /**
     * Method to handle the given key when found and the object found associated with it.

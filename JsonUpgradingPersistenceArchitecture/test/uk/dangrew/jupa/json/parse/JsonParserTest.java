@@ -23,7 +23,7 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.dangrew.jupa.json.parse.handle.type.JsonParseHandle;
+import uk.dangrew.jupa.json.JsonHandle;
 import uk.dangrew.jupa.json.parse.handle.type.StringParseHandle;
 
 /**
@@ -38,7 +38,7 @@ public class JsonParserTest {
    private static final String KEY_C = "KeyC";
    private static final String VALUE_C = "ValueC";
    
-   private JsonParseHandle handle;
+   private JsonHandle handle;
    private DefaultKeyRecorder keyRecorder;
    private JsonParser systemUnderTest;
    

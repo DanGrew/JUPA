@@ -12,15 +12,16 @@ package uk.dangrew.jupa.json.parse.handle.type;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import uk.dangrew.jupa.json.JsonHandle;
 import uk.dangrew.jupa.json.parse.handle.key.JsonKeyParseHandle;
 
 /**
- * The {@link JsonParseHandleImpl} provides an implementation of {@link JsonParseHandle} that
+ * The {@link JsonParseHandleImpl} provides an implementation of {@link JsonHandle} that
  * provides common structure and processing of a parse handle where the type specific methods
  * are defined by extensions.
  * @param <HandledTypeT> the type of value handled.
  */
-public abstract class JsonParseHandleImpl< HandledTypeT > implements JsonParseHandle {
+public abstract class JsonParseHandleImpl< HandledTypeT > implements JsonHandle {
    
    private final JsonKeyParseHandle< HandledTypeT > keyHandle;
    
