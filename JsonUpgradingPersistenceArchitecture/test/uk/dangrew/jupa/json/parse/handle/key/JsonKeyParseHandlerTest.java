@@ -21,9 +21,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 /**
- * {@link JsonKeyHandler} test.
+ * {@link JsonKeyParseHandler} test.
  */
-public class JsonKeyHandlerTest {
+public class JsonKeyParseHandlerTest {
 
    protected static final String KEY = "Key";
    
@@ -32,11 +32,11 @@ public class JsonKeyHandlerTest {
    @Mock protected Consumer< String > finishedObject;
    @Mock protected Consumer< String > startedArray;
    @Mock protected Consumer< String > finishedArray;
-   protected JsonKeyHandle< String > systemUnderTest;
+   protected JsonKeyParseHandle< String > systemUnderTest;
    
    @Before public void initialiseSystemUnderTest(){
       MockitoAnnotations.initMocks( this );
-      systemUnderTest = new JsonKeyHandler<>( 
+      systemUnderTest = new JsonKeyParseHandler<>( 
                handle, startedObject, finishedObject, startedArray, finishedArray 
       );
    }//End Method

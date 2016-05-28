@@ -13,13 +13,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * {@link JsonValueHandler} test.
+ * {@link JsonArrayParseHandler} test.
  */
-public class JsonValueHandlerTest extends JsonKeyHandlerTest {
+public class JsonArrayParseHandlerTest extends JsonKeyParseHandlerTest {
 
    @Before @Override public void initialiseSystemUnderTest() {
       super.initialiseSystemUnderTest();
-      systemUnderTest = new JsonValueHandler<>( handle );
+      systemUnderTest = new JsonArrayParseHandler<>( handle, startedArray, finishedArray );
    }//End Method
    
    @Test( expected = IllegalStateException.class ) @Override public void startedObjectShouldDirectAppropriately() {
@@ -28,14 +28,6 @@ public class JsonValueHandlerTest extends JsonKeyHandlerTest {
    
    @Test( expected = IllegalStateException.class ) @Override public void finishedObjectShouldDirectAppropriately() {
       systemUnderTest.finishedObject( KEY );
-   }//End Method
-   
-   @Test( expected = IllegalStateException.class ) @Override public void startedArrayShouldDirectAppropriately() {
-      systemUnderTest.startedArray( KEY );
-   }//End Method
-   
-   @Test( expected = IllegalStateException.class ) @Override public void finishedArrayShouldDirectAppropriately() {
-      systemUnderTest.finishedArray( KEY );
    }//End Method
 
 }//End Class

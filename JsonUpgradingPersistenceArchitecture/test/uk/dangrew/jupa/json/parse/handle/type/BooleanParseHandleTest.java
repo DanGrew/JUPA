@@ -20,16 +20,16 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.dangrew.jupa.json.parse.handle.key.JsonKeyHandle;
+import uk.dangrew.jupa.json.parse.handle.key.JsonKeyParseHandle;
 
 /**
- * {@link BooleanTypeHandle} test.
+ * {@link BooleanParseHandle} test.
  */
-public class BooleanTypeHandleTest extends JsonParseHandleImplTest< Boolean > {
+public class BooleanParseHandleTest extends JsonParseHandleImplTest< Boolean > {
    
    @Before @Override public void initialiseSystemUnderTest() {
       super.initialiseSystemUnderTest();
-      systemUnderTest = new BooleanTypeHandle( handle );
+      systemUnderTest = new BooleanParseHandle( handle );
    }//End Method
 
    @Test public void shouldHandleObjectAndProvideValue() {
@@ -67,7 +67,7 @@ public class BooleanTypeHandleTest extends JsonParseHandleImplTest< Boolean > {
    @Test @Override public void methodConstructorShouldUseMethodInHandle(){
       @SuppressWarnings("unchecked") //safe - mocking generic objects
       BiConsumer< String, Boolean > methodHandle = mock( BiConsumer.class );
-      systemUnderTest = new BooleanTypeHandle( methodHandle );
+      systemUnderTest = new BooleanParseHandle( methodHandle );
       
       final boolean value = false;
       systemUnderTest.handle( KEY, value );
@@ -76,7 +76,7 @@ public class BooleanTypeHandleTest extends JsonParseHandleImplTest< Boolean > {
    }//End Method
    
    @Test( expected = IllegalArgumentException.class ) @Override public void constructorShouldNotAcceptNullHandle() {
-      new BooleanTypeHandle( ( JsonKeyHandle< Boolean > )null );
+      new BooleanParseHandle( ( JsonKeyParseHandle< Boolean > )null );
    }//End Method
    
 }//End Class

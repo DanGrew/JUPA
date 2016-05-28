@@ -20,23 +20,22 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
-import javafx.scene.layout.Priority;
-import uk.dangrew.jupa.json.parse.handle.key.JsonKeyHandle;
+import uk.dangrew.jupa.json.parse.handle.key.JsonKeyParseHandle;
 
 /**
- * {@link EnumTypeHandle} test.
+ * {@link LongParseHandle} test.
  */
-public class EnumTypeHandleTest extends JsonParseHandleImplTest< Priority > {
+public class LongParseHandleTest extends JsonParseHandleImplTest< Long > {
    
    @Before @Override public void initialiseSystemUnderTest() {
       super.initialiseSystemUnderTest();
-      systemUnderTest = new EnumTypeHandle< Priority >( Priority.class, handle );
+      systemUnderTest = new LongParseHandle( handle );
    }//End Method
 
    @Test public void shouldHandleObjectAndProvideValue() {
       JSONObject object = new JSONObject();
       
-      final Priority value = Priority.ALWAYS;
+      final long value = 874652;
       object.put( KEY, value );
       
       systemUnderTest.handle( KEY, object );
@@ -47,7 +46,7 @@ public class EnumTypeHandleTest extends JsonParseHandleImplTest< Priority > {
    @Test public void shouldHandleArrayAndProvideValue() {
       JSONArray array = new JSONArray();
       
-      final Priority value = Priority.ALWAYS;
+      final long value = 976439587;
       final int index = 1;
       array.put( "" );
       array.put( value );
@@ -59,7 +58,7 @@ public class EnumTypeHandleTest extends JsonParseHandleImplTest< Priority > {
    }//End Method
 
    @Test @Override public void handleShouldForwardToKeyHandle(){
-      final Priority value = Priority.ALWAYS;
+      final long value = 3984793;
       systemUnderTest.handle( KEY, value );
       verify( handle ).handle( KEY, value );
       verifyNoMoreInteractions( handle );
@@ -67,21 +66,17 @@ public class EnumTypeHandleTest extends JsonParseHandleImplTest< Priority > {
    
    @Test @Override public void methodConstructorShouldUseMethodInHandle(){
       @SuppressWarnings("unchecked") //safe - mocking generic objects
-      BiConsumer< String, Priority > methodHandle = mock( BiConsumer.class );
-      systemUnderTest = new EnumTypeHandle< Priority >( Priority.class, methodHandle );
+      BiConsumer< String, Long > methodHandle = mock( BiConsumer.class );
+      systemUnderTest = new LongParseHandle( methodHandle );
       
-      final Priority value = Priority.ALWAYS;
+      final long value = 938475;
       systemUnderTest.handle( KEY, value );
       verify( methodHandle ).accept( KEY, value );
       verifyNoMoreInteractions( methodHandle );
    }//End Method
    
-   @Test( expected = IllegalArgumentException.class ) public void constructorShouldNotAcceptNullEnumType(){
-      new EnumTypeHandle<>( null, handle );
-   }//End Method
-   
    @Test( expected = IllegalArgumentException.class ) @Override public void constructorShouldNotAcceptNullHandle() {
-      new EnumTypeHandle<>( Priority.class, ( JsonKeyHandle< Priority > )null );
+      new LongParseHandle( ( JsonKeyParseHandle< Long > )null );
    }//End Method
    
 }//End Class

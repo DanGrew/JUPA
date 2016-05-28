@@ -9,41 +9,40 @@
  */
 package uk.dangrew.jupa.json.parse.handle.type;
 
-import java.math.BigInteger;
 import java.util.function.BiConsumer;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import uk.dangrew.jupa.json.parse.handle.key.JsonKeyHandle;
-import uk.dangrew.jupa.json.parse.handle.key.JsonValueHandler;
+import uk.dangrew.jupa.json.parse.handle.key.JsonKeyParseHandle;
+import uk.dangrew.jupa.json.parse.handle.key.JsonValueParseHandler;
 
 /**
- * {@link BigInteger} {@link JsonParseHandleImpl}.
+ * {@link String} {@link JsonParseHandleImpl}.
  */
-public class BigIntegerTypeHandle extends JsonParseHandleImpl< BigInteger > {
+public class StringParseHandle extends JsonParseHandleImpl< String > {
    
    /**
-    * Constructs a new {@link BigIntegerTypeHandle}.
-    * @param handle the {@link JsonKeyHandle} associated.
+    * Constructs a new {@link StringParseHandle}.
+    * @param handle the {@link JsonKeyParseHandle} associated.
     */
-   public BigIntegerTypeHandle( JsonKeyHandle< BigInteger > handle ) {
+   public StringParseHandle( JsonKeyParseHandle< String > handle ) {
       super( handle );
    }//End Constructor
    
    /**
-    * Constructs a new {@link BigIntegerTypeHandle} with the given method in a {@link JsonValueHandler}.
-    * @param handle the handle to use in a {@link JsonValueHandler}.
+    * Constructs a new {@link StringParseHandle} with the given method in a {@link JsonValueParseHandler}.
+    * @param handle the handle to use in a {@link JsonValueParseHandler}.
     */
-   public BigIntegerTypeHandle( BiConsumer< String, BigInteger > handle ) {
-      this( new JsonValueHandler<>( handle ) );
+   public StringParseHandle( BiConsumer< String, String > handle ) {
+      this( new JsonValueParseHandler<>( handle ) );
    }//End Constructor
    
    /**
     * {@inheritDoc}
     */
    @Override public void handleKeyPresent( String key, JSONObject object ) {
-      BigInteger value = object.optBigInteger( key, null );
+      String value = object.optString( key );
       super.handle( key, value );
    }//End Method
    
@@ -51,7 +50,7 @@ public class BigIntegerTypeHandle extends JsonParseHandleImpl< BigInteger > {
     * {@inheritDoc}
     */
    @Override public void handleArrayIndexPresent( String key, JSONArray array, int index ) {
-      BigInteger value = array.optBigInteger( index, null );
+      String value = array.optString( index );
       super.handle( key, value );
    }//End Method
 

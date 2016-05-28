@@ -14,22 +14,22 @@ import java.util.function.BiConsumer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import uk.dangrew.jupa.json.parse.handle.key.JsonKeyHandle;
-import uk.dangrew.jupa.json.parse.handle.key.JsonValueHandler;
+import uk.dangrew.jupa.json.parse.handle.key.JsonKeyParseHandle;
+import uk.dangrew.jupa.json.parse.handle.key.JsonValueParseHandler;
 
 /**
  * {@link Enum} {@link JsonParseHandleImpl}.
  */
-public class EnumTypeHandle< EnumTypeT extends Enum< EnumTypeT > > extends JsonParseHandleImpl< EnumTypeT > {
+public class EnumParseHandle< EnumTypeT extends Enum< EnumTypeT > > extends JsonParseHandleImpl< EnumTypeT > {
    
    private final Class< EnumTypeT > enumType;
    
    /**
-    * Constructs a new {@link EnumTypeHandle}.
+    * Constructs a new {@link EnumParseHandle}.
     * @param enumType the {@link Class} of the {@link Enum}.
-    * @param handle the {@link JsonKeyHandle} associated.
+    * @param handle the {@link JsonKeyParseHandle} associated.
     */
-   public EnumTypeHandle( Class< EnumTypeT > enumType, JsonKeyHandle< EnumTypeT > handle ) {
+   public EnumParseHandle( Class< EnumTypeT > enumType, JsonKeyParseHandle< EnumTypeT > handle ) {
       super( handle );
 
       if ( enumType == null ) {
@@ -39,12 +39,12 @@ public class EnumTypeHandle< EnumTypeT extends Enum< EnumTypeT > > extends JsonP
    }//End Constructor
    
    /**
-    * Constructs a new {@link EnumTypeHandle} with the given method in a {@link JsonValueHandler}.
+    * Constructs a new {@link EnumParseHandle} with the given method in a {@link JsonValueParseHandler}.
     * @param enumType the {@link Class} of the {@link Enum}.
-    * @param handle the handle to use in a {@link JsonValueHandler}.
+    * @param handle the handle to use in a {@link JsonValueParseHandler}.
     */
-   public EnumTypeHandle( Class< EnumTypeT > enumType, BiConsumer< String, EnumTypeT > handle ) {
-      this( enumType, new JsonValueHandler<>( handle ) );
+   public EnumParseHandle( Class< EnumTypeT > enumType, BiConsumer< String, EnumTypeT > handle ) {
+      this( enumType, new JsonValueParseHandler<>( handle ) );
    }//End Constructor
    
    /**

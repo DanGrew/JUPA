@@ -20,8 +20,8 @@ import org.junit.Test;
 
 import uk.dangrew.jupa.TestCommon;
 import uk.dangrew.jupa.json.parse.JsonParser;
-import uk.dangrew.jupa.json.parse.handle.key.JsonArrayHandler;
-import uk.dangrew.jupa.json.parse.handle.type.IntegerTypeHandle;
+import uk.dangrew.jupa.json.parse.handle.key.JsonArrayParseHandler;
+import uk.dangrew.jupa.json.parse.handle.type.IntegerParseHandle;
 
 /**
  * Proof of concept test to prove matrices can be parsed when only one global key present.
@@ -35,11 +35,11 @@ public class IntegerMatrixParseTest {
       matrix = new MatrixModel();
       parser = new JsonParser();
       
-      JsonArrayHandler< Integer > arrayHandler = new JsonArrayHandler<>( 
+      JsonArrayParseHandler< Integer > arrayHandler = new JsonArrayParseHandler<>( 
                matrix::arrayItem, matrix::arrayStarted, matrix::arrayFinished 
       );
-      parser.when( "two-dimensional", new IntegerTypeHandle( arrayHandler ) );
-      parser.when( "three-dimensional", new IntegerTypeHandle( arrayHandler ) );
+      parser.when( "two-dimensional", new IntegerParseHandle( arrayHandler ) );
+      parser.when( "three-dimensional", new IntegerParseHandle( arrayHandler ) );
    }//End Method
 
    @Test public void proofOfConceptTest() {

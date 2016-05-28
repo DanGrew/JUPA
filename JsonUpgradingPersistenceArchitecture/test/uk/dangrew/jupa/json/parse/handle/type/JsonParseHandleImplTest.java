@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import uk.dangrew.jupa.json.parse.handle.key.JsonKeyHandle;
+import uk.dangrew.jupa.json.parse.handle.key.JsonKeyParseHandle;
 
 /**
  * {@link JsonParseHandleImpl} test framework.
@@ -31,7 +31,7 @@ public abstract class JsonParseHandleImplTest< HandledTypeT > {
    protected static final String KEY = "Key";
    
    protected JsonParseHandleImpl< HandledTypeT > systemUnderTest;
-   @Mock protected JsonKeyHandle< HandledTypeT > handle;
+   @Mock protected JsonKeyParseHandle< HandledTypeT > handle;
    
    @Before public void initialiseSystemUnderTest(){
       MockitoAnnotations.initMocks( this );

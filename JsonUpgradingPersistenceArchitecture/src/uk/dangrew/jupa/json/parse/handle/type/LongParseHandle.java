@@ -14,35 +14,35 @@ import java.util.function.BiConsumer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import uk.dangrew.jupa.json.parse.handle.key.JsonKeyHandle;
-import uk.dangrew.jupa.json.parse.handle.key.JsonValueHandler;
+import uk.dangrew.jupa.json.parse.handle.key.JsonKeyParseHandle;
+import uk.dangrew.jupa.json.parse.handle.key.JsonValueParseHandler;
 
 /**
- * {@link String} {@link JsonParseHandleImpl}.
+ * {@link Long} {@link JsonParseHandleImpl}.
  */
-public class StringTypeHandle extends JsonParseHandleImpl< String > {
+public class LongParseHandle extends JsonParseHandleImpl< Long > {
    
    /**
-    * Constructs a new {@link StringTypeHandle}.
-    * @param handle the {@link JsonKeyHandle} associated.
+    * Constructs a new {@link LongParseHandle}.
+    * @param handle the {@link JsonKeyParseHandle} associated.
     */
-   public StringTypeHandle( JsonKeyHandle< String > handle ) {
+   public LongParseHandle( JsonKeyParseHandle< Long > handle ) {
       super( handle );
    }//End Constructor
    
    /**
-    * Constructs a new {@link StringTypeHandle} with the given method in a {@link JsonValueHandler}.
-    * @param handle the handle to use in a {@link JsonValueHandler}.
+    * Constructs a new {@link LongParseHandle} with the given method in a {@link JsonValueParseHandler}.
+    * @param handle the handle to use in a {@link JsonValueParseHandler}.
     */
-   public StringTypeHandle( BiConsumer< String, String > handle ) {
-      this( new JsonValueHandler<>( handle ) );
+   public LongParseHandle( BiConsumer< String, Long > handle ) {
+      this( new JsonValueParseHandler<>( handle ) );
    }//End Constructor
    
    /**
     * {@inheritDoc}
     */
    @Override public void handleKeyPresent( String key, JSONObject object ) {
-      String value = object.optString( key );
+      long value = object.optLong( key );
       super.handle( key, value );
    }//End Method
    
@@ -50,8 +50,7 @@ public class StringTypeHandle extends JsonParseHandleImpl< String > {
     * {@inheritDoc}
     */
    @Override public void handleArrayIndexPresent( String key, JSONArray array, int index ) {
-      String value = array.optString( index );
+      long value = array.optLong( index );
       super.handle( key, value );
    }//End Method
-
 }//End Class

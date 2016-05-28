@@ -19,13 +19,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.util.Pair;
-import uk.dangrew.jupa.json.parse.handle.key.JsonKeyHandle;
+import uk.dangrew.jupa.json.parse.handle.key.JsonKeyParseHandle;
 
 /**
- * The {@link DefaultKeyRecorder} is respisible for providing a basic testable
+ * The {@link DefaultKeyRecorder} is responsible for providing a basic testable
  * output when handling keys from a Json parse.
  */
-public class DefaultKeyRecorder implements JsonKeyHandle< String > {
+public class DefaultKeyRecorder implements JsonKeyParseHandle< String > {
 
    static final String OBJECT_STARTED = "ObjectStarted";
    static final String OBJECT_FINISHED = "ObjectFinished";

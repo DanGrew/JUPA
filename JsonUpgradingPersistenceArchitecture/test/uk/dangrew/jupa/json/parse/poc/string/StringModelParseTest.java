@@ -21,9 +21,9 @@ import org.junit.Test;
 
 import uk.dangrew.jupa.TestCommon;
 import uk.dangrew.jupa.json.parse.JsonParser;
-import uk.dangrew.jupa.json.parse.handle.key.JsonArrayHandler;
-import uk.dangrew.jupa.json.parse.handle.key.JsonKeyHandler;
-import uk.dangrew.jupa.json.parse.handle.type.StringTypeHandle;
+import uk.dangrew.jupa.json.parse.handle.key.JsonArrayParseHandler;
+import uk.dangrew.jupa.json.parse.handle.key.JsonKeyParseHandler;
+import uk.dangrew.jupa.json.parse.handle.type.StringParseHandle;
 
 /**
  * Proof of concept test to prove that a simple string model can be parsed in.
@@ -45,22 +45,22 @@ public class StringModelParseTest {
       model = new StringModel();
       
       parser = new JsonParser();
-      parser.when( FIRST_NAME, new StringTypeHandle( model::firstName ) );
-      parser.when( LAST_NAME, new StringTypeHandle( model::lastName ) );
+      parser.when( FIRST_NAME, new StringParseHandle( model::firstName ) );
+      parser.when( LAST_NAME, new StringParseHandle( model::lastName ) );
       
-      JsonArrayHandler< String > skillsHandler = new JsonArrayHandler<>( 
+      JsonArrayParseHandler< String > skillsHandler = new JsonArrayParseHandler<>( 
                model::skill, model::skillsFound, model::skillsComplete 
       );
-      parser.when( SKILLS, new StringTypeHandle( skillsHandler ) );
+      parser.when( SKILLS, new StringParseHandle( skillsHandler ) );
       
-      JsonKeyHandler< String > projectsHandler = new JsonKeyHandler<>( 
+      JsonKeyParseHandler< String > projectsHandler = new JsonKeyParseHandler<>( 
                null, model::projectFound, model::projectComplete, model::projectsFound, model::projectsComplete 
       );
-      parser.when( PROJECTS, new StringTypeHandle( projectsHandler ) );
+      parser.when( PROJECTS, new StringParseHandle( projectsHandler ) );
       
-      parser.when( PROJECT_NAME, new StringTypeHandle( model::projectName ) );
-      parser.when( PROJECT_FULL_NAME, new StringTypeHandle( model::projectFullName ) );
-      parser.when( VCS, new StringTypeHandle( model::vcs ) );
+      parser.when( PROJECT_NAME, new StringParseHandle( model::projectName ) );
+      parser.when( PROJECT_FULL_NAME, new StringParseHandle( model::projectFullName ) );
+      parser.when( VCS, new StringParseHandle( model::vcs ) );
    }//End Method
    
    @Test public void proofOfConceptTest() {

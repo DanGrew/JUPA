@@ -13,21 +13,21 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
- * The {@link JsonArrayHandler} provides a {@link JsonKeyHandler} specifically for handling
+ * The {@link JsonArrayParseHandler} provides a {@link JsonKeyParseHandler} specifically for handling
  * {@link org.json.JSONArray}s.
  * @param <HandledTypeT> the type of value being handled.
  */
-public class JsonArrayHandler< HandledTypeT > extends JsonKeyHandler< HandledTypeT > {
+public class JsonArrayParseHandler< HandledTypeT > extends JsonKeyParseHandler< HandledTypeT > {
 
    private static final String EXPECTED_ARRAY_WITH_VALUES_ONLY = ": expected array with values only.";
 
    /**
-    * Constructs a new {@link JsonArrayHandler}.
+    * Constructs a new {@link JsonArrayParseHandler}.
     * @param handle the method to call when handling a value.
     * @param startedArray the method to call when handling the start of an array.
     * @param finishedArray the method to call when handling the end of an array.
     */
-   public JsonArrayHandler(
+   public JsonArrayParseHandler(
             BiConsumer< String, HandledTypeT > handle,
             Consumer< String > startedArray,
             Consumer< String > finishedArray         

@@ -10,12 +10,12 @@
 package uk.dangrew.jupa.json.parse.handle.key;
 
 /**
- * The {@link JsonKeyHandle} provides an interface for defining handlers of
+ * The {@link JsonKeyParseHandle} provides an interface for defining handlers of
  * values that provides instructions and triggers to another model that handles
  * parsed input.
  * @param <HandledTypeT> the type of value being handled.
  */
-public interface JsonKeyHandle< HandledTypeT > {
+public interface JsonKeyParseHandle< HandledTypeT > {
    
    /**
     * Method to handle a value parsed for a key.

@@ -14,35 +14,35 @@ import java.util.function.BiConsumer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import uk.dangrew.jupa.json.parse.handle.key.JsonKeyHandle;
-import uk.dangrew.jupa.json.parse.handle.key.JsonValueHandler;
+import uk.dangrew.jupa.json.parse.handle.key.JsonKeyParseHandle;
+import uk.dangrew.jupa.json.parse.handle.key.JsonValueParseHandler;
 
 /**
- * {@link Long} {@link JsonParseHandleImpl}.
+ * {@link Boolean} {@link JsonParseHandleImpl}.
  */
-public class LongTypeHandle extends JsonParseHandleImpl< Long > {
+public class BooleanParseHandle extends JsonParseHandleImpl< Boolean > {
    
    /**
-    * Constructs a new {@link LongTypeHandle}.
-    * @param handle the {@link JsonKeyHandle} associated.
+    * Constructs a new {@link BooleanParseHandle}.
+    * @param handle the {@link JsonKeyParseHandle} associated.
     */
-   public LongTypeHandle( JsonKeyHandle< Long > handle ) {
+   public BooleanParseHandle( JsonKeyParseHandle< Boolean > handle ) {
       super( handle );
    }//End Constructor
    
    /**
-    * Constructs a new {@link LongTypeHandle} with the given method in a {@link JsonValueHandler}.
-    * @param handle the handle to use in a {@link JsonValueHandler}.
+    * Constructs a new {@link BooleanParseHandle} with the given method in a {@link JsonValueParseHandler}.
+    * @param handle the handle to use in a {@link JsonValueParseHandler}.
     */
-   public LongTypeHandle( BiConsumer< String, Long > handle ) {
-      this( new JsonValueHandler<>( handle ) );
+   public BooleanParseHandle( BiConsumer< String, Boolean > handle ) {
+      this( new JsonValueParseHandler<>( handle ) );
    }//End Constructor
    
    /**
     * {@inheritDoc}
     */
    @Override public void handleKeyPresent( String key, JSONObject object ) {
-      long value = object.optLong( key );
+      boolean value = object.optBoolean( key );
       super.handle( key, value );
    }//End Method
    
@@ -50,7 +50,7 @@ public class LongTypeHandle extends JsonParseHandleImpl< Long > {
     * {@inheritDoc}
     */
    @Override public void handleArrayIndexPresent( String key, JSONArray array, int index ) {
-      long value = array.optLong( index );
+      boolean value = array.optBoolean( index );
       super.handle( key, value );
    }//End Method
 }//End Class

@@ -20,16 +20,16 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.dangrew.jupa.json.parse.handle.key.JsonKeyHandle;
+import uk.dangrew.jupa.json.parse.handle.key.JsonKeyParseHandle;
 
 /**
- * {@link StringTypeHandle} test.
+ * {@link StringParseHandle} test.
  */
-public class StringTypeHandleTest extends JsonParseHandleImplTest< String > {
+public class StringParseHandleTest extends JsonParseHandleImplTest< String > {
    
    @Before @Override public void initialiseSystemUnderTest() {
       super.initialiseSystemUnderTest();
-      systemUnderTest = new StringTypeHandle( handle );
+      systemUnderTest = new StringParseHandle( handle );
    }//End Method
 
    @Test public void shouldHandleObjectAndProvideValue() {
@@ -67,7 +67,7 @@ public class StringTypeHandleTest extends JsonParseHandleImplTest< String > {
    @Test @Override public void methodConstructorShouldUseMethodInHandle(){
       @SuppressWarnings("unchecked") //safe - mocking generic objects
       BiConsumer< String, String > methodHandle = mock( BiConsumer.class );
-      systemUnderTest = new StringTypeHandle( methodHandle );
+      systemUnderTest = new StringParseHandle( methodHandle );
       
       final String value = "some specific value";
       systemUnderTest.handle( KEY, value );
@@ -76,7 +76,7 @@ public class StringTypeHandleTest extends JsonParseHandleImplTest< String > {
    }//End Method
    
    @Test( expected = IllegalArgumentException.class ) @Override public void constructorShouldNotAcceptNullHandle() {
-      new StringTypeHandle( ( JsonKeyHandle< String > )null );
+      new StringParseHandle( ( JsonKeyParseHandle< String > )null );
    }//End Method
    
 }//End Class

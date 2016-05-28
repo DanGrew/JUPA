@@ -15,28 +15,28 @@ import java.util.function.BiConsumer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import uk.dangrew.jupa.json.parse.handle.key.JsonKeyHandle;
-import uk.dangrew.jupa.json.parse.handle.key.JsonValueHandler;
+import uk.dangrew.jupa.json.parse.handle.key.JsonKeyParseHandle;
+import uk.dangrew.jupa.json.parse.handle.key.JsonValueParseHandler;
 
 /**
  * {@link BigDecimal} {@link JsonParseHandleImpl}.
  */
-public class BigDecimalTypeHandle extends JsonParseHandleImpl< BigDecimal > {
+public class BigDecimalParseHandle extends JsonParseHandleImpl< BigDecimal > {
    
    /**
-    * Constructs a new {@link BigDecimalTypeHandle}.
-    * @param handle the {@link JsonKeyHandle} associated.
+    * Constructs a new {@link BigDecimalParseHandle}.
+    * @param handle the {@link JsonKeyParseHandle} associated.
     */
-   public BigDecimalTypeHandle( JsonKeyHandle< BigDecimal > handle ) {
+   public BigDecimalParseHandle( JsonKeyParseHandle< BigDecimal > handle ) {
       super( handle );
    }//End Constructor
    
    /**
-    * Constructs a new {@link BigDecimalTypeHandle} with the given method in a {@link JsonValueHandler}.
-    * @param handle the handle to use in a {@link JsonValueHandler}.
+    * Constructs a new {@link BigDecimalParseHandle} with the given method in a {@link JsonValueParseHandler}.
+    * @param handle the handle to use in a {@link JsonValueParseHandler}.
     */
-   public BigDecimalTypeHandle( BiConsumer< String, BigDecimal > handle ) {
-      this( new JsonValueHandler<>( handle ) );
+   public BigDecimalParseHandle( BiConsumer< String, BigDecimal > handle ) {
+      this( new JsonValueParseHandler<>( handle ) );
    }//End Constructor
    
    /**

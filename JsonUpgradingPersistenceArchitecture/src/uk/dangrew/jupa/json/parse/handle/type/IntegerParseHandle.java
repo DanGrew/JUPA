@@ -14,28 +14,28 @@ import java.util.function.BiConsumer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import uk.dangrew.jupa.json.parse.handle.key.JsonKeyHandle;
-import uk.dangrew.jupa.json.parse.handle.key.JsonValueHandler;
+import uk.dangrew.jupa.json.parse.handle.key.JsonKeyParseHandle;
+import uk.dangrew.jupa.json.parse.handle.key.JsonValueParseHandler;
 
 /**
  * {@link Integer} {@link JsonParseHandleImpl}.
  */
-public class IntegerTypeHandle extends JsonParseHandleImpl< Integer >{
+public class IntegerParseHandle extends JsonParseHandleImpl< Integer >{
 
    /**
-    * Constructs a new {@link IntegerTypeHandle}.
-    * @param handle the {@link JsonKeyHandle} associated.
+    * Constructs a new {@link IntegerParseHandle}.
+    * @param handle the {@link JsonKeyParseHandle} associated.
     */
-   public IntegerTypeHandle( JsonKeyHandle< Integer > keyHandle ) {
+   public IntegerParseHandle( JsonKeyParseHandle< Integer > keyHandle ) {
       super( keyHandle );
    }//End Constructor
    
    /**
-    * Constructs a new {@link IntegerTypeHandle} with the given method in a {@link JsonValueHandler}.
-    * @param handle the handle to use in a {@link JsonValueHandler}.
+    * Constructs a new {@link IntegerParseHandle} with the given method in a {@link JsonValueParseHandler}.
+    * @param handle the handle to use in a {@link JsonValueParseHandler}.
     */
-   public IntegerTypeHandle( BiConsumer< String, Integer > handle ) {
-      this( new JsonValueHandler<>( handle ) );
+   public IntegerParseHandle( BiConsumer< String, Integer > handle ) {
+      this( new JsonValueParseHandler<>( handle ) );
    }//End Constructor
 
    /**

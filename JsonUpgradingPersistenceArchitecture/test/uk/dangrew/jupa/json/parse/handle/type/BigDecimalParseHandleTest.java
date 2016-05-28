@@ -21,16 +21,16 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.dangrew.jupa.json.parse.handle.key.JsonKeyHandle;
+import uk.dangrew.jupa.json.parse.handle.key.JsonKeyParseHandle;
 
 /**
- * {@link BigDecimalTypeHandle} test.
+ * {@link BigDecimalParseHandle} test.
  */
-public class BigDecimalTypeHandleTest extends JsonParseHandleImplTest< BigDecimal > {
+public class BigDecimalParseHandleTest extends JsonParseHandleImplTest< BigDecimal > {
    
    @Before @Override public void initialiseSystemUnderTest() {
       super.initialiseSystemUnderTest();
-      systemUnderTest = new BigDecimalTypeHandle( handle );
+      systemUnderTest = new BigDecimalParseHandle( handle );
    }//End Method
 
    @Test public void shouldHandleObjectAndProvideValue() {
@@ -68,7 +68,7 @@ public class BigDecimalTypeHandleTest extends JsonParseHandleImplTest< BigDecima
    @Test @Override public void methodConstructorShouldUseMethodInHandle(){
       @SuppressWarnings("unchecked") //safe - mocking generic objects
       BiConsumer< String, BigDecimal > methodHandle = mock( BiConsumer.class );
-      systemUnderTest = new BigDecimalTypeHandle( methodHandle );
+      systemUnderTest = new BigDecimalParseHandle( methodHandle );
       
       final BigDecimal value = BigDecimal.valueOf( 348756 );
       systemUnderTest.handle( KEY, value );
@@ -77,7 +77,7 @@ public class BigDecimalTypeHandleTest extends JsonParseHandleImplTest< BigDecima
    }//End Method
    
    @Test( expected = IllegalArgumentException.class ) @Override public void constructorShouldNotAcceptNullHandle() {
-      new BigDecimalTypeHandle( ( JsonKeyHandle< BigDecimal > )null );
+      new BigDecimalParseHandle( ( JsonKeyParseHandle< BigDecimal > )null );
    }//End Method
    
 }//End Class

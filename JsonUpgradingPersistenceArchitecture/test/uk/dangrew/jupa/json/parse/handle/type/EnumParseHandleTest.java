@@ -20,22 +20,23 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.dangrew.jupa.json.parse.handle.key.JsonKeyHandle;
+import javafx.scene.layout.Priority;
+import uk.dangrew.jupa.json.parse.handle.key.JsonKeyParseHandle;
 
 /**
- * {@link IntegerTypeHandle} test.
+ * {@link EnumParseHandle} test.
  */
-public class IntegerTypeHandleTest extends JsonParseHandleImplTest< Integer > {
+public class EnumParseHandleTest extends JsonParseHandleImplTest< Priority > {
    
    @Before @Override public void initialiseSystemUnderTest() {
       super.initialiseSystemUnderTest();
-      systemUnderTest = new IntegerTypeHandle( handle );
+      systemUnderTest = new EnumParseHandle< Priority >( Priority.class, handle );
    }//End Method
 
    @Test public void shouldHandleObjectAndProvideValue() {
       JSONObject object = new JSONObject();
       
-      final int value = 347;
+      final Priority value = Priority.ALWAYS;
       object.put( KEY, value );
       
       systemUnderTest.handle( KEY, object );
@@ -46,7 +47,7 @@ public class IntegerTypeHandleTest extends JsonParseHandleImplTest< Integer > {
    @Test public void shouldHandleArrayAndProvideValue() {
       JSONArray array = new JSONArray();
       
-      final int value = 39457;
+      final Priority value = Priority.ALWAYS;
       final int index = 1;
       array.put( "" );
       array.put( value );
@@ -57,26 +58,8 @@ public class IntegerTypeHandleTest extends JsonParseHandleImplTest< Integer > {
       verifyNoMoreInteractions( handle );
    }//End Method
 
-   @Test public void shouldHandleMissingKeyInObjectAndProvideValue() {
-      JSONObject object = new JSONObject();
-      
-      systemUnderTest.handle( KEY, object );
-      verify( handle ).handle( KEY, null );
-      verifyNoMoreInteractions( handle );
-   }//End Method
-   
-   @Test public void shouldHandleMissingItemArrayAndProvideValue() {
-      JSONArray array = new JSONArray();
-      
-      final int index = 1;
-      
-      systemUnderTest.handle( KEY, array, index );
-      verify( handle ).handle( KEY, null );
-      verifyNoMoreInteractions( handle );
-   }//End Method
-   
    @Test @Override public void handleShouldForwardToKeyHandle(){
-      final int value = 394857;
+      final Priority value = Priority.ALWAYS;
       systemUnderTest.handle( KEY, value );
       verify( handle ).handle( KEY, value );
       verifyNoMoreInteractions( handle );
@@ -84,17 +67,21 @@ public class IntegerTypeHandleTest extends JsonParseHandleImplTest< Integer > {
    
    @Test @Override public void methodConstructorShouldUseMethodInHandle(){
       @SuppressWarnings("unchecked") //safe - mocking generic objects
-      BiConsumer< String, Integer > methodHandle = mock( BiConsumer.class );
-      systemUnderTest = new IntegerTypeHandle( methodHandle );
+      BiConsumer< String, Priority > methodHandle = mock( BiConsumer.class );
+      systemUnderTest = new EnumParseHandle< Priority >( Priority.class, methodHandle );
       
-      final int value = 3094;
+      final Priority value = Priority.ALWAYS;
       systemUnderTest.handle( KEY, value );
       verify( methodHandle ).accept( KEY, value );
       verifyNoMoreInteractions( methodHandle );
    }//End Method
    
-   @Test( expected = IllegalArgumentException.class ) @Override public void constructorShouldNotAcceptNullHandle() {
-      new IntegerTypeHandle( ( JsonKeyHandle< Integer > )null );
+   @Test( expected = IllegalArgumentException.class ) public void constructorShouldNotAcceptNullEnumType(){
+      new EnumParseHandle<>( null, handle );
    }//End Method
    
-}
+   @Test( expected = IllegalArgumentException.class ) @Override public void constructorShouldNotAcceptNullHandle() {
+      new EnumParseHandle<>( Priority.class, ( JsonKeyParseHandle< Priority > )null );
+   }//End Method
+   
+}//End Class

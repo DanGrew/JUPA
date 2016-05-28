@@ -24,7 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import uk.dangrew.jupa.json.parse.handle.type.JsonParseHandle;
-import uk.dangrew.jupa.json.parse.handle.type.StringTypeHandle;
+import uk.dangrew.jupa.json.parse.handle.type.StringParseHandle;
 
 /**
  * {@link JsonParser} test.
@@ -44,7 +44,7 @@ public class JsonParserTest {
    
    @Before public void initialiseSystemUnderTest(){
       keyRecorder = new DefaultKeyRecorder();
-      handle = new StringTypeHandle( keyRecorder );
+      handle = new StringParseHandle( keyRecorder );
       systemUnderTest = new JsonParser();
    }//End Method
    

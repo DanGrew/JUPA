@@ -13,6 +13,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
+import java.math.BigInteger;
 import java.util.function.BiConsumer;
 
 import org.json.JSONArray;
@@ -20,22 +21,22 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.dangrew.jupa.json.parse.handle.key.JsonKeyHandle;
+import uk.dangrew.jupa.json.parse.handle.key.JsonKeyParseHandle;
 
 /**
- * {@link LongTypeHandle} test.
+ * {@link BigIntegerParseHandle} test.
  */
-public class LongTypeHandleTest extends JsonParseHandleImplTest< Long > {
+public class BigIntegerParseHandleTest extends JsonParseHandleImplTest< BigInteger > {
    
    @Before @Override public void initialiseSystemUnderTest() {
       super.initialiseSystemUnderTest();
-      systemUnderTest = new LongTypeHandle( handle );
+      systemUnderTest = new BigIntegerParseHandle( handle );
    }//End Method
 
    @Test public void shouldHandleObjectAndProvideValue() {
       JSONObject object = new JSONObject();
       
-      final long value = 874652;
+      final BigInteger value = BigInteger.valueOf( 348756 );
       object.put( KEY, value );
       
       systemUnderTest.handle( KEY, object );
@@ -46,7 +47,7 @@ public class LongTypeHandleTest extends JsonParseHandleImplTest< Long > {
    @Test public void shouldHandleArrayAndProvideValue() {
       JSONArray array = new JSONArray();
       
-      final long value = 976439587;
+      final BigInteger value = BigInteger.valueOf( 348756 );
       final int index = 1;
       array.put( "" );
       array.put( value );
@@ -58,7 +59,7 @@ public class LongTypeHandleTest extends JsonParseHandleImplTest< Long > {
    }//End Method
 
    @Test @Override public void handleShouldForwardToKeyHandle(){
-      final long value = 3984793;
+      final BigInteger value = BigInteger.valueOf( 348756 );
       systemUnderTest.handle( KEY, value );
       verify( handle ).handle( KEY, value );
       verifyNoMoreInteractions( handle );
@@ -66,17 +67,17 @@ public class LongTypeHandleTest extends JsonParseHandleImplTest< Long > {
    
    @Test @Override public void methodConstructorShouldUseMethodInHandle(){
       @SuppressWarnings("unchecked") //safe - mocking generic objects
-      BiConsumer< String, Long > methodHandle = mock( BiConsumer.class );
-      systemUnderTest = new LongTypeHandle( methodHandle );
+      BiConsumer< String, BigInteger > methodHandle = mock( BiConsumer.class );
+      systemUnderTest = new BigIntegerParseHandle( methodHandle );
       
-      final long value = 938475;
+      final BigInteger value = BigInteger.valueOf( 348756 );
       systemUnderTest.handle( KEY, value );
       verify( methodHandle ).accept( KEY, value );
       verifyNoMoreInteractions( methodHandle );
    }//End Method
    
    @Test( expected = IllegalArgumentException.class ) @Override public void constructorShouldNotAcceptNullHandle() {
-      new LongTypeHandle( ( JsonKeyHandle< Long > )null );
+      new BigIntegerParseHandle( ( JsonKeyParseHandle< BigInteger > )null );
    }//End Method
    
 }//End Class

@@ -12,7 +12,7 @@ package uk.dangrew.jupa.json.parse.handle.type;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import uk.dangrew.jupa.json.parse.handle.key.JsonKeyHandle;
+import uk.dangrew.jupa.json.parse.handle.key.JsonKeyParseHandle;
 
 /**
  * The {@link JsonParseHandleImpl} provides an implementation of {@link JsonParseHandle} that
@@ -22,13 +22,13 @@ import uk.dangrew.jupa.json.parse.handle.key.JsonKeyHandle;
  */
 public abstract class JsonParseHandleImpl< HandledTypeT > implements JsonParseHandle {
    
-   private final JsonKeyHandle< HandledTypeT > keyHandle;
+   private final JsonKeyParseHandle< HandledTypeT > keyHandle;
    
    /**
     * Constructs a new {@link JsonParseHandleImpl}.
-    * @param keyHandle the {@link JsonKeyHandle} associated to trigger.
+    * @param keyHandle the {@link JsonKeyParseHandle} associated to trigger.
     */
-   protected JsonParseHandleImpl( JsonKeyHandle< HandledTypeT > keyHandle ) {
+   protected JsonParseHandleImpl( JsonKeyParseHandle< HandledTypeT > keyHandle ) {
       if ( keyHandle == null ) {
          throw new IllegalArgumentException( "Null Key Handle is not permitted." );
       }

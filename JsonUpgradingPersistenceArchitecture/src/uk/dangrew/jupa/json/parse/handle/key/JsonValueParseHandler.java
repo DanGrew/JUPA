@@ -12,19 +12,19 @@ package uk.dangrew.jupa.json.parse.handle.key;
 import java.util.function.BiConsumer;
 
 /**
- * The {@link JsonValueHandler} provides a {@link JsonKeyHandler} that only needs to
+ * The {@link JsonValueParseHandler} provides a {@link JsonKeyParseHandler} that only needs to
  * parse values and expects no nested objects or arrays.
  * @param <HandledTypeT> the type of value being handled.
  */
-public class JsonValueHandler< HandledTypeT > extends JsonKeyHandler< HandledTypeT > {
+public class JsonValueParseHandler< HandledTypeT > extends JsonKeyParseHandler< HandledTypeT > {
 
    private static final String EXPECTED_VALUE_ONLY = ": expected value only.";
 
    /** 
-    * Constructs a new {@link JsonValueHandler}.
+    * Constructs a new {@link JsonValueParseHandler}.
     * @param handle the method to call when handling a parsed value.
     */
-   public JsonValueHandler( BiConsumer< String, HandledTypeT > handle ) {
+   public JsonValueParseHandler( BiConsumer< String, HandledTypeT > handle ) {
       super( handle, null, null, null, null );
    }//End Constructor
    
