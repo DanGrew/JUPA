@@ -41,11 +41,6 @@ class JsonPathPopulator implements BiFunction< JsonNavigable, Object, Object >{
          return navigable.navigate( parent );
       }
       
-      if ( previouslyNavigated == null ) {
-         storePrevious( navigable, parent );
-         return null;
-      }
-      
       Object structure = navigable.generateStructure();
       previouslyNavigated.put( previousParent, structure );
       storePrevious( navigable, structure );

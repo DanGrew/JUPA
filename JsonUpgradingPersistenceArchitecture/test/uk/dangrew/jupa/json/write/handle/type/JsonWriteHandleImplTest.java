@@ -40,6 +40,10 @@ public class JsonWriteHandleImplTest {
       MockitoAnnotations.initMocks( this );
       systemUnderTest = new JsonWriteHandleImpl( handle );
    }//End Method
+   
+   @Test( expected = IllegalArgumentException.class ) public void shouldNotAcceptNullHandle(){
+      new JsonWriteHandleImpl( null );
+   }//End Method
 
    @Test public void startedObjectShouldForwardToHandle() {
       systemUnderTest.startedObject( KEY );
