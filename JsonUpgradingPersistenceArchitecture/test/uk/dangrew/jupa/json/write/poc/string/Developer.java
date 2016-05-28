@@ -7,7 +7,7 @@
  *                 2016
  * ----------------------------------------
  */
-package uk.dangrew.jupa.json.parse.poc.string;
+package uk.dangrew.jupa.json.write.poc.string;
 
 import java.util.List;
 

@@ -7,7 +7,7 @@
  *                 2016
  * ----------------------------------------
  */
-package uk.dangrew.jupa.json.parse.poc.string;
+package uk.dangrew.jupa.json.write.poc.string;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -30,14 +30,6 @@ import uk.dangrew.jupa.json.parse.handle.type.StringParseHandle;
  */
 public class StringModelParseTest {
    
-   private static final String FIRST_NAME = "firstName";
-   private static final String LAST_NAME = "lastName";
-   private static final String SKILLS = "skills";
-   private static final String PROJECTS = "projects";
-   private static final String PROJECT_NAME = "projectName";
-   private static final String VCS = "vcs";
-   private static final String PROJECT_FULL_NAME = "projectFullName";
-   
    private StringModel model;
    private JsonParser parser;
 
@@ -45,22 +37,22 @@ public class StringModelParseTest {
       model = new StringModel();
       
       parser = new JsonParser();
-      parser.when( FIRST_NAME, new StringParseHandle( model::firstName ) );
-      parser.when( LAST_NAME, new StringParseHandle( model::lastName ) );
+      parser.when( StringModel.FIRST_NAME, new StringParseHandle( model::firstName ) );
+      parser.when( StringModel.LAST_NAME, new StringParseHandle( model::lastName ) );
       
       JsonArrayParseHandler< String > skillsHandler = new JsonArrayParseHandler<>( 
                model::skill, model::skillsFound, model::skillsComplete 
       );
-      parser.when( SKILLS, new StringParseHandle( skillsHandler ) );
+      parser.when( StringModel.SKILLS, new StringParseHandle( skillsHandler ) );
       
       JsonKeyParseHandler< String > projectsHandler = new JsonKeyParseHandler<>( 
                null, model::projectFound, model::projectComplete, model::projectsFound, model::projectsComplete 
       );
-      parser.when( PROJECTS, new StringParseHandle( projectsHandler ) );
+      parser.when( StringModel.PROJECTS, new StringParseHandle( projectsHandler ) );
       
-      parser.when( PROJECT_NAME, new StringParseHandle( model::projectName ) );
-      parser.when( PROJECT_FULL_NAME, new StringParseHandle( model::projectFullName ) );
-      parser.when( VCS, new StringParseHandle( model::vcs ) );
+      parser.when( StringModel.PROJECT_NAME, new StringParseHandle( model::projectName ) );
+      parser.when( StringModel.PROJECT_FULL_NAME, new StringParseHandle( model::projectFullName ) );
+      parser.when( StringModel.VCS, new StringParseHandle( model::vcs ) );
    }//End Method
    
    @Test public void proofOfConceptTest() {

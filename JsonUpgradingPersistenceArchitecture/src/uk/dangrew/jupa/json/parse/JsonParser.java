@@ -19,6 +19,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import uk.dangrew.jupa.json.JsonHandle;
+import uk.dangrew.jupa.json.JsonNavigation;
 
 /**
  * The {@link JsonParser} provides a method of parsing a {@link JSONObject} notifying
@@ -151,7 +152,7 @@ public class JsonParser {
          return;
       }
       
-      JsonHandle handle = handles.get( key );
+      JsonNavigation handle = handles.get( key );
       handle.startedObject( key );
    }//End Method
    
@@ -164,7 +165,7 @@ public class JsonParser {
          return;
       }
       
-      JsonHandle handle = handles.get( key );
+      JsonNavigation handle = handles.get( key );
       handle.finishedObject( key );
    }//End Method
    
@@ -177,7 +178,7 @@ public class JsonParser {
          return;
       }
       
-      JsonHandle handle = handles.get( key );
+      JsonNavigation handle = handles.get( key );
       handle.startedArray( key );
    }//End Method
    
@@ -190,7 +191,7 @@ public class JsonParser {
          return;
       }
       
-      JsonHandle handle = handles.get( key );
+      JsonNavigation handle = handles.get( key );
       handle.finishedArray( key );
    }//End Method
    

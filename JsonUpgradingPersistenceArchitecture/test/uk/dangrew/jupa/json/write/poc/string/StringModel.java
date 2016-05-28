@@ -7,7 +7,7 @@
  *                 2016
  * ----------------------------------------
  */
-package uk.dangrew.jupa.json.parse.poc.string;
+package uk.dangrew.jupa.json.write.poc.string;
 
 import java.util.ArrayList;
 
@@ -15,6 +15,14 @@ import java.util.ArrayList;
  * Basic model for handling parsing of {@link String} values.
  */
 public class StringModel {
+   
+   static final String FIRST_NAME = "firstName";
+   static final String LAST_NAME = "lastName";
+   static final String SKILLS = "skills";
+   static final String PROJECTS = "projects";
+   static final String PROJECT_NAME = "projectName";
+   static final String VCS = "vcs";
+   static final String PROJECT_FULL_NAME = "projectFullName";
    
    Developer developer;
    private Project projectInProgress;
@@ -36,12 +44,30 @@ public class StringModel {
    }//End Method
    
    /**
+    * Method to get the first name value.
+    * @param key the first name key.
+    * @return the first name.
+    */
+   String getFirstName( String key ) {
+      return developer.firstName;
+   }//End Method
+   
+   /**
     * Method to handle the parsing of the last name.
     * @param key the key parsed.
     * @param value the value parsed.
     */
    void lastName( String key, String value ){
       developer.lastName = value;
+   }//End Method
+   
+   /**
+    * Getter for the last name.
+    * @param key the last name key.
+    * @return the last name.
+    */
+   String getLastName( String key ) {
+      return developer.lastName;
    }//End Method
    
    /**
@@ -59,6 +85,16 @@ public class StringModel {
     */
    void skill( String key, String value ){
       developer.skills.add( value );
+   }//End Method
+   
+   /**
+    * Getter for a skill at a particular index.
+    * @param key the skill key.
+    * @param index the index to get the value for.
+    * @return the skill at that index.
+    */
+   String getSkill( String key, Integer index ) {
+      return developer.skills.get( index );
    }//End Method
    
    /**

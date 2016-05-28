@@ -7,7 +7,7 @@
  *                 2016
  * ----------------------------------------
  */
-package uk.dangrew.jupa.json.parse.poc.string;
+package uk.dangrew.jupa.json.write.poc.string;
 
 /** Simple data object for testing.**/
 public final class Project {

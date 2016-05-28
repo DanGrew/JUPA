@@ -1,0 +1,53 @@
+/*
+ * ----------------------------------------
+ *           Json Upgrading and 
+ *        Persistence Architecture
+ * ----------------------------------------
+ *          Produced by Dan Grew
+ *                 2016
+ * ----------------------------------------
+ */
+package uk.dangrew.jupa.json.write.handle.key;
+
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Function;
+
+/**
+ * The {@link JsonArrayWriteHandler} provides a {@link JsonKeyWriteHandler} specifically for handling
+ * {@link org.json.JSONArray}s.
+ */
+public class JsonArrayWriteHandler extends JsonKeyWriteHandler {
+
+   private static final String EXPECTED_ARRAY_WITH_VALUES_ONLY = ": expected array with values only.";
+   private static final Function< String, Object > ARRAY_FOUND_HANDLE = key -> null;
+
+   /**
+    * Constructs a new {@link JsonArrayWriteHandler}.
+    * @param arrayItemHandle the method to call when an item in an index has been found.
+    * @param startedArray the method to call when handling the start of an array.
+    * @param finishedArray the method to call when handling the end of an array.
+    */
+   public JsonArrayWriteHandler(
+            BiFunction< String, Integer, Object > arrayItemHandle,
+            Consumer< String > startedArray,
+            Consumer< String > finishedArray         
+   ) {
+      super( ARRAY_FOUND_HANDLE, arrayItemHandle, null, null, startedArray, finishedArray );
+   }//End Constructor
+   
+   /**
+    * {@inheritDoc}
+    */
+   @Override public void startedObject( String key ) {
+      throw new IllegalStateException( key + EXPECTED_ARRAY_WITH_VALUES_ONLY );
+   }//End Method
+   
+   /**
+    * {@inheritDoc}
+    */
+   @Override public void finishedObject( String key ) {
+      throw new IllegalStateException( key + EXPECTED_ARRAY_WITH_VALUES_ONLY );
+   }//End Method
+   
+}//End Class

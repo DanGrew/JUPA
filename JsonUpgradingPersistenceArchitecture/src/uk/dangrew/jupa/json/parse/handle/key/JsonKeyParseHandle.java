@@ -9,13 +9,15 @@
  */
 package uk.dangrew.jupa.json.parse.handle.key;
 
+import uk.dangrew.jupa.json.JsonNavigation;
+
 /**
  * The {@link JsonKeyParseHandle} provides an interface for defining handlers of
  * values that provides instructions and triggers to another model that handles
  * parsed input.
  * @param <HandledTypeT> the type of value being handled.
  */
-public interface JsonKeyParseHandle< HandledTypeT > {
+public interface JsonKeyParseHandle< HandledTypeT > extends JsonNavigation {
    
    /**
     * Method to handle a value parsed for a key.
@@ -24,28 +26,4 @@ public interface JsonKeyParseHandle< HandledTypeT > {
     */
    public void handle( String key, HandledTypeT value );
    
-   /**
-    * Method to indicate that an object has been started with the given key.
-    * @param key the key started with.
-    */
-   public void startedObject( String key );
-   
-   /**
-    * Method to indicate that an object has been finished with the given key.
-    * @param key the key finished with.
-    */
-   public void finishedObject( String key );
-
-   /**
-    * Method to indicate that an array has been started with the given key.
-    * @param key the key started with.
-    */
-   public void startedArray( String key );
-   
-   /**
-    * Method to indicate that an array has been finished with the given key.
-    * @param key the key finished with.
-    */
-   public void finishedArray( String key );
-
 }//End Interface
