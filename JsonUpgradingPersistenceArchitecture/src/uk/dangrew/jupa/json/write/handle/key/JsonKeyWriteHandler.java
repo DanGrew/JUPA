@@ -13,18 +13,16 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import uk.dangrew.jupa.json.JsonNavigationHandlerImpl;
+
 /**
  * The {@link JsonKeyWriteHandler} provides a handler for writing key values to a JSON stream. 
  * Each method provided will be invoked when the associated point in writing is reached.
  */
-public class JsonKeyWriteHandler implements JsonKeyWriteHandle{
+public class JsonKeyWriteHandler extends JsonNavigationHandlerImpl implements JsonKeyWriteHandle{
 
    private final Function< String, Object > objectRetriever;
    private final BiFunction< String, Integer, Object > arrayRetriever;
-   private final Consumer< String > startedObject;
-   private final Consumer< String > finishedObject;
-   private final Consumer< String > startedArray;
-   private final Consumer< String > finishedArray;
    
    /** 
     * Constructs a new {@link JsonKeyWriteHandler}.
@@ -42,42 +40,11 @@ public class JsonKeyWriteHandler implements JsonKeyWriteHandle{
             Consumer< String > startedArray,
             Consumer< String > finishedArray         
    ) {
+      super( startedObject, finishedObject, startedArray, finishedArray );
       this.objectRetriever = objectRetriever;
       this.arrayRetriever = arrayRetriever;
-      this.startedObject = startedObject;
-      this.finishedObject = finishedObject;
-      this.startedArray = startedArray;
-      this.finishedArray = finishedArray;
    }//End Constructor
    
-   /**
-    * {@inheritDoc}
-    */
-   @Override public void startedObject( String key ) {
-      startedObject.accept( key );
-   }//End Method
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override public void finishedObject( String key ) {
-      finishedObject.accept( key );
-   }//End Method
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override public void startedArray( String key ) {
-      startedArray.accept( key );
-   }//End Method
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override public void finishedArray( String key ) {
-      finishedArray.accept( key );
-   }//End Method
-
    /**
     * {@inheritDoc}
     */

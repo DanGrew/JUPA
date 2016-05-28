@@ -12,18 +12,16 @@ package uk.dangrew.jupa.json.parse.handle.key;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import uk.dangrew.jupa.json.JsonNavigationHandlerImpl;
+
 /**
  * The {@link JsonKeyParseHandler} provides a handler for reading keys from a JSON stream. 
  * Each method provided will be invoked when the associated point in parsing is reached.
  * @param <HandledTypeT> the type of value being handled.
  */
-public class JsonKeyParseHandler< HandledTypeT > implements JsonKeyParseHandle< HandledTypeT >{
+public class JsonKeyParseHandler< HandledTypeT > extends JsonNavigationHandlerImpl implements JsonKeyParseHandle< HandledTypeT >{
 
    private final BiConsumer< String, HandledTypeT > handle;
-   private final Consumer< String > startedObject;
-   private final Consumer< String > finishedObject;
-   private final Consumer< String > startedArray;
-   private final Consumer< String > finishedArray;
    
    /** 
     * Constructs a new {@link JsonKeyParseHandler}.
@@ -40,11 +38,8 @@ public class JsonKeyParseHandler< HandledTypeT > implements JsonKeyParseHandle< 
             Consumer< String > startedArray,
             Consumer< String > finishedArray         
    ) {
+      super( startedObject, finishedObject, startedArray, finishedArray );
       this.handle = handle;
-      this.startedObject = startedObject;
-      this.finishedObject = finishedObject;
-      this.startedArray = startedArray;
-      this.finishedArray = finishedArray;
    }//End Constructor
    
    /**
@@ -52,34 +47,6 @@ public class JsonKeyParseHandler< HandledTypeT > implements JsonKeyParseHandle< 
     */
    @Override public void handle( String key, HandledTypeT value ) {
       handle.accept( key, value );
-   }//End Method
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override public void startedObject( String key ) {
-      startedObject.accept( key );
-   }//End Method
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override public void finishedObject( String key ) {
-      finishedObject.accept( key );
-   }//End Method
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override public void startedArray( String key ) {
-      startedArray.accept( key );
-   }//End Method
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override public void finishedArray( String key ) {
-      finishedArray.accept( key );
    }//End Method
 
 }//End Class
