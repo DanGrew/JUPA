@@ -26,8 +26,6 @@ import uk.dangrew.jupa.json.JsonNavigationHandlerImplTest;
  */
 public class JsonKeyParseHandlerTest extends JsonNavigationHandlerImplTest {
 
-   protected static final String KEY = "Key";
-   
    @Mock protected BiConsumer< String, String > handle;
    protected JsonKeyParseHandle< String > systemUnderTest;
    

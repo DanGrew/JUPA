@@ -23,8 +23,11 @@ public class StringModel {
    static final String PROJECT_NAME = "projectName";
    static final String VCS = "vcs";
    static final String PROJECT_FULL_NAME = "projectFullName";
+   static final String PROJECT = "project";
    
    Developer developer;
+   
+   private int projectIndex;
    private Project projectInProgress;
    
    /**
@@ -122,6 +125,23 @@ public class StringModel {
    }//End Method
    
    /**
+    * Begin writing a new {@link Project}.
+    * @param key the project key.
+    */
+   void beginProjectWrite( String key ){
+      projectInProgress = developer.projects.get( projectIndex );
+   }//End Method
+   
+   /**
+    * End writing the current {@link Project}.
+    * @param key the project key.
+    */
+   void endProjectWrite( String key ){
+      projectInProgress = null;
+      projectIndex++;
+   }//End Method
+   
+   /**
     * Method to handle the parsing of the project name.
     * @param key the key parsed.
     * @param value the value parsed.
@@ -134,12 +154,28 @@ public class StringModel {
    }//End Method
    
    /**
+    * Getter for the current {@link Project} name.
+    * @param key the project name key.
+    */
+   Object getProjectName( String key ) {
+      return projectInProgress.projectName;
+   }//End Method
+   
+   /**
     * Method to handle the parsing of the full project name.
     * @param key the key parsed.
     * @param value the value parsed.
     */
    void projectFullName( String key, String value ){
       projectInProgress.fullProjectName = value;
+   }//End Method
+   
+   /**
+    * Getter for the current {@link Project} full name.
+    * @param key the project full name key.
+    */
+   Object getProjectFullName( String key ) {
+      return projectInProgress.fullProjectName;
    }//End Method
    
    /**
@@ -150,6 +186,10 @@ public class StringModel {
    void vcs( String key, String value ){
       projectInProgress.vcs = value;
    }//End Method
+   
+   Object getVcs( String key ) {
+      return projectInProgress.vcs;
+   }
    
    /**
     * Method to handle the completion of a project.

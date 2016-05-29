@@ -21,6 +21,7 @@ public class JsonArrayWriteHandler extends JsonKeyWriteHandler {
 
    private static final String EXPECTED_ARRAY_WITH_VALUES_ONLY = ": expected array with values only.";
    private static final Function< String, Object > ARRAY_FOUND_HANDLE = key -> null;
+   private static final BiFunction< String, Integer, Object > ARRAY_INDEX_HANDLE = ( key, index ) -> null;
 
    /**
     * Constructs a new {@link JsonArrayWriteHandler}.
@@ -34,6 +35,28 @@ public class JsonArrayWriteHandler extends JsonKeyWriteHandler {
             Consumer< String > finishedArray         
    ) {
       super( ARRAY_FOUND_HANDLE, arrayItemHandle, null, null, startedArray, finishedArray );
+   }//End Constructor
+   
+   /**
+    * Constructs a new {@link JsonArrayWriteHandler}.
+    * @param arrayItemHandle the method to call when an item in an index has been found.
+    */
+   public JsonArrayWriteHandler(
+            BiFunction< String, Integer, Object > arrayItemHandle
+   ) {
+      this( arrayItemHandle, DO_NOTHING, DO_NOTHING );
+   }//End Constructor
+   
+   /**
+    * Constructs a new {@link JsonArrayWriteHandler}.
+    * @param startedArray the method to call when handling the start of an array.
+    * @param finishedArray the method to call when handling the end of an array.
+    */
+   public JsonArrayWriteHandler(
+            Consumer< String > startedArray,
+            Consumer< String > finishedArray
+   ) {
+      this( ARRAY_INDEX_HANDLE, startedArray, finishedArray );
    }//End Constructor
    
    /**

@@ -25,6 +25,7 @@ import org.mockito.MockitoAnnotations;
 public class JsonNavigationHandlerImplTest {
 
    protected static final String KEY = "Key";
+   protected static final String VALUE = "Value";
    protected static final int INDEX = 4;
    
    @Mock protected Consumer< String > startedObject;
@@ -62,6 +63,14 @@ public class JsonNavigationHandlerImplTest {
       systemUnderTest.finishedArray( KEY );
       verify( finishedArray ).accept( KEY );
       verifyNoMoreInteractions( startedObject, finishedObject, startedArray, finishedArray );
+   }//End Method
+   
+   @Test public void nullsShouldBePermittedByConstructor(){
+      systemUnderTest = new JsonNavigationHandlerImpl( null, null, null, null );
+      systemUnderTest.startedObject( KEY );
+      systemUnderTest.finishedObject( KEY );
+      systemUnderTest.startedArray( KEY );
+      systemUnderTest.finishedArray( KEY );
    }//End Method
    
 }//End Class

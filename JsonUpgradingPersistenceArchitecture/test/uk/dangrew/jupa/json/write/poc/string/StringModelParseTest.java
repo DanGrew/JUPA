@@ -22,7 +22,7 @@ import org.junit.Test;
 import uk.dangrew.jupa.TestCommon;
 import uk.dangrew.jupa.json.parse.JsonParser;
 import uk.dangrew.jupa.json.parse.handle.key.JsonArrayParseHandler;
-import uk.dangrew.jupa.json.parse.handle.key.JsonKeyParseHandler;
+import uk.dangrew.jupa.json.parse.handle.key.JsonArrayWithObjectParseHandler;
 import uk.dangrew.jupa.json.parse.handle.type.StringParseHandle;
 
 /**
@@ -45,8 +45,8 @@ public class StringModelParseTest {
       );
       parser.when( StringModel.SKILLS, new StringParseHandle( skillsHandler ) );
       
-      JsonKeyParseHandler< String > projectsHandler = new JsonKeyParseHandler<>( 
-               null, model::projectFound, model::projectComplete, model::projectsFound, model::projectsComplete 
+      JsonArrayWithObjectParseHandler< String > projectsHandler = new JsonArrayWithObjectParseHandler<>( 
+               model::projectFound, model::projectComplete, model::projectsFound, model::projectsComplete 
       );
       parser.when( StringModel.PROJECTS, new StringParseHandle( projectsHandler ) );
       

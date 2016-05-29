@@ -17,6 +17,8 @@ import java.util.function.Consumer;
  */
 public class JsonNavigationHandlerImpl implements JsonNavigation {
    
+   protected static final Consumer< String > DO_NOTHING = key -> { /* do nothing */ };
+   
    private final Consumer< String > startedObject;
    private final Consumer< String > finishedObject;
    private final Consumer< String > startedArray;
@@ -24,10 +26,10 @@ public class JsonNavigationHandlerImpl implements JsonNavigation {
    
    /**
     * Constructs a new {@link JsonNavigationHandlerImpl}.
-    * @param startedObject the method to call when an object is started.
-    * @param finishedObject the method to call when an object is finished.
-    * @param startedArray the method to call when an array is started.
-    * @param finishedArray the method to call when an array is finished.
+    * @param startedObject the method to call when an object is started, can be null.
+    * @param finishedObject the method to call when an object is finished, can be null.
+    * @param startedArray the method to call when an array is started, can be null.
+    * @param finishedArray the method to call when an array is finished, can be null.
     */
    public JsonNavigationHandlerImpl(
             Consumer< String > startedObject,
@@ -35,10 +37,10 @@ public class JsonNavigationHandlerImpl implements JsonNavigation {
             Consumer< String > startedArray,
             Consumer< String > finishedArray         
    ) {
-      this.startedObject = startedObject;
-      this.finishedObject = finishedObject;
-      this.startedArray = startedArray;
-      this.finishedArray = finishedArray;
+      this.startedObject = startedObject == null ? DO_NOTHING : startedObject;
+      this.finishedObject = finishedObject == null ? DO_NOTHING : finishedObject;
+      this.startedArray = startedArray == null ? DO_NOTHING : startedArray;
+      this.finishedArray = finishedArray == null ? DO_NOTHING : finishedArray;
    }//End Constructor
    
    /**
