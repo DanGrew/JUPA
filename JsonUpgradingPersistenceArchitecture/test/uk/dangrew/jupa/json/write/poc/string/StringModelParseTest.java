@@ -35,24 +35,7 @@ public class StringModelParseTest {
 
    @Before public void initialiseSystemUnderTest(){
       model = new StringModel();
-      
-      parser = new JsonParser();
-      parser.when( StringModel.FIRST_NAME, new StringParseHandle( model::firstName ) );
-      parser.when( StringModel.LAST_NAME, new StringParseHandle( model::lastName ) );
-      
-      JsonArrayParseHandler< String > skillsHandler = new JsonArrayParseHandler<>( 
-               model::skill, model::skillsFound, model::skillsComplete 
-      );
-      parser.when( StringModel.SKILLS, new StringParseHandle( skillsHandler ) );
-      
-      JsonArrayWithObjectParseHandler< String > projectsHandler = new JsonArrayWithObjectParseHandler<>( 
-               model::projectFound, model::projectComplete, model::projectsFound, model::projectsComplete 
-      );
-      parser.when( StringModel.PROJECTS, new StringParseHandle( projectsHandler ) );
-      
-      parser.when( StringModel.PROJECT_NAME, new StringParseHandle( model::projectName ) );
-      parser.when( StringModel.PROJECT_FULL_NAME, new StringParseHandle( model::projectFullName ) );
-      parser.when( StringModel.VCS, new StringParseHandle( model::vcs ) );
+      parser = new StringModelParsing().constructParserWithReadHandles( model );
    }//End Method
    
    @Test public void proofOfConceptTest() {

@@ -11,10 +11,10 @@ package uk.dangrew.jupa.json.write.poc.string;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import static uk.dangrew.jupa.json.write.poc.string.StringModelParsing.FIRST_NAME_VALUE;
+import static uk.dangrew.jupa.json.write.poc.string.StringModelParsing.LAST_NAME_VALUE;
+import static uk.dangrew.jupa.json.write.poc.string.StringModelParsing.PROJECTS_VALUE;
+import static uk.dangrew.jupa.json.write.poc.string.StringModelParsing.SKILLS_VALUE;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -23,68 +23,28 @@ import org.junit.Test;
 
 import uk.dangrew.jupa.json.parse.JsonParser;
 import uk.dangrew.jupa.json.write.JsonStructure;
-import uk.dangrew.jupa.json.write.handle.key.JsonArrayWithObjectWriteHandler;
-import uk.dangrew.jupa.json.write.handle.key.JsonArrayWriteHandler;
-import uk.dangrew.jupa.json.write.handle.key.JsonValueWriteHandler;
-import uk.dangrew.jupa.json.write.handle.type.JsonWriteHandleImpl;
 
 /**
  * Proof of concept test to prove a string model can be written.
  */
 public class StringModelWriteTest {
 
-   private static final String FIRST_NAME_VALUE = "Dan";
-   private static final String LAST_NAME_VALUE = "Grew";
-   private static final List< String > SKILLS_VALUE = Arrays.asList( "Java", "Testing", "Jenkins", "Design" );
-   private static final List< Project > PROJECTS_VALUE = Arrays.asList( 
-            new Project( "JenkinsTestTracker", "JenkinsTestTracker", "GitHub" ),
-            new Project( "SystemDigest", "SystemDigest", "GitHub" ),
-            new Project( "JUPA", "JsonUpgradingPersistenceArchitecture", "GitHub" )
-   );
-   
    private StringModel model;
+   private StringModelParsing parsing;
    private JSONObject jsonObject;
    
    @Before public void initialiseSystemUnderTest(){
       jsonObject = new JSONObject();
       
-      model = new StringModel();
-      model.developer = new Developer();
-      model.developer.firstName = FIRST_NAME_VALUE;
-      model.developer.lastName = LAST_NAME_VALUE;
-      model.developer.skills = new ArrayList<>();
-      model.developer.skills.addAll( SKILLS_VALUE );
-      model.developer.projects = new ArrayList<>();
-      model.developer.projects.addAll( PROJECTS_VALUE );
+      parsing = new StringModelParsing();
       
-      JsonStructure structure = new JsonStructure();
-      structure.child( StringModel.FIRST_NAME, structure.root() );
-      structure.child( StringModel.LAST_NAME, structure.root() );
-      structure.array( StringModel.SKILLS, structure.root() );
-      structure.array( StringModel.PROJECTS, structure.root() );
-      structure.child( StringModel.PROJECT, StringModel.PROJECTS );
-      structure.child( StringModel.PROJECT_NAME, StringModel.PROJECT );
-      structure.child( StringModel.PROJECT_FULL_NAME, StringModel.PROJECT );
-      structure.child( StringModel.VCS, StringModel.PROJECT );
-      
-      structure.arraySize( StringModel.SKILLS, SKILLS_VALUE.size() );
-      structure.arraySize( StringModel.PROJECTS, 3 );
+      model = parsing.constructStringModelWithData();
+      JsonStructure structure = parsing.constructStructure( SKILLS_VALUE.size(), PROJECTS_VALUE.size() );
       structure.build( jsonObject );
    }//End Method
    
    @Test public void proofOfConceptTest() {
-      JsonParser parser = new JsonParser();
-      
-      parser.when( StringModel.FIRST_NAME, new JsonWriteHandleImpl( new JsonValueWriteHandler( model::getFirstName ) ) );
-      parser.when( StringModel.LAST_NAME, new JsonWriteHandleImpl( new JsonValueWriteHandler( model::getLastName ) ) );
-      parser.when( StringModel.SKILLS, new JsonWriteHandleImpl( new JsonArrayWriteHandler( model::getSkill ) ) );
-      parser.when( StringModel.PROJECTS, new JsonWriteHandleImpl( new JsonArrayWithObjectWriteHandler( 
-               model::beginProjectWrite, model::endProjectWrite, null, null 
-      ) ) );
-      parser.when( StringModel.PROJECT_NAME, new JsonWriteHandleImpl( new JsonValueWriteHandler( model::getProjectName ) ) );
-      parser.when( StringModel.PROJECT_FULL_NAME, new JsonWriteHandleImpl( new JsonValueWriteHandler( model::getProjectFullName ) ) );
-      parser.when( StringModel.VCS, new JsonWriteHandleImpl( new JsonValueWriteHandler( model::getVcs ) ) );
-      
+      JsonParser parser = parsing.constructParserWithWriteHandles( model );
       parser.parse( jsonObject );
       
       assertThat( jsonObject.get( StringModel.FIRST_NAME ), is( FIRST_NAME_VALUE ) );
