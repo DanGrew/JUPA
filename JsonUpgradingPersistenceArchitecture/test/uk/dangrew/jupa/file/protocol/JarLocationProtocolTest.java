@@ -35,6 +35,8 @@ import uk.dangrew.jupa.json.io.JsonIO;
  */
 public class JarLocationProtocolTest {
 
+   private static final String FILENAME = "any file name";
+   
    @Mock private JsonIO jsonIO;
    @Captor private ArgumentCaptor< File > fileCaptor;
    @Captor private ArgumentCaptor< JSONObject > jsonCaptor;
@@ -42,11 +44,11 @@ public class JarLocationProtocolTest {
    
    @Before public void initialiseSystemUnderTest(){
       MockitoAnnotations.initMocks( this );
-      systemUnderTest = new JarLocationProtocol( jsonIO );
+      systemUnderTest = new JarLocationProtocol( jsonIO, FILENAME );
    }//End Method
    
    @Test public void publicConstructorShouldProvideJsonIO(){
-      systemUnderTest = new JarLocationProtocol();
+      systemUnderTest = new JarLocationProtocol( FILENAME );
       assertThat( systemUnderTest.readFromLocation(), is( nullValue() ) );
    }//End Method
    
@@ -55,7 +57,7 @@ public class JarLocationProtocolTest {
       verify( jsonIO ).read( fileCaptor.capture() );
       verifyNoMoreInteractions( jsonIO );
       
-      assertThat( fileCaptor.getValue().getAbsolutePath(), endsWith( JarLocationProtocol.FILENAME ) );
+      assertThat( fileCaptor.getValue().getAbsolutePath(), endsWith( FILENAME ) );
    }//End Method
    
    @Test public void writeShouldDelegateToIOWithCorrectFilePathAndObject() {
@@ -65,7 +67,7 @@ public class JarLocationProtocolTest {
       verify( jsonIO ).write( fileCaptor.capture(), jsonCaptor.capture() );
       verifyNoMoreInteractions( jsonIO );
       
-      assertThat( fileCaptor.getValue().getAbsolutePath(), endsWith( JarLocationProtocol.FILENAME ) );
+      assertThat( fileCaptor.getValue().getAbsolutePath(), endsWith( FILENAME ) );
       assertThat( jsonCaptor.getValue(), is( jsonObject ) );
    }//End Method
    
@@ -77,6 +79,10 @@ public class JarLocationProtocolTest {
       
       when( jsonIO.write( Mockito.any(), Mockito.any() ) ).thenReturn( false );
       assertThat( systemUnderTest.writeToLocation( jsonObject ), is( false ) );
+   }//End Method
+   
+   @Test( expected = NullPointerException.class ) public void shouldNotAcceptNullFilename(){
+      new JarLocationProtocol( null );
    }//End Method
 
 }//End Class

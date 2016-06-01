@@ -21,28 +21,32 @@ import uk.dangrew.jupa.json.io.JsonIO;
  */
 public class JarLocationProtocol implements FileLocationProtocol {
    
-   static final String FILENAME = "jtt-configuration.json";
-   
    private final JsonIO jsonIO;
    private final File source;
    
    /**
     * Constructs a new {@link JarLocationProtocol}.
+    * @param filename the filename to read/write to.
     */
-   public JarLocationProtocol() {
-      this( new JsonIO() );
+   public JarLocationProtocol( String filename ) {
+      this( new JsonIO(), filename );
    }//End Constructor
    
    /**
     * Constructs a new {@link JarLocationProtocol}.
     * @param jsonIO the {@link JsonIO} for read and writing.
+    * @param filename the filename to read/write to.
     */
-   JarLocationProtocol( JsonIO jsonIO ) {
+   JarLocationProtocol( JsonIO jsonIO, String filename ) {
+      if ( filename == null ) {
+         throw new NullPointerException( "Filename cannot be null." );
+      }
+      
       this.jsonIO = jsonIO;
       
       File jarPath = new File( this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath() );
       String propertiesPath = jarPath.getParentFile().getAbsolutePath();
-      source = new File( propertiesPath + "/" + FILENAME );
+      source = new File( propertiesPath + "/" + filename );
    }//End Constructor
    
    /**

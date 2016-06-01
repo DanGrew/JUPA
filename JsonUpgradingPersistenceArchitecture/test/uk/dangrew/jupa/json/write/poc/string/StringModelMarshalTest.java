@@ -35,7 +35,7 @@ public class StringModelMarshalTest {
                parsing.constructStructure( SKILLS_VALUE.size(), PROJECTS_VALUE.size() ),
                parsing.constructParserWithReadHandles( readModel ),
                parsing.constructParserWithWriteHandles( writeModel ),
-               new JarLocationProtocol()
+               new JarLocationProtocol( "StringModelMarshalTest-output-file.json" )
       );
       
       marshaller.write();
