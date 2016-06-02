@@ -9,6 +9,7 @@
  */
 package uk.dangrew.jupa.file.protocol;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
@@ -44,11 +45,11 @@ public class JarLocationProtocolTest {
    
    @Before public void initialiseSystemUnderTest(){
       MockitoAnnotations.initMocks( this );
-      systemUnderTest = new JarLocationProtocol( jsonIO, FILENAME );
+      systemUnderTest = new JarLocationProtocol( jsonIO, FILENAME, getClass() );
    }//End Method
    
    @Test public void publicConstructorShouldProvideJsonIO(){
-      systemUnderTest = new JarLocationProtocol( FILENAME );
+      systemUnderTest = new JarLocationProtocol( FILENAME, getClass() );
       assertThat( systemUnderTest.readFromLocation(), is( nullValue() ) );
    }//End Method
    
@@ -58,6 +59,17 @@ public class JarLocationProtocolTest {
       verifyNoMoreInteractions( jsonIO );
       
       assertThat( fileCaptor.getValue().getAbsolutePath(), endsWith( FILENAME ) );
+   }//End Method
+   
+   @Test public void readShouldDelegateToIOWithCorrectFilePathForClassOutsideOfProject() {
+      systemUnderTest = new JarLocationProtocol( jsonIO, FILENAME, JSONObject.class );
+      
+      systemUnderTest.readFromLocation();
+      verify( jsonIO ).read( fileCaptor.capture() );
+      verifyNoMoreInteractions( jsonIO );
+      
+      assertThat( fileCaptor.getValue().getAbsolutePath(), endsWith( FILENAME ) );
+      assertThat( fileCaptor.getValue().getAbsolutePath(), containsString( "json" ) );
    }//End Method
    
    @Test public void writeShouldDelegateToIOWithCorrectFilePathAndObject() {
@@ -82,7 +94,15 @@ public class JarLocationProtocolTest {
    }//End Method
    
    @Test( expected = NullPointerException.class ) public void shouldNotAcceptNullFilename(){
-      new JarLocationProtocol( null );
+      new JarLocationProtocol( null, getClass() );
+   }//End Method
+   
+   @Test( expected = NullPointerException.class ) public void shouldNotAcceptNullClass(){
+      new JarLocationProtocol( FILENAME, null );
+   }//End Method
+   
+   @Test( expected = IllegalArgumentException.class ) public void shouldNotAcceptClassWithNoCodeSource(){
+      new JarLocationProtocol( FILENAME, String.class );
    }//End Method
 
 }//End Class
