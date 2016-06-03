@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 /**
  * The {@link JsonStructureTree} is responsible for defining the relationships between items
@@ -24,7 +25,7 @@ class JsonStructureTree {
    static final String ROOT = "Root-Node-Representation";
    
    private final Map< String, Set< String > > parentToChildren;
-   private final HashMap< String, Integer > arrays;
+   private final HashMap< String, Function< String, Integer > > arrays;
 
    /**
     * Constructs a new {@link JsonStructureTree}.
@@ -80,23 +81,15 @@ class JsonStructureTree {
     * Method to add an array to the given parent.
     * @param array the key for the array.
     * @param parent the parent to add to.
+    * @param arraySizeFunction the {@link Function} used to retrieve the current array size when building.
     */
-   void addArray( String array, String parent ) {
-      addChild( array, parent );
-      arrays.put( array, null );
-   }//End Method
-
-   /**
-    * Method to set the array size for the given array name.
-    * @param array the child array name.
-    * @param arrayLength the length of the array.
-    */
-   void setArraySize( String array, int arrayLength ) {
-      if ( !isArray( array ) ) {
-         throw new IllegalStateException( array + " is not an array in this strucutre." );
+   void addArray( String array, String parent, Function< String, Integer > arraySizeFunction ) {
+      if ( arraySizeFunction == null ) {
+         throw new NullPointerException( "Must provide method of determining array size." );
       }
       
-      arrays.put( array, arrayLength );
+      addChild( array, parent );
+      arrays.put( array, arraySizeFunction );
    }//End Method
 
    /**
@@ -113,7 +106,8 @@ class JsonStructureTree {
     * @return the array size, or null if not set.
     */
    Integer getArraySize( String child ) {
-      return arrays.get( child );
+      Function< String, Integer > arraySizeFunction = arrays.get( child );
+      return arraySizeFunction.apply( child );
    }//End Method
 
 }//End Class

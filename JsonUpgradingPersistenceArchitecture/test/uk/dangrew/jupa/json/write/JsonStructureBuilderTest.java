@@ -15,6 +15,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
+import java.util.function.Function;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -33,6 +34,7 @@ public class JsonStructureBuilderTest {
    private static final String KEY_A = "KeyA";
    private static final String KEY_B = "KeyB";
    private static final String KEY_C = "KeyC";
+   private static final Function< String, Integer > ARRAY_SIZE_FUNCTION = key -> 3;
    
    private JSONObject jsonObject;
    private JsonStructureTree tree;
@@ -91,9 +93,8 @@ public class JsonStructureBuilderTest {
    }//End Method
    
    @Test public void shouldBuildNestedArrayWithValues(){
-      tree.addArray( ARRAY, ROOT );
-      final int arrayLength = 4;
-      tree.setArraySize( ARRAY, arrayLength );
+      tree.addArray( ARRAY, ROOT, ARRAY_SIZE_FUNCTION );
+      final int arrayLength = ARRAY_SIZE_FUNCTION.apply( ARRAY );
       
       systemUnderTest.build( jsonObject );
       
@@ -106,12 +107,11 @@ public class JsonStructureBuilderTest {
    }//End Method
    
    @Test public void shouldBuildNestedArrayWithObjects(){
-      tree.addArray( ARRAY, ROOT );
+      tree.addArray( ARRAY, ROOT, ARRAY_SIZE_FUNCTION );
       tree.addChild( CHILD, ARRAY );
       tree.addChild( KEY_A, CHILD );
       
-      final int arrayLength = 4;
-      tree.setArraySize( ARRAY, arrayLength );
+      final int arrayLength = ARRAY_SIZE_FUNCTION.apply( ARRAY );
       
       systemUnderTest.build( jsonObject );
       
@@ -126,13 +126,12 @@ public class JsonStructureBuilderTest {
    
    @Test public void shouldBuildNestedObjectsWithArraysAndKeys(){
       tree.addChild( CHILD, ROOT );
-      tree.addArray( ARRAY, CHILD );
+      tree.addArray( ARRAY, CHILD, ARRAY_SIZE_FUNCTION );
       tree.addChild( ANOTHER_CHILD, ARRAY );
       tree.addChild( KEY_A, ANOTHER_CHILD );
       tree.addChild( KEY_B, CHILD );
       
-      final int arrayLength = 2;
-      tree.setArraySize( ARRAY, arrayLength );
+      final int arrayLength = ARRAY_SIZE_FUNCTION.apply( ARRAY );
       
       systemUnderTest.build( jsonObject );
       
@@ -150,13 +149,11 @@ public class JsonStructureBuilderTest {
    }//End Method
    
    @Test public void shouldBuildArraysWithinArrays(){
-      tree.addArray( CHILD, ROOT );
-      tree.addArray( ANOTHER_CHILD, CHILD );
-      
       final int childLength = 10;
-      tree.setArraySize( CHILD, childLength );
       final int anotherChildLength = 15;
-      tree.setArraySize( ANOTHER_CHILD, anotherChildLength );
+      
+      tree.addArray( CHILD, ROOT, key -> childLength );
+      tree.addArray( ANOTHER_CHILD, CHILD, key -> anotherChildLength );
       
       systemUnderTest.build( jsonObject );
       
@@ -172,8 +169,12 @@ public class JsonStructureBuilderTest {
       }
    }//End Method
    
+   @Test( expected = NullPointerException.class ) public void shouldNotAcceptNullArrayFunction(){
+      tree.addArray( ARRAY, ROOT, null );
+   }//End Method
+   
    @Test( expected = NullPointerException.class ) public void shouldNotAcceptNullArraySize(){
-      tree.addArray( ARRAY, ROOT );
+      tree.addArray( ARRAY, ROOT, key -> null );
       systemUnderTest.build( jsonObject );
    }//End Method
    

@@ -32,7 +32,7 @@ public class StringModelMarshalTest {
       StringModel readModel = new StringModel();
       StringModel writeModel = parsing.constructStringModelWithData();
       ModelMarshaller marshaller = new ModelMarshaller( 
-               parsing.constructStructure( SKILLS_VALUE.size(), PROJECTS_VALUE.size() ),
+               parsing.constructStructure( writeModel ),
                parsing.constructParserWithReadHandles( readModel ),
                parsing.constructParserWithWriteHandles( writeModel ),
                new JarLocationProtocol( "StringModelMarshalTest-output-file.json", getClass() )

@@ -101,6 +101,15 @@ public class StringModel {
    }//End Method
    
    /**
+    * Method the get the number of skills in the model.
+    * @param key the skills key.
+    * @return the number of skills.
+    */
+   Integer getSkillCount( String key ){
+      return developer.skills.size();
+   }//End Method
+   
+   /**
     * Method to handle the completion of the skills.
     * @param key the key parsed.
     */
@@ -122,6 +131,15 @@ public class StringModel {
     */
    void projectFound( String key ){
       projectInProgress = new Project();
+   }//End Method
+   
+   /**
+    * Method to get the number of project held.
+    * @param key the projects key.
+    * @return the number of projects held.
+    */
+   Integer getProjectCount( String key ){
+      return developer.projects.size();
    }//End Method
    
    /**

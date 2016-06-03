@@ -14,6 +14,8 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.function.Function;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -32,6 +34,8 @@ public class JsonStructureTest {
    private static final String LAST_NAME = "Last Name";
    private static final String AGE = "Age";
    private static final String CHILDREN = "Children";
+   
+   private static final Function< String, Integer > ARRAY_SIZE_FUNCTION = key -> 4;
    
    private JSONObject jsonObject;
    private JsonStructure systemUnderTest;
@@ -64,18 +68,17 @@ public class JsonStructureTest {
       jsonObject = new JSONObject();
       systemUnderTest = new JsonStructure();
       
-      systemUnderTest.array( PEOPLE, systemUnderTest.root() );
+      systemUnderTest.array( PEOPLE, systemUnderTest.root(), ARRAY_SIZE_FUNCTION );
       systemUnderTest.child( PERSON, PEOPLE );
       systemUnderTest.value( FIRST_NAME, PERSON );
       systemUnderTest.value( LAST_NAME, PERSON );
       systemUnderTest.value( AGE, PERSON );
       
-      final int peopleCount = 3;
-      systemUnderTest.arraySize( PEOPLE, peopleCount );
-      
       systemUnderTest.build( jsonObject );
       
       JSONArray people = jsonObject.getJSONArray( PEOPLE );
+      int peopleCount = ARRAY_SIZE_FUNCTION.apply( PEOPLE );
+      
       assertThat( people.length(), is( peopleCount ) );
       for ( int i = 0; i < peopleCount; i++ ) {
          JSONObject person = people.getJSONObject( i );
@@ -112,15 +115,10 @@ public class JsonStructureTest {
    }//End Method
 
    @Test public void arrayShouldCallThroughToTree() {
-      systemUnderTest.array( CHILDREN, PERSON );
-      verify( tree ).addArray( CHILDREN, PERSON );
+      systemUnderTest.array( CHILDREN, PERSON, ARRAY_SIZE_FUNCTION );
+      verify( tree ).addArray( CHILDREN, PERSON, ARRAY_SIZE_FUNCTION );
    }//End Method
    
-   @Test public void arraySizeShouldCallThroughToTree() {
-      systemUnderTest.arraySize( CHILDREN, 6 );
-      verify( tree ).setArraySize( CHILDREN, 6 );
-   }//End Method
-
    @Test public void buildSizeShouldCallThroughToBuilder() {
       systemUnderTest.build( jsonObject );
       verify( builder ).build( jsonObject );

@@ -87,20 +87,16 @@ class StringModelParsing {
     * @param projectsSize the number of projects.
     * @return the {@link JsonStructure}.
     */
-   JsonStructure constructStructure( int skillsSize, int projectsSize ) {
+   JsonStructure constructStructure( StringModel model ) {
       JsonStructure structure = new JsonStructure();
       structure.child( StringModel.FIRST_NAME, structure.root() );
       structure.child( StringModel.LAST_NAME, structure.root() );
-      structure.array( StringModel.SKILLS, structure.root() );
-      structure.array( StringModel.PROJECTS, structure.root() );
+      structure.array( StringModel.SKILLS, structure.root(), model::getSkillCount );
+      structure.array( StringModel.PROJECTS, structure.root(), model::getProjectCount );
       structure.child( StringModel.PROJECT, StringModel.PROJECTS );
       structure.child( StringModel.PROJECT_NAME, StringModel.PROJECT );
       structure.child( StringModel.PROJECT_FULL_NAME, StringModel.PROJECT );
       structure.child( StringModel.VCS, StringModel.PROJECT );
-      
-      structure.arraySize( StringModel.SKILLS, skillsSize );
-      structure.arraySize( StringModel.PROJECTS, projectsSize );
-      
       return structure;
    }//End Method
    

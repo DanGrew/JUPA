@@ -39,7 +39,7 @@ public class StringModelWriteTest {
       parsing = new StringModelParsing();
       
       model = parsing.constructStringModelWithData();
-      JsonStructure structure = parsing.constructStructure( SKILLS_VALUE.size(), PROJECTS_VALUE.size() );
+      JsonStructure structure = parsing.constructStructure( model );
       structure.build( jsonObject );
    }//End Method
    

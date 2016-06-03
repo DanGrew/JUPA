@@ -9,6 +9,8 @@
  */
 package uk.dangrew.jupa.json.write;
 
+import java.util.function.Function;
+
 import org.json.JSONObject;
 
 /**
@@ -81,22 +83,12 @@ public class JsonStructure {
     * child within the parent with the given key.
     * @param array the unique id for the array, used to refer to throughout construction.
     * @param parent the unique id for the parent, used to refer to throughout construction.
+    * @param arraySizeFunction the {@link Function} used to retrieve the current array size when building.
     */
-   public void array( String array, String parent ) {
-      tree.addArray( array, parent );
+   public void array( String array, String parent, Function< String, Integer > arraySizeFunction ) {
+      tree.addArray( array, parent, arraySizeFunction );
    }//End Method
    
-   /**
-    * Method to set the array size for the given array child id. This is done separately so that the
-    * same structure can be built for different sets of data, separately the model definition from the
-    * state of the data.
-    * @param name the id of the array.
-    * @param size the number of items to build into the array.
-    */
-   public void arraySize( String name, int size ) {
-      tree.setArraySize( name, size );
-   }//End Method
-
    /**
     * Method to build the structure into the given {@link JSONObject}.
     * @param jsonObject the {@link JSONObject} to build into.
