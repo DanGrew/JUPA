@@ -15,7 +15,9 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import javafx.beans.property.ObjectProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableMap;
 import uk.dangrew.jupa.json.marshall.ModelMarshaller;
 
 /**
@@ -29,7 +31,7 @@ public class SessionManager {
    private final ModelMarshaller marshaller;
    private final AtomicBoolean running = new AtomicBoolean( true );
    private final BlockingQueue< Object > queue = new ArrayBlockingQueue<>( 1 );
-   private final Set< ObjectProperty< ? > > registeredProperties;
+   private final Set< Object > registeredProperties;
    
    /**
     * Constructs a new {@link SecurityManager}.
@@ -42,15 +44,28 @@ public class SessionManager {
    }//End Constructor
 
    /**
-    * Method to register an {@link ObjectProperty} that, when changes, triggers a new session
+    * Method to register an {@link ObservableValue} that, when changes, triggers a new session
     * write.
-    * @param property the {@link ObjectProperty} to listen to.
+    * @param property the {@link ObservableValue} to listen to.
     */
-   public void triggerWriteOnChange( ObjectProperty< ? > property ) {
+   public void triggerWriteOnChange( ObservableValue< ? > property ) {
       if ( registeredProperties.contains( property ) ) {
          return;
       }
       property.addListener( ( source, old, updated ) -> queue.offer( new Object() ) );
+      registeredProperties.add( property );
+   }//End Method
+   
+   /**
+    * Method to register an {@link ObservableMap} that, when changes, triggers a new session
+    * write.
+    * @param property the {@link ObservableMap} to listen to.
+    */
+   public < K, V > void triggerWriteOnChange( ObservableMap< K, V > property ) {
+      if ( registeredProperties.contains( property ) ) {
+         return;
+      }
+      property.addListener( ( MapChangeListener.Change< ? extends K, ? extends V > change ) -> queue.offer( new Object() ) );
       registeredProperties.add( property );
    }//End Method
    

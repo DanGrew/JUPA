@@ -29,6 +29,10 @@ import org.mockito.MockitoAnnotations;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableMap;
 import uk.dangrew.jupa.json.marshall.ModelMarshaller;
 import uk.dangrew.jupa.mockito.NoResponseAnswer;
 
@@ -67,7 +71,7 @@ public class SessionManagerTest {
    @Test public void shouldTriggerEachOfMultipleTriggers() throws InterruptedException {
       ObjectProperty< String > property1 = new SimpleObjectProperty< String >( "anything" );
       ObjectProperty< String > property2 = new SimpleObjectProperty< String >( "anything" );
-      ObjectProperty< String > property3 = new SimpleObjectProperty< String >( "anything" );
+      ObservableMap< String, String > property3 = FXCollections.observableHashMap();
       ObjectProperty< String > property4 = new SimpleObjectProperty< String >( "anything" );
       systemUnderTest.triggerWriteOnChange( property1 );
       systemUnderTest.triggerWriteOnChange( property2 );
@@ -87,7 +91,7 @@ public class SessionManagerTest {
       
       writeLatch = new CountDownLatch( 1 );
       doAnswer( new NoResponseAnswer<>( writeLatch::countDown ) ).when( marshaller ).write();
-      property3.set( "whatever" );
+      property3.put( "whatever", "I want" );
       writeLatch.await();
       
       writeLatch = new CountDownLatch( 1 );
@@ -98,12 +102,15 @@ public class SessionManagerTest {
       verify( marshaller, times( 4 ) ).write();
    }//End Method
    
-   @Test( expected = NullPointerException.class ) public void shouldNotAcceptNullTrigger(){
-      systemUnderTest.triggerWriteOnChange( null );
+   @Test( expected = NullPointerException.class ) public void shouldNotAcceptNullValueTrigger(){
+      systemUnderTest.triggerWriteOnChange( ( ObservableValue< ? > )null );
    }//End Method
    
-   @Test public void shouldIgnoreSameTriggerMultipleTimes() throws InterruptedException{
-      System.out.println( "restart" );
+   @Test( expected = NullPointerException.class ) public void shouldNotAcceptNullMapTrigger(){
+      systemUnderTest.triggerWriteOnChange( ( ObservableMap< ?, ? > )null );
+   }//End Method
+   
+   @Test public void shouldIgnoreSameValueTriggerMultipleTimes() throws InterruptedException{
       ObjectProperty< String > property = new SimpleObjectProperty< String >( "anything" );
       systemUnderTest.triggerWriteOnChange( property );
       systemUnderTest.triggerWriteOnChange( property );
@@ -118,7 +125,22 @@ public class SessionManagerTest {
       verify( marshaller ).write();
    }//End Method
    
-   @Test public void shouldHaveNoFurtherInteractionsWithAlreadyRegisteredProperty(){
+   @Test public void shouldIgnoreSameMapTriggerMultipleTimes() throws InterruptedException{
+      ObservableMap< String, String > property = FXCollections.observableHashMap();
+      systemUnderTest.triggerWriteOnChange( property );
+      systemUnderTest.triggerWriteOnChange( property );
+      systemUnderTest.triggerWriteOnChange( property );
+      verifyZeroInteractions( marshaller );
+      
+      writeLatch = new CountDownLatch( 1 );
+      doAnswer( new NoResponseAnswer<>( writeLatch::countDown ) ).when( marshaller ).write();
+      property.put( "something", "else" );
+      writeLatch.await();
+      
+      verify( marshaller ).write();
+   }//End Method
+   
+   @Test public void shouldHaveNoFurtherInteractionsWithAlreadyRegisteredValue(){
       @SuppressWarnings("unchecked") //mocking genericized objects
       ObjectProperty< Object > property = mock( ObjectProperty.class );
       
@@ -126,6 +148,16 @@ public class SessionManagerTest {
       systemUnderTest.triggerWriteOnChange( property );
       systemUnderTest.triggerWriteOnChange( property );
       verify( property, times( 1 ) ).addListener( Mockito.< ChangeListener< Object > >any() ); 
+   }//End Method
+   
+   @Test public void shouldHaveNoFurtherInteractionsWithAlreadyRegisteredMap(){
+      @SuppressWarnings("unchecked") //mocking genericized objects
+      ObservableMap< Object, Object > property = mock( ObservableMap.class );
+      
+      systemUnderTest.triggerWriteOnChange( property );
+      systemUnderTest.triggerWriteOnChange( property );
+      systemUnderTest.triggerWriteOnChange( property );
+      verify( property, times( 1 ) ).addListener( Mockito.< MapChangeListener< Object, Object > >any() ); 
    }//End Method
    
    @Test public void shouldQueueOnlyOneWriteToAvoidRepeatingTheSameWrite() throws InterruptedException{
