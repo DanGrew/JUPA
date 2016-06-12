@@ -82,6 +82,9 @@ public class JsonIO {
       
       if ( !file.exists() ) {
          try {
+            if ( file.getParentFile() != null ) {
+               file.getParentFile().mkdirs();
+            }
             file.createNewFile();
          } catch ( IOException e ) {
             //TODO - digest.

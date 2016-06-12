@@ -22,6 +22,7 @@ import uk.dangrew.jupa.json.io.JsonIO;
  */
 public class JarLocationProtocol implements FileLocationProtocol {
    
+   private static final String FILE_SEPARATOR = "/";
    private final JsonIO jsonIO;
    private final File source;
    
@@ -32,17 +33,29 @@ public class JarLocationProtocol implements FileLocationProtocol {
     * the {@link File} relative to.
     */
    public JarLocationProtocol( String filename, Class< ? > relativeTo ) {
-      this( new JsonIO(), filename, relativeTo );
+      this( new JsonIO(), null, filename, relativeTo );
+   }//End Constructor
+   
+   /**
+    * Constructs a new {@link JarLocationProtocol}.
+    * @param subFolder the name of the sub folder the file will be placed in.
+    * @param filename the filename to read/write to.
+    * @param relativeTo the {@link Class} providing the {@link CodeSource} to place
+    * the {@link File} relative to.
+    */
+   public JarLocationProtocol( String subFolder, String filename, Class< ? > relativeTo ) {
+      this( new JsonIO(), subFolder, filename, relativeTo );
    }//End Constructor
    
    /**
     * Constructs a new {@link JarLocationProtocol}.
     * @param jsonIO the {@link JsonIO} for read and writing.
+    * @param subFolder the name of the sub folder the file will be placed in.
     * @param filename the filename to read/write to.
     * @param relativeTo the {@link Class} providing the {@link CodeSource} to place
     * the {@link File} relative to.
     */
-   JarLocationProtocol( JsonIO jsonIO, String filename, Class< ? > relativeTo ) {
+   JarLocationProtocol( JsonIO jsonIO, String subFolder, String filename, Class< ? > relativeTo ) {
       if ( filename == null || relativeTo == null ) {
          throw new NullPointerException( "Parameters cannot be null." );
       }
@@ -57,8 +70,14 @@ public class JarLocationProtocol implements FileLocationProtocol {
       this.jsonIO = jsonIO;
       
       File jarPath = new File( codeSource.getLocation().getPath() );
-      String propertiesPath = jarPath.getParentFile().getAbsolutePath();
-      source = new File( propertiesPath + "/" + filename );
+      StringBuilder propertiesPath = new StringBuilder( jarPath.getParentFile().getAbsolutePath() );
+      
+      if ( subFolder != null ) {
+         propertiesPath.append( FILE_SEPARATOR ).append( subFolder );
+      }
+      
+      propertiesPath.append( FILE_SEPARATOR ).append( filename );
+      source = new File( propertiesPath.toString() );
    }//End Constructor
    
    /**

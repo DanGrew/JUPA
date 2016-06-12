@@ -45,12 +45,17 @@ public class JarLocationProtocolTest {
    
    @Before public void initialiseSystemUnderTest(){
       MockitoAnnotations.initMocks( this );
-      systemUnderTest = new JarLocationProtocol( jsonIO, FILENAME, getClass() );
+      systemUnderTest = new JarLocationProtocol( jsonIO, null, FILENAME, getClass() );
    }//End Method
    
    @Test public void publicConstructorShouldProvideJsonIO(){
       systemUnderTest = new JarLocationProtocol( FILENAME, getClass() );
       assertThat( systemUnderTest.readFromLocation(), is( nullValue() ) );
+   }//End Method
+   
+   @Test public void publicConstructorWithSubFolderShouldProvideJsonIO(){
+      systemUnderTest = new JarLocationProtocol( "subFolder", FILENAME, getClass() );
+      systemUnderTest.writeToLocation( new JSONObject() );
    }//End Method
    
    @Test public void readShouldDelegateToIOWithCorrectFilePath() {
@@ -62,7 +67,7 @@ public class JarLocationProtocolTest {
    }//End Method
    
    @Test public void readShouldDelegateToIOWithCorrectFilePathForClassOutsideOfProject() {
-      systemUnderTest = new JarLocationProtocol( jsonIO, FILENAME, JSONObject.class );
+      systemUnderTest = new JarLocationProtocol( jsonIO, null, FILENAME, JSONObject.class );
       
       systemUnderTest.readFromLocation();
       verify( jsonIO ).read( fileCaptor.capture() );
@@ -104,5 +109,17 @@ public class JarLocationProtocolTest {
    @Test( expected = IllegalArgumentException.class ) public void shouldNotAcceptClassWithNoCodeSource(){
       new JarLocationProtocol( FILENAME, String.class );
    }//End Method
-
+   
+   @Test public void shouldLookForFileInSubFolder(){
+      final String subFolder = "SubFolder";
+      systemUnderTest = new JarLocationProtocol( jsonIO, subFolder, FILENAME, JSONObject.class );
+      
+      systemUnderTest.readFromLocation();
+      verify( jsonIO ).read( fileCaptor.capture() );
+      verifyNoMoreInteractions( jsonIO );
+      
+      assertThat( fileCaptor.getValue().getAbsolutePath(), endsWith( subFolder + "/" + FILENAME ) );
+      assertThat( fileCaptor.getValue().getAbsolutePath(), containsString( "json" ) );
+   }//End Method
+   
 }//End Class

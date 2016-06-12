@@ -29,17 +29,22 @@ import java.util.Scanner;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import uk.dangrew.jupa.TestCommon;
 
 /**
  * {@link JsonIO} test,
  */
+@RunWith( JUnitParamsRunner.class )
 public class JsonIOTest {
 
    private static final String EXISITNG_FILE = "existing-file.json";
    private static final String POPULATING_FILE = "populating-file.json";
+   private static final String SUB_FOLDER_FILE = "testing/populating-file.json";
    private static final String INVALID_FILE = "invalid-file.json";
    
    private JSONObject jsonObject;
@@ -52,6 +57,11 @@ public class JsonIOTest {
       File file = constructFileFor( POPULATING_FILE );
       if ( file.exists() ) {
          file.delete();
+      }
+      
+      File subfolderFile = constructFileFor( SUB_FOLDER_FILE );
+      if ( subfolderFile.exists() ) {
+         subfolderFile.delete();
       }
    }//End Method
    
@@ -100,12 +110,14 @@ public class JsonIOTest {
       }
    }//End Method
    
-   @Test public void writeShouldConstructNonExistentFile(){
-      assertThat( JsonIOTest.class.getResource( POPULATING_FILE ), is( nullValue() ) );
-      shouldWriteTestableFile();
+   @Parameters( { POPULATING_FILE, SUB_FOLDER_FILE } )
+   @Test public void writeShouldConstructNonExistentFile( String file ){
+      assertThat( JsonIOTest.class.getResource( file ), is( nullValue() ) );
+      shouldWriteTestableFile( file );
    }//End Method
    
-   @Test public void shouldWriteTestableFile() {
+   @Parameters( { POPULATING_FILE, SUB_FOLDER_FILE } )
+   @Test public void shouldWriteTestableFile( String filename ) {
       final String keyA = "something very specific";
       final String keyB = "anotherkey";
       final String value = "another thing but mispelt";
@@ -114,14 +126,14 @@ public class JsonIOTest {
       writeObject.put( keyA, value );
       writeObject.put( keyB, value );
       
-      final File file = constructFileFor( POPULATING_FILE );
+      final File file = constructFileFor( filename );
       assertThat( systemUnderTest.write( file, writeObject ), is( true ) );
       
       assertThat( file.exists(), is( true ) );
       jsonObject = systemUnderTest.read( file );
       assertThat( jsonObject.toString(), is( writeObject.toString() ) );
       
-      assertThat( TestCommon.readFileIntoString( getClass(), POPULATING_FILE ), is( writeObject.toString( 3 ) ) );
+      assertThat( TestCommon.readFileIntoString( getClass(), filename ), is( writeObject.toString( 3 ) ) );
    }//End Method
    
    @Test public void shouldCatchNullStringWhenReadAndAvoidExceptions(){
@@ -152,13 +164,16 @@ public class JsonIOTest {
       assertThat( systemUnderTest.readFileIntoString( file ), is( nullValue() ) );
    }//End Method
    
-   @Test public void writeShouldUseFileThatAlreadyExists() throws IOException{
-      final File file = constructFileFor( POPULATING_FILE );
+   @Parameters( { POPULATING_FILE, SUB_FOLDER_FILE } )
+   @Test public void writeShouldUseFileThatAlreadyExists( String filename ) throws IOException{
+      final File file = constructFileFor( filename );
       assertThat( file, is( not( nullValue() ) ) );
       assertThat( file.exists(), is( false ) );
+      
+      file.getParentFile().mkdirs();
       file.createNewFile();
       
-      shouldWriteTestableFile();
+      shouldWriteTestableFile( filename );
    }//End Method
    
    @Test public void writeShouldFailGracefullyIfFileCannotBeCreated() throws IOException{
