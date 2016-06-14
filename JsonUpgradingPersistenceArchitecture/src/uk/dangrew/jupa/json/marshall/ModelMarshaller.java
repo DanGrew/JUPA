@@ -65,7 +65,9 @@ public class ModelMarshaller {
     */
    public void read() {
       JSONObject readObject = fileProtocol.readFromLocation();
-      parserWithReadHandles.parse( readObject );
+      if ( readObject != null ) {
+         parserWithReadHandles.parse( readObject );
+      }
    }//End Method
 
 }//End Class

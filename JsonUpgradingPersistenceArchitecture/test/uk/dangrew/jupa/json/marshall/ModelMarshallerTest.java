@@ -85,4 +85,9 @@ public class ModelMarshallerTest {
       order.verify( protocol ).readFromLocation();
       order.verify( parserWithReadHandles ).parse( readObject );
    }//End Method
+   
+   @Test public void shouldIgnoreNullObjectRead(){
+      systemUnderTest = new ModelMarshaller( structure, new JsonParser(), new JsonParser(), protocol );
+      systemUnderTest.read();
+   }//End Method
 }//End Class
