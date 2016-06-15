@@ -7,7 +7,7 @@
  *                 2016
  * ----------------------------------------
  */
-package uk.dangrew.jupa.json.write;
+package uk.dangrew.jupa.json.structure;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -21,6 +21,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
+
+import uk.dangrew.jupa.json.structure.JsonStructureBuilder;
+import uk.dangrew.jupa.json.structure.JsonStructureTree;
 
 /**
  * {@link JsonStructureBuilder} test.

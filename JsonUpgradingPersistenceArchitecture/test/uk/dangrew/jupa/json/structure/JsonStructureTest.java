@@ -7,7 +7,7 @@
  *                 2016
  * ----------------------------------------
  */
-package uk.dangrew.jupa.json.write;
+package uk.dangrew.jupa.json.structure;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -22,6 +22,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import uk.dangrew.jupa.json.structure.JsonStructure;
+import uk.dangrew.jupa.json.structure.JsonStructureBuilder;
+import uk.dangrew.jupa.json.structure.JsonStructureTree;
 
 /**
  * {@link JsonStructure} test.

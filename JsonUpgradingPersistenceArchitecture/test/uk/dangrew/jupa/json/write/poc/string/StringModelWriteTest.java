@@ -22,7 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import uk.dangrew.jupa.json.parse.JsonParser;
-import uk.dangrew.jupa.json.write.JsonStructure;
+import uk.dangrew.jupa.json.structure.JsonStructure;
 
 /**
  * Proof of concept test to prove a string model can be written.

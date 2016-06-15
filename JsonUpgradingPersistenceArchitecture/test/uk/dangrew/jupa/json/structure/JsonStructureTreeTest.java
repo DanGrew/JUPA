@@ -7,7 +7,7 @@
  *                 2016
  * ----------------------------------------
  */
-package uk.dangrew.jupa.json.write;
+package uk.dangrew.jupa.json.structure;
 
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
@@ -20,6 +20,8 @@ import java.util.function.Function;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import uk.dangrew.jupa.json.structure.JsonStructureTree;
 
 /**
  * {@link JsonStructureTree} test.

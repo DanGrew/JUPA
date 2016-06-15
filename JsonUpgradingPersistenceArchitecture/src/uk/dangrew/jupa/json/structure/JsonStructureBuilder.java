@@ -7,7 +7,7 @@
  *                 2016
  * ----------------------------------------
  */
-package uk.dangrew.jupa.json.write;
+package uk.dangrew.jupa.json.structure;
 
 import java.util.Collection;
 

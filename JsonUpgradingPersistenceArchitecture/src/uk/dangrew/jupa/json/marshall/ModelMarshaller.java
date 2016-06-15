@@ -13,7 +13,7 @@ import org.json.JSONObject;
 
 import uk.dangrew.jupa.file.protocol.FileLocationProtocol;
 import uk.dangrew.jupa.json.parse.JsonParser;
-import uk.dangrew.jupa.json.write.JsonStructure;
+import uk.dangrew.jupa.json.structure.JsonStructure;
 
 /**
  * The {@link ModelMarshaller} is responsible for marshalling a model, defined in terms of

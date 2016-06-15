@@ -27,7 +27,7 @@ import org.mockito.MockitoAnnotations;
 
 import uk.dangrew.jupa.file.protocol.FileLocationProtocol;
 import uk.dangrew.jupa.json.parse.JsonParser;
-import uk.dangrew.jupa.json.write.JsonStructure;
+import uk.dangrew.jupa.json.structure.JsonStructure;
 
 /**
  * {@link ModelMarshaller} test.
