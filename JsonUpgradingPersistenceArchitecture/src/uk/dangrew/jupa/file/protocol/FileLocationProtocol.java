@@ -29,5 +29,11 @@ public interface FileLocationProtocol {
     * @return true if successfully written.
     */
    public boolean writeToLocation( JSONObject object );
+   
+   /**
+    * Method to get the absolute path of the {@link java.io.File} location.
+    * @return the {@link String} location.
+    */
+   public String getLocation();
 
 }//End Interface

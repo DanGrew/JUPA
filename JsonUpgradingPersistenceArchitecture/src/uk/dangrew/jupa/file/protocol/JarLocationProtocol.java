@@ -93,5 +93,12 @@ public class JarLocationProtocol implements FileLocationProtocol {
    @Override public boolean writeToLocation( JSONObject object ) {
       return jsonIO.write( source, object );
    }//End Method
+   
+   /**
+    * {@inheritDoc}
+    */
+   @Override public String getLocation() {
+      return source.getAbsolutePath();
+   }//End Method
 
 }//End Class

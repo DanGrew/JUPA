@@ -122,4 +122,13 @@ public class JarLocationProtocolTest {
       assertThat( fileCaptor.getValue().getAbsolutePath(), containsString( "json" ) );
    }//End Method
    
+   @Test public void shouldProvideAbsolutePath(){
+      systemUnderTest = new JarLocationProtocol( "anything", FILENAME, getClass() );
+      
+      File thisLocation = new File( getClass().getProtectionDomain().getCodeSource().getLocation().getPath() );
+      
+      String fullLocation = systemUnderTest.getLocation();
+      assertThat( fullLocation, containsString( thisLocation.getParentFile().getAbsolutePath() + "/anything/" + FILENAME ) );
+   }//End Method
+   
 }//End Class
