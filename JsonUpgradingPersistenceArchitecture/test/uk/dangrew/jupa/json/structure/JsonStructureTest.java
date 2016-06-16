@@ -23,10 +23,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import uk.dangrew.jupa.json.structure.JsonStructure;
-import uk.dangrew.jupa.json.structure.JsonStructureBuilder;
-import uk.dangrew.jupa.json.structure.JsonStructureTree;
-
 /**
  * {@link JsonStructure} test.
  */
@@ -45,10 +41,11 @@ public class JsonStructureTest {
    private JsonStructure systemUnderTest;
    @Mock private JsonStructureTree tree;
    @Mock private JsonStructureBuilder builder;
+   @Mock private JsonStructureCompatibility compatibilty;
    
    @Before public void initialiseSystemUnderTest(){
       MockitoAnnotations.initMocks( this );
-      systemUnderTest = new JsonStructure( tree, builder );
+      systemUnderTest = new JsonStructure( tree, builder, compatibilty );
    }//End Method
    
    @Test public void shouldBuildObjectStructureWithAttributesAsPlaceholders(){
@@ -66,6 +63,8 @@ public class JsonStructureTest {
       assertThat( person.get( FIRST_NAME ), is( systemUnderTest.placeholder() ) );
       assertThat( person.get( LAST_NAME ), is( systemUnderTest.placeholder() ) );
       assertThat( person.get( AGE ), is( systemUnderTest.placeholder() ) );
+      
+      assertThat( systemUnderTest.isCompatible( jsonObject ), is( true ) );
    }//End Method
    
    @Test public void shouldBuildArrayStructureWithAttributesInSpecificNumberOfItems(){
@@ -90,6 +89,8 @@ public class JsonStructureTest {
          assertThat( person.get( LAST_NAME ), is( systemUnderTest.placeholder() ) );
          assertThat( person.get( AGE ), is( systemUnderTest.placeholder() ) );
       }
+      
+      assertThat( systemUnderTest.isCompatible( jsonObject ), is( true ) );
    }//End Method
    
    @Test public void rootShouldProvideTreeRoot() {
@@ -126,6 +127,17 @@ public class JsonStructureTest {
    @Test public void buildSizeShouldCallThroughToBuilder() {
       systemUnderTest.build( jsonObject );
       verify( builder ).build( jsonObject );
+   }//End Method
+   
+   @Test public void compatibilityShouldCallThroughToCompatibilityObject(){
+      when( compatibilty.isCompatible( jsonObject ) ).thenReturn( false );
+      assertThat( systemUnderTest.isCompatible( jsonObject ), is( false ) );
+      
+      when( compatibilty.isCompatible( jsonObject ) ).thenReturn( true );
+      assertThat( systemUnderTest.isCompatible( jsonObject ), is( true ) );
+      
+      when( compatibilty.isCompatible( jsonObject ) ).thenReturn( false );
+      assertThat( systemUnderTest.isCompatible( jsonObject ), is( false ) );
    }//End Method
 
 }//End Class

@@ -14,6 +14,8 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.json.JSONObject;
@@ -23,6 +25,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import uk.dangrew.jupa.file.protocol.FileLocationProtocol;
@@ -43,6 +46,7 @@ public class ModelMarshallerTest {
    
    @Before public void initialiseSystemUnderTest(){
       MockitoAnnotations.initMocks( this );
+      when( structure.isCompatible( Mockito.any() ) ).thenReturn( true );
       systemUnderTest = new ModelMarshaller( structure, parserWithReadHandles, parserWithWriteHandles, protocol );
    }//End Method
    
@@ -89,5 +93,22 @@ public class ModelMarshallerTest {
    @Test public void shouldIgnoreNullObjectRead(){
       systemUnderTest = new ModelMarshaller( structure, new JsonParser(), new JsonParser(), protocol );
       systemUnderTest.read();
+   }//End Method
+   
+   @Test public void shouldAvoidParsingIfParsedStructureIsNotCompatible(){
+      when( structure.isCompatible( Mockito.any() ) ).thenReturn( false );
+      systemUnderTest.read();
+      verify( parserWithReadHandles, never() ).parse( Mockito.any() );
+      
+      final JSONObject readObject = new JSONObject();
+      when( protocol.readFromLocation() ).thenReturn( readObject );
+      
+      when( structure.isCompatible( Mockito.any() ) ).thenReturn( true );
+      systemUnderTest.read();
+      verify( parserWithReadHandles ).parse( Mockito.any() );
+      
+      when( structure.isCompatible( Mockito.any() ) ).thenReturn( false );
+      systemUnderTest.read();
+      verify( parserWithReadHandles ).parse( Mockito.any() );
    }//End Method
 }//End Class

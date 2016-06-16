@@ -21,8 +21,9 @@ import org.json.JSONObject;
  */
 public class JsonStructure {
    
-   private JsonStructureTree tree;
-   private JsonStructureBuilder builder;
+   private final JsonStructureTree tree;
+   private final JsonStructureBuilder builder;
+   private final JsonStructureCompatibility compatibility;
    
    /**
     * Constructs a new {@link JsonStructure}.
@@ -30,16 +31,19 @@ public class JsonStructure {
    public JsonStructure() {
       tree = new JsonStructureTree();
       builder = new JsonStructureBuilder( tree );
+      compatibility = new JsonStructureCompatibility( tree );
    }//End Constructor
 
    /**
     * Constructs a new {@link JsonStructure}.
     * @param tree the {@link JsonStructureTree} to use.
     * @param builder the {@link JsonStructureBuilder} to use.
+    * @param compatibility the {@link JsonStructureCompatibility} to use.
     */
-   JsonStructure( JsonStructureTree tree, JsonStructureBuilder builder ) {
+   JsonStructure( JsonStructureTree tree, JsonStructureBuilder builder, JsonStructureCompatibility compatibility ) {
       this.tree = tree;
       this.builder = builder;
+      this.compatibility = compatibility;
    }//End Constructor
 
    /**
@@ -95,6 +99,16 @@ public class JsonStructure {
     */
    public void build( JSONObject jsonObject ) {
       builder.build( jsonObject );
+   }//End Method
+   
+   /**
+    * Method to determine whether the given {@link JSONObject} matches the expected structure defined by
+    * the {@link JsonStructure} associated.
+    * @param jsonObject the {@link JSONObject} in question.
+    * @return true if compatible, false otherwise.
+    */
+   public boolean isCompatible( JSONObject jsonObject ) {
+      return compatibility.isCompatible( jsonObject );
    }//End Method
 
 }//End Class
