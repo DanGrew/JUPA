@@ -10,11 +10,6 @@
 package uk.dangrew.jupa.json.io;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Scanner;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,12 +22,23 @@ import uk.dangrew.sd.logging.io.BasicStringIO;
 public class JsonIO {
    
    private final BasicStringIO stringIO;
+   private final JsonIODigest digest;
    
    /**
     * Constructs a new {@link JsonIO}.
     */
    public JsonIO() {
-      stringIO = new BasicStringIO();
+      this( new JsonIODigest() );
+   }//End Constructor
+   
+   /**
+    * Constructs a new {@link JsonIO} with the given {@link JsonIODigest}.
+    * @param digest the {@link JsonIODigest} to use.
+    */
+   JsonIO( JsonIODigest digest ) {
+      this.stringIO = new BasicStringIO();
+      this.digest = digest;
+      this.digest.attachSource( this );
    }//End Constructor
 
    /**
@@ -48,6 +54,7 @@ public class JsonIO {
       try {
          return new JSONObject( parsedString );
       } catch ( JSONException exception ) {
+         digest.failedToParseInput( file );
          return null;
       }
    }//End Method
