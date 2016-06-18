@@ -28,7 +28,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import uk.dangrew.jupa.file.protocol.FileLocationProtocol;
+import uk.dangrew.jupa.file.protocol.JsonPersistingProtocol;
 import uk.dangrew.jupa.json.parse.JsonParser;
 import uk.dangrew.jupa.json.structure.JsonStructure;
 
@@ -37,7 +37,7 @@ import uk.dangrew.jupa.json.structure.JsonStructure;
  */
 public class ModelMarshallerTest {
 
-   @Mock private FileLocationProtocol protocol;
+   @Mock private JsonPersistingProtocol protocol;
    @Mock private JsonStructure structure;
    @Mock private JsonParser parserWithReadHandles;
    @Mock private JsonParser parserWithWriteHandles;

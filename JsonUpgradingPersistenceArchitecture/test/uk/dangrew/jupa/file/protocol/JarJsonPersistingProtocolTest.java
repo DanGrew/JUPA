@@ -32,29 +32,29 @@ import org.mockito.MockitoAnnotations;
 import uk.dangrew.jupa.json.io.JsonIO;
 
 /**
- * {@link JarLocationProtocol} test.
+ * {@link JarJsonPersistingProtocol} test.
  */
-public class JarLocationProtocolTest {
+public class JarJsonPersistingProtocolTest {
 
    private static final String FILENAME = "any file name";
    
    @Mock private JsonIO jsonIO;
    @Captor private ArgumentCaptor< File > fileCaptor;
    @Captor private ArgumentCaptor< JSONObject > jsonCaptor;
-   private JarLocationProtocol systemUnderTest;
+   private JarJsonPersistingProtocol systemUnderTest;
    
    @Before public void initialiseSystemUnderTest(){
       MockitoAnnotations.initMocks( this );
-      systemUnderTest = new JarLocationProtocol( jsonIO, null, FILENAME, getClass() );
+      systemUnderTest = new JarJsonPersistingProtocol( jsonIO, null, FILENAME, getClass() );
    }//End Method
    
    @Test public void publicConstructorShouldProvideJsonIO(){
-      systemUnderTest = new JarLocationProtocol( FILENAME, getClass() );
+      systemUnderTest = new JarJsonPersistingProtocol( FILENAME, getClass() );
       assertThat( systemUnderTest.readFromLocation(), is( nullValue() ) );
    }//End Method
    
    @Test public void publicConstructorWithSubFolderShouldProvideJsonIO(){
-      systemUnderTest = new JarLocationProtocol( "subFolder", FILENAME, getClass() );
+      systemUnderTest = new JarJsonPersistingProtocol( "subFolder", FILENAME, getClass() );
       systemUnderTest.writeToLocation( new JSONObject() );
    }//End Method
    
@@ -67,7 +67,7 @@ public class JarLocationProtocolTest {
    }//End Method
    
    @Test public void readShouldDelegateToIOWithCorrectFilePathForClassOutsideOfProject() {
-      systemUnderTest = new JarLocationProtocol( jsonIO, null, FILENAME, JSONObject.class );
+      systemUnderTest = new JarJsonPersistingProtocol( jsonIO, null, FILENAME, JSONObject.class );
       
       systemUnderTest.readFromLocation();
       verify( jsonIO ).read( fileCaptor.capture() );
@@ -99,20 +99,20 @@ public class JarLocationProtocolTest {
    }//End Method
    
    @Test( expected = NullPointerException.class ) public void shouldNotAcceptNullFilename(){
-      new JarLocationProtocol( null, getClass() );
+      new JarJsonPersistingProtocol( null, getClass() );
    }//End Method
    
    @Test( expected = NullPointerException.class ) public void shouldNotAcceptNullClass(){
-      new JarLocationProtocol( FILENAME, null );
+      new JarJsonPersistingProtocol( FILENAME, null );
    }//End Method
    
    @Test( expected = IllegalArgumentException.class ) public void shouldNotAcceptClassWithNoCodeSource(){
-      new JarLocationProtocol( FILENAME, String.class );
+      new JarJsonPersistingProtocol( FILENAME, String.class );
    }//End Method
    
    @Test public void shouldLookForFileInSubFolder(){
       final String subFolder = "SubFolder";
-      systemUnderTest = new JarLocationProtocol( jsonIO, subFolder, FILENAME, JSONObject.class );
+      systemUnderTest = new JarJsonPersistingProtocol( jsonIO, subFolder, FILENAME, JSONObject.class );
       
       systemUnderTest.readFromLocation();
       verify( jsonIO ).read( fileCaptor.capture() );
@@ -123,7 +123,7 @@ public class JarLocationProtocolTest {
    }//End Method
    
    @Test public void shouldProvideAbsolutePath(){
-      systemUnderTest = new JarLocationProtocol( "anything", FILENAME, getClass() );
+      systemUnderTest = new JarJsonPersistingProtocol( "anything", FILENAME, getClass() );
       
       File thisLocation = new File( getClass().getProtectionDomain().getCodeSource().getLocation().getPath() );
       

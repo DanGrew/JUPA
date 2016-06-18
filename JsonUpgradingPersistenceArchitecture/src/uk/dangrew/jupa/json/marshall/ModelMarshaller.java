@@ -11,20 +11,20 @@ package uk.dangrew.jupa.json.marshall;
 
 import org.json.JSONObject;
 
-import uk.dangrew.jupa.file.protocol.FileLocationProtocol;
+import uk.dangrew.jupa.file.protocol.JsonPersistingProtocol;
 import uk.dangrew.jupa.json.parse.JsonParser;
 import uk.dangrew.jupa.json.structure.JsonStructure;
 
 /**
  * The {@link ModelMarshaller} is responsible for marshalling a model, defined in terms of
- * {@link JsonParser}s to a {@link FileLocationProtocol}.
+ * {@link JsonParser}s to a {@link JsonPersistingProtocol}.
  */
 public class ModelMarshaller {
 
    private final JsonStructure structure;
    private final JsonParser parserWithReadHandles;
    private final JsonParser parserWithWriteHandles;
-   private final FileLocationProtocol fileProtocol;
+   private final JsonPersistingProtocol fileProtocol;
 
    /**
     * Constructs a new {@link ModelMarshaller}.
@@ -32,13 +32,13 @@ public class ModelMarshaller {
     * required structure.
     * @param parserWithReadHandles the {@link JsonParser} for reading.
     * @param parserWithWriteHandles the {@link JsonParser} for writing.
-    * @param fileProtocol the {@link FileLocationProtocol} for reading and writing.
+    * @param fileProtocol the {@link JsonPersistingProtocol} for reading and writing.
     */
    public ModelMarshaller( 
             JsonStructure structure, 
             JsonParser parserWithReadHandles, 
             JsonParser parserWithWriteHandles,
-            FileLocationProtocol fileProtocol
+            JsonPersistingProtocol fileProtocol
    ) {
       if ( structure == null || parserWithReadHandles == null || parserWithWriteHandles == null || fileProtocol == null ) {
          throw new NullPointerException( "No parameters are allowed to be null." );

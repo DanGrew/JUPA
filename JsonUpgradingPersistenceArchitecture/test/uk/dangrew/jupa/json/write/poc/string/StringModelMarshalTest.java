@@ -13,11 +13,10 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static uk.dangrew.jupa.json.write.poc.string.StringModelParsing.PROJECTS_VALUE;
-import static uk.dangrew.jupa.json.write.poc.string.StringModelParsing.SKILLS_VALUE;
 
 import org.junit.Test;
 
-import uk.dangrew.jupa.file.protocol.JarLocationProtocol;
+import uk.dangrew.jupa.file.protocol.JarJsonPersistingProtocol;
 import uk.dangrew.jupa.json.marshall.ModelMarshaller;
 
 /**
@@ -35,7 +34,7 @@ public class StringModelMarshalTest {
                parsing.constructStructure( writeModel ),
                parsing.constructParserWithReadHandles( readModel ),
                parsing.constructParserWithWriteHandles( writeModel ),
-               new JarLocationProtocol( "StringModelMarshalTest-output-file.json", getClass() )
+               new JarJsonPersistingProtocol( "StringModelMarshalTest-output-file.json", getClass() )
       );
       
       marshaller.write();

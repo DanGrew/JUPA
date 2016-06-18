@@ -11,11 +11,13 @@ package uk.dangrew.jupa.file.protocol;
 
 import org.json.JSONObject;
 
+import uk.dangrew.sd.logging.location.FileLocationProtocol;
+
 /**
  * The {@link FileLocationProtocol} is responsible for determining where a {@link java.io.File} should
  * be placed and how it should be written.
  */
-public interface FileLocationProtocol {
+public interface JsonPersistingProtocol extends FileLocationProtocol {
    
    /**
     * Method to read from the associated location into a {@link JSONObject}.
@@ -30,10 +32,4 @@ public interface FileLocationProtocol {
     */
    public boolean writeToLocation( JSONObject object );
    
-   /**
-    * Method to get the absolute path of the {@link java.io.File} location.
-    * @return the {@link String} location.
-    */
-   public String getLocation();
-
 }//End Interface
