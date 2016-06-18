@@ -19,10 +19,21 @@ import java.util.Scanner;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import uk.dangrew.sd.logging.io.BasicStringIO;
+
 /**
  * {@link JsonIO} provides basic read and write functionality for files.
  */
 public class JsonIO {
+   
+   private final BasicStringIO stringIO;
+   
+   /**
+    * Constructs a new {@link JsonIO}.
+    */
+   public JsonIO() {
+      stringIO = new BasicStringIO();
+   }//End Constructor
 
    /**
     * Method to read json data from the given {@link File}.
@@ -30,10 +41,7 @@ public class JsonIO {
     * @return the {@link JSONObject} read, or null if anything goes wrong.
     */
    public JSONObject read( File file ) {
-      if ( !file.exists() ) {
-         return null;
-      }
-      String parsedString = readFileIntoString( file );
+      String parsedString = stringIO.read( file );
       if ( parsedString == null ) {
          return null;
       }
@@ -45,60 +53,17 @@ public class JsonIO {
    }//End Method
    
    /**
-    * Method to read the given {@link Scanner} and extract a {@link String}.
-    * @param scanner the {@link Scanner} to read.
-    * @return the {@link String} containing all text from the {@link Scanner}.
-    */
-   String readScannerContentAndClose( Scanner scanner ) {
-      String content = scanner.useDelimiter( "//Z" ).next();
-      scanner.close();
-      return content;
-   }//End Method
-   
-   /**
-    * Method to read a text file into a {@link String}.
-    * @param file the {@link File} to read into a {@link String}.
-    * @return the {@link String} containing all text from the {@link File}.
-    */
-   String readFileIntoString( File file ) {
-      try ( InputStream stream = new FileInputStream( file ) ){
-         Scanner scanner = new Scanner( stream );
-         return readScannerContentAndClose( scanner );
-      } catch ( IOException e ) {
-         return null;
-      } 
-   }//End Method
-
-   /**
     * Method to write the given {@link JSONObject} to the given {@link File}.
     * @param file the {@link File} to write to.
     * @param object the {@link JSONObject} to write.
     * @return true if written successfully.
     */
    public boolean write( File file, JSONObject object ) {
-      if ( object == null ) {
-         throw new NullPointerException( "Write object must not be null." );
+      if ( file == null ) {
+         throw new NullPointerException( "File must not be null." );
       }
-      
-      if ( !file.exists() ) {
-         try {
-            if ( file.getParentFile() != null ) {
-               file.getParentFile().mkdirs();
-            }
-            file.createNewFile();
-         } catch ( IOException e ) {
-            //TODO - digest.
-            return false;
-         }
-      }
-      
-      try ( FileWriter writer = new FileWriter( file ) ) {
-         writer.write( object.toString( 3 ) );
-         return true;
-      } catch ( IOException e ) {
-         //TODO - digest.
-         return false;
-      }
+      String stringToWrite = object.toString( 3 );
+      return stringIO.write( file, stringToWrite, false );
    }//End Method
 
 }//End Class

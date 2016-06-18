@@ -136,34 +136,6 @@ public class JsonIOTest {
       assertThat( TestCommon.readFileIntoString( getClass(), filename ), is( writeObject.toString( 3 ) ) );
    }//End Method
    
-   @Test public void shouldCatchNullStringWhenReadAndAvoidExceptions(){
-      final File file = constructFileFor( EXISITNG_FILE );
-      assertThat( file, is( not( nullValue() ) ) );
-      assertThat( file.exists(), is( true ) );
-      
-      //this should not happen because file issues are handled before - spying to make sure
-      systemUnderTest = spy( systemUnderTest );
-      when( systemUnderTest.readFileIntoString( file ) ).thenReturn( null );
-      
-      assertThat( systemUnderTest.read( file ), is( nullValue() ) );
-   }//End Method
-   
-   @Test( expected = IllegalStateException.class ) public void readScannerShouldClose(){
-      Scanner scanner = new Scanner( new StringReader( "anything" ) );
-      systemUnderTest.readScannerContentAndClose( scanner );
-      scanner.next();
-   }//End Method
-   
-   @Test public void readFileIntoStringShouldHandleIoExceptionsEvenThoughDefendedAgainst(){
-      systemUnderTest = spy( systemUnderTest );
-      doAnswer( invocation -> { throw new IOException(); } ).when( systemUnderTest ).readScannerContentAndClose( Mockito.any() );
-      
-      final File file = constructFileFor( EXISITNG_FILE );
-      assertThat( file, is( not( nullValue() ) ) );
-      assertThat( file.exists(), is( true ) );
-      assertThat( systemUnderTest.readFileIntoString( file ), is( nullValue() ) );
-   }//End Method
-   
    @Parameters( { POPULATING_FILE, SUB_FOLDER_FILE } )
    @Test public void writeShouldUseFileThatAlreadyExists( String filename ) throws IOException{
       final File file = constructFileFor( filename );
