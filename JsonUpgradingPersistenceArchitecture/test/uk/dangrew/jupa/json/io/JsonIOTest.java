@@ -16,25 +16,27 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.StringReader;
 import java.net.URL;
-import java.util.Scanner;
 
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import uk.dangrew.jupa.TestCommon;
+import uk.dangrew.sd.core.lockdown.DigestMessageReceiver;
+import uk.dangrew.sd.core.lockdown.DigestMessageReceiverImpl;
 
 /**
  * {@link JsonIO} test,
@@ -48,11 +50,14 @@ public class JsonIOTest {
    private static final String INVALID_FILE = "invalid-file.json";
    
    private JSONObject jsonObject;
+   @Mock private JsonIODigest digest;
    private JsonIO systemUnderTest;
    
    @Before public void initialiseSystemUnderTest(){
+      MockitoAnnotations.initMocks( this );
+      
       jsonObject = new JSONObject();
-      systemUnderTest = new JsonIO();
+      systemUnderTest = new JsonIO( digest );
       
       File file = constructFileFor( POPULATING_FILE );
       if ( file.exists() ) {
@@ -63,6 +68,10 @@ public class JsonIOTest {
       if ( subfolderFile.exists() ) {
          subfolderFile.delete();
       }
+   }//End Method
+   
+   @Test public void shouldAttachToDigest(){
+      verify( digest ).attachSource( systemUnderTest );
    }//End Method
    
    @Test public void shouldParseTestableFile() {
@@ -88,6 +97,7 @@ public class JsonIOTest {
       assertThat( invalidFile, is( not( nullValue() ) ) );
       assertThat( invalidFile.exists(), is( true ) );
       assertThat( systemUnderTest.read( invalidFile ), is( nullValue() ) );
+      verify( digest ).failedToParseInput( invalidFile );
    }//End Method
    
    @Test public void writeShouldNotAcceptNullFile(){
@@ -181,6 +191,17 @@ public class JsonIOTest {
       }
       
       return new File( knownResourcePath );
+   }//End Method
+   
+   @Test public void publicConstructorShouldProvideDigest(){
+      DigestMessageReceiver receiver = mock( DigestMessageReceiver.class );
+      new DigestMessageReceiverImpl( receiver );
+      
+      systemUnderTest = new JsonIO();
+      
+      File invalidFile = constructFileFor( INVALID_FILE );
+      assertThat( systemUnderTest.read( invalidFile ), is( nullValue() ) );
+      verify( receiver ).log( Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any() );
    }//End Method
 
 }//End Class
