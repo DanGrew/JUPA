@@ -72,15 +72,16 @@ class JsonStructureCompatibility {
          return false;
       }
       
-      JSONArray jsonArray = ( JSONArray ) object;
-      if ( structureTree.getArraySize( nodeName ) != jsonArray.length() ) {
-         return false;
-      }
-      
       Collection< String > rootElements = structureTree.getChildrenOf( nodeName );
       if ( rootElements.isEmpty() ) {
          return true;
       } else if ( rootElements.size() > 1 ) {
+         return false;
+      }
+      
+      JSONArray jsonArray = ( JSONArray ) object;
+      if ( jsonArray.length() == 0 ) {
+         //definitely require one element, must have children
          return false;
       }
       

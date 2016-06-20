@@ -172,7 +172,7 @@ public class JsonStructureCompatibilityTest {
       assertThat( systemUnderTest.isCompatible( object ), is( false ) );      
    }//End Method
    
-   @Test public void shouldRejectPartiallyMissingArray(){
+   @Test public void shouldAcceptArrayWithAnyNumberOfElementsSoLongAsOneIsPresent(){
       structureTree.addArray( CHILDA, structureTree.getRoot(), SIZE_RETRIEVER );
       structureTree.addArray( CHILDB, CHILDA, SIZE_RETRIEVER );
       
@@ -184,7 +184,7 @@ public class JsonStructureCompatibilityTest {
          childA.put( childB );
       }
       
-      assertThat( systemUnderTest.isCompatible( object ), is( false ) );  
+      assertThat( systemUnderTest.isCompatible( object ), is( true ) );  
    }//End Method
    
    @Test public void shouldAcceptFullyPopulatedNestedArrays(){
@@ -222,21 +222,6 @@ public class JsonStructureCompatibilityTest {
       JSONArray array = new JSONArray();
       childA.put( CHILDB, array );
       assertThat( systemUnderTest.isCompatible( object ), is( false ) );
-      
-      JSONObject childC1 = new JSONObject();
-      array.put( childC1 );
-      JSONObject childD1 = new JSONObject();
-      childC1.put( CHILDD, childD1 );
-      JSONObject childE1 = new JSONObject();
-      childC1.put( CHILDE, childE1 );
-      assertThat( systemUnderTest.isCompatible( object ), is( false ) );
-      
-      JSONObject childC2 = new JSONObject();
-      array.put( childC2 );
-      JSONObject childD2 = new JSONObject();
-      childC2.put( CHILDD, childD2 );
-      JSONObject childE2 = new JSONObject();
-      childC2.put( CHILDE, childE2 );
       
       JSONObject childC3 = new JSONObject();
       array.put( childC3 );

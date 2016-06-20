@@ -21,9 +21,6 @@ import org.junit.Test;
 
 import uk.dangrew.jupa.TestCommon;
 import uk.dangrew.jupa.json.parse.JsonParser;
-import uk.dangrew.jupa.json.parse.handle.key.JsonArrayParseHandler;
-import uk.dangrew.jupa.json.parse.handle.key.JsonArrayWithObjectParseHandler;
-import uk.dangrew.jupa.json.parse.handle.type.StringParseHandle;
 
 /**
  * Proof of concept test to prove that a simple string model can be parsed in.

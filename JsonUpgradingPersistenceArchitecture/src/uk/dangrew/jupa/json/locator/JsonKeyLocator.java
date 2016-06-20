@@ -13,8 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 
-import org.json.JSONObject;
-
 /**
  * The {@link JsonKeyLocator} is responsible for creating a path to a key
  * in a {@link JSONObject} with a builder style interface that allows modification

@@ -13,15 +13,12 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import java.util.function.Function;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import uk.dangrew.jupa.json.structure.JsonStructureTree;
 
 /**
  * {@link JsonStructureTree} test.
