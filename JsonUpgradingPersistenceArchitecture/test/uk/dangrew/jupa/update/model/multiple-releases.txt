@@ -1,0 +1,11 @@
+Release, "1.4.56"
+Download, "some-location/1.4.56"
+Description, "this is the first release"
+
+Release, "1.4.57"
+Download, "some-location/1.4.57"
+Description, "this is the next release"
+
+Release, "1.4.60"
+Download, "some-location/1.4.60"
+Description, "this is the final release"
