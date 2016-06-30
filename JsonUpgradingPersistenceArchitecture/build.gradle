@@ -58,6 +58,7 @@ repositories {
 dependencies {
 	compile 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.1.9'
 	compile group: 'org.controlsfx', name: 'controlsfx', version:'8.40.9'
+	compile group: 'org.apache.httpcomponents', name: 'httpclient', version:'4.1.2'
     compile group: 'org.json', name: 'json', version: '20151123'
     compile group: 'com.opencsv', name: 'opencsv', version: '3.8'
     compile group: 'SystemDigest', name: 'SystemDigest', version: '1.2.41'
