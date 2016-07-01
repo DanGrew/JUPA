@@ -22,9 +22,6 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.dangrew.jupa.json.structure.JsonStructureBuilder;
-import uk.dangrew.jupa.json.structure.JsonStructureTree;
-
 /**
  * {@link JsonStructureBuilder} test.
  */

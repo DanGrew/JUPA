@@ -60,7 +60,11 @@ public class ReleasesDownloaderTest {
                 "https://raw.githubusercontent.com/DanGrew/JenkinsTestTracker/master/RELEASES"
        );
        List< ReleaseDefinition > releases = new ReleaseParser().parse( content );
-       TestApplication.launch( () -> new ReleaseSummaryPanel( releases ) );
+       TestApplication.launch( () -> {
+          ReleaseSummaryPanel summary = new ReleaseSummaryPanel();
+          summary.setReleases( releases );
+          return summary;
+       } );
        
        Thread.sleep( 1000000 );
    }//End Method

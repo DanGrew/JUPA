@@ -7,11 +7,23 @@
  *                 2016
  * ----------------------------------------
  */
+/*
+ * ----------------------------------------
+ *           Json Upgrading and 
+ *        Persistence Architecture
+ * ----------------------------------------
+ *          Produced by Dan Grew
+ *                 2016
+ * ----------------------------------------
+ */
 package uk.dangrew.jupa.update.view;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.controlsfx.control.NotificationPane;
+
+import com.sun.javafx.application.PlatformImpl;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -33,30 +45,55 @@ public class ReleaseSummaryPanel extends NotificationPane {
    
    private final Label developmentMessage;
    private final VBox releasesContainer;
+   
+   private final List< ReleaseDefinition > releases;
 
    /**
     * Constructs a new {@link ReleaseSummaryPanel}.
-    * @param releases the {@link List} of {@link ReleaseDefinition}s to display.
     */
-   public ReleaseSummaryPanel( List< ReleaseDefinition > releases ) {
-      developmentMessage = new Label( DEVELOPMENT_MESSAGE );
-      developmentMessage.setWrapText( true );
-      developmentMessage.setPadding( new Insets( 5 ) );
-      developmentMessage.setPrefHeight( DEVELOPMENT_MESSAGE_HEIGHT );
+   public ReleaseSummaryPanel() {
+      this.releases = new ArrayList<>();
+      
+      this.developmentMessage = new Label( DEVELOPMENT_MESSAGE );
+      this.developmentMessage.setWrapText( true );
+      this.developmentMessage.setPadding( new Insets( 5 ) );
+      this.developmentMessage.setPrefHeight( DEVELOPMENT_MESSAGE_HEIGHT );
       setGraphic( developmentMessage );
       
       getStyleClass().add( NotificationPane.STYLE_CLASS_DARK );
       
-      releasesContainer = new VBox();
-      releases.forEach( release -> {
-         ReleaseButton button = new ReleaseButton( release );
-         button.setOnAction( event -> show() );
-         releasesContainer.getChildren().add( button );
-      } );
-      releasesContainer.setPrefSize( 400, 600 );
+      this.releasesContainer = new VBox();
+      this.releasesContainer.setPrefSize( 400, 600 );
       
       setContent( releasesContainer );
    }//End Constructor
+   
+   /**
+    * Method to set the {@link ReleaseDefinition}s to display.
+    * @param releases the {@link List} of {@link ReleaseDefinition}s to display.
+    */
+   public void setReleases( List< ReleaseDefinition > releasesToDisplay ) {
+      this.releases.clear();
+      this.releases.addAll( releasesToDisplay );
+      
+      PlatformImpl.runAndWait( () -> {
+         releasesContainer.getChildren().clear();
+         releasesToDisplay.forEach( release -> {
+            ReleaseButton button = new ReleaseButton( release );
+            button.setOnAction( event -> show() );
+            releasesContainer.getChildren().add( button );
+         } );
+      } );
+   }//End Method
+   
+   /**
+    * Method to determine whether this {@link ReleaseSummaryPanel} is using the given {@link List} of {@link ReleaseDefinition}s.
+    * @param checkReleases the {@link ReleaseDefinition}s expected.
+    * @return true if identical.
+    */
+   public boolean hasReleases( List< ReleaseDefinition > checkReleases ) {
+      return this.releases.equals( checkReleases );
+   }//End Method
 
    Label developmentMessage(){
       return developmentMessage;

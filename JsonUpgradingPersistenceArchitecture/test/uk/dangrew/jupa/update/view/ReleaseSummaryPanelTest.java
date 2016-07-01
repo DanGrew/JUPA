@@ -54,7 +54,8 @@ public class ReleaseSummaryPanelTest {
                + "which you will clearly care about." 
       );
       
-      systemUnderTest = new ReleaseSummaryPanel( Arrays.asList( releaseA, releaseB, releaseC ) );
+      systemUnderTest = new ReleaseSummaryPanel();
+      systemUnderTest.setReleases( Arrays.asList( releaseA, releaseB, releaseC ) );
    }//End Method
 
    @Ignore
@@ -109,6 +110,23 @@ public class ReleaseSummaryPanelTest {
       ReleaseButton thirdButton = ( ReleaseButton ) systemUnderTest.releaseContainer().getChildren().get( 2 );
       thirdButton.getOnAction().handle( new ActionEvent() );
       assertThat( systemUnderTest.isShowing(), is( true ) );
+   }//End Method
+   
+   @Test public void shouldHaveGivenReleases(){
+      assertThat( systemUnderTest.hasReleases( Arrays.asList( releaseA, releaseB, releaseC ) ), is( true ) );
+      assertThat( systemUnderTest.hasReleases( Arrays.asList( releaseA, releaseC ) ), is( false ) );
+      assertThat( systemUnderTest.hasReleases( Arrays.asList( releaseA, releaseC, releaseB ) ), is( false ) );
+   }//End Method
+   
+   @Test public void shouldReplaceReleasesWhenSetAgain(){
+      ReleaseDefinition newRelease = new ReleaseDefinition( "me", "you", "irene" );
+      systemUnderTest.setReleases( Arrays.asList( newRelease ) );
+      
+      assertThat( systemUnderTest.releaseContainer().getChildren(), hasSize( 1 ) );
+      
+      assertThat( systemUnderTest.releaseContainer().getChildren().get( 0 ), is( instanceOf( ReleaseButton.class ) ) );
+      ReleaseButton firstButton = ( ReleaseButton ) systemUnderTest.releaseContainer().getChildren().get( 0 );
+      assertThat( firstButton.version().getText(), is( newRelease.getIdentification() ) );
    }//End Method
 
 }//End Class
