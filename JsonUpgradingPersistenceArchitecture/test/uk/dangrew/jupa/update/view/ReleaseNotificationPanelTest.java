@@ -22,7 +22,6 @@ import org.controlsfx.control.NotificationPane;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import com.sun.javafx.application.PlatformImpl;
 
@@ -32,7 +31,6 @@ import uk.dangrew.jupa.update.download.NotificationScheduler;
 import uk.dangrew.jupa.update.download.ReleaseAvailableTask;
 import uk.dangrew.jupa.update.download.ReleasesDownloader;
 import uk.dangrew.jupa.update.model.ReleaseDefinition;
-import uk.dangrew.jupa.update.model.ReleaseParser;
 
 /**
  * {@link ReleaseNotificationPanel} test.
@@ -51,7 +49,7 @@ public class ReleaseNotificationPanelTest {
       TestApplication.launch( () -> systemUnderTest );
       
       ReleasesDownloader downloader = mock( ReleasesDownloader.class );
-      ReleaseAvailableTask task = new ReleaseAvailableTask( downloader, new ReleaseParser(), systemUnderTest );
+      ReleaseAvailableTask task = new ReleaseAvailableTask( "1.3.1", downloader, systemUnderTest );
       new NotificationScheduler( task, 3000 );
       
       Thread.sleep( 1000 );

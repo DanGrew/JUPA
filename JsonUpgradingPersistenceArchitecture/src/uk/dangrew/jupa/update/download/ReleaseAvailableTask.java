@@ -25,28 +25,32 @@ public class ReleaseAvailableTask extends TimerTask {
 
    private final ReleasesDownloader downloader;
    private final ReleaseParser parser;
+   private final ReleaseUpgradeChecker checker;
    private final ReleaseAvailabilityObserver observer;
    
    private final List< ReleaseDefinition > releases;
    
    /**
     * Constructs a new {@link ReleaseAvailableTask}.
+    * @param currentVersion the current version of the software.
     * @param downloader the {@link ReleasesDownloader} to use.
     * @param observer the {@link ReleaseAvailabilityObserver} to notify when the releases change.
     */
-   public ReleaseAvailableTask( ReleasesDownloader downloader, ReleaseAvailabilityObserver observer ) {
-      this( downloader, new ReleaseParser(), observer );
+   public ReleaseAvailableTask( String currentVersion, ReleasesDownloader downloader, ReleaseAvailabilityObserver observer ) {
+      this( downloader, new ReleaseParser(), new ReleaseUpgradeChecker( currentVersion ), observer );
    }//End Constructor
    
    /**
     * Constructs a new {@link ReleaseAvailableTask}.
     * @param downloader the {@link ReleasesDownloader} to use.
     * @param parser the {@link ReleaseParser} to use.
+    * @param checker the {@link ReleaseUpgradeChecker} to use.
     * @param observer the {@link ReleaseAvailabilityObserver} to notify when the releases change.
     */
-   public ReleaseAvailableTask( ReleasesDownloader downloader, ReleaseParser parser, ReleaseAvailabilityObserver observer ){
+   ReleaseAvailableTask( ReleasesDownloader downloader, ReleaseParser parser, ReleaseUpgradeChecker checker, ReleaseAvailabilityObserver observer ){
       this.downloader = downloader;
       this.parser = parser;
+      this.checker = checker;
       this.observer = observer;
       
       this.releases = new ArrayList<>();
@@ -68,7 +72,9 @@ public class ReleaseAvailableTask extends TimerTask {
       
       releases.clear();
       releases.addAll( parsedReleases );
-      observer.releasesAreNowAvailable( parsedReleases );
+      
+      List< ReleaseDefinition > filtered = checker.filterBasedOnCurrentVersion( parsedReleases );
+      observer.releasesAreNowAvailable( filtered );
    }//End Method
-
+   
 }//End Class

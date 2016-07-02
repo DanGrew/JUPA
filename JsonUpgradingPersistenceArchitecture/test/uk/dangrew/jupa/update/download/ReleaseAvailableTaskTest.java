@@ -22,6 +22,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import uk.dangrew.jupa.mockito.ParameterReturner;
 import uk.dangrew.jupa.update.model.ReleaseAvailabilityObserver;
 import uk.dangrew.jupa.update.model.ReleaseDefinition;
 import uk.dangrew.jupa.update.model.ReleaseParser;
@@ -40,13 +41,15 @@ public class ReleaseAvailableTaskTest {
    @Mock private ReleaseAvailabilityObserver observer;
    @Mock private ReleasesDownloader downloader;
    @Mock private ReleaseParser parser;
+   @Mock private ReleaseUpgradeChecker checker;
    private ReleaseAvailableTask systemUnderTest;
    
    @Before public void initialiseSystemUnderTest(){
       MockitoAnnotations.initMocks( this );
       
       when( downloader.downloadContent() ).thenReturn( DOWNLOADED_CONTENT );
-      systemUnderTest = new ReleaseAvailableTask( downloader, parser, observer );
+      when( checker.filterBasedOnCurrentVersion( Mockito.anyListOf( ReleaseDefinition.class ) ) ).then( new ParameterReturner<>( List.class, 0 ) );
+      systemUnderTest = new ReleaseAvailableTask( downloader, parser, checker, observer );
    }//End Method
 
    /**
@@ -142,6 +145,35 @@ public class ReleaseAvailableTaskTest {
       when( downloader.downloadContent() ).thenReturn( null );
       systemUnderTest.run();
       verify( observer, never() ).releasesAreNowAvailable( Mockito.anyListOf( ReleaseDefinition.class ) );
+   }//End Method
+   
+   @Test public void shouldFilterReleasesUsesCheckerBeforePassingOn(){
+      List< ReleaseDefinition > firstReleases = Arrays.asList( releaseA, releaseB, releaseC );
+      whenParsedReturn( firstReleases );
+      List< ReleaseDefinition > filteredReleases = Arrays.asList( releaseB, releaseC );
+      when( checker.filterBasedOnCurrentVersion( firstReleases ) ).thenReturn( filteredReleases );
+      
+      systemUnderTest.run();
+      verify( observer ).releasesAreNowAvailable( filteredReleases );
+   }//End Method
+   
+   @Test public void shouldUseVersionNumberToFilterReleases(){
+      when( downloader.downloadContent() ).thenReturn( 
+               "Release, \"V2\"\n"
+             + "Download, \"somewhere\"\n"
+             + "Description, \"anything\"\n"
+             
+             + "Release, \"V1\"\n"
+             + "Download, \"somewhere\"\n"
+             + "Description, \"anything\"\n"
+             
+             + "Release, \"V0\"\n"
+             + "Download, \"somewhere\"\n"
+             + "Description, \"anything\"\n"
+     );
+      systemUnderTest = new ReleaseAvailableTask( "V1", downloader, observer );
+      systemUnderTest.run();
+      verify( observer ).releasesAreNowAvailable( Arrays.asList( new ReleaseDefinition( "V2", "somewhere", "anything" ) ) );
    }//End Method
 
 }//End Class
