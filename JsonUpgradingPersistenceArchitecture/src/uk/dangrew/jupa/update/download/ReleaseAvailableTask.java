@@ -28,8 +28,6 @@ public class ReleaseAvailableTask extends TimerTask {
    private final ReleaseUpgradeChecker checker;
    private final ReleaseAvailabilityObserver observer;
    
-   private final List< ReleaseDefinition > releases;
-   
    /**
     * Constructs a new {@link ReleaseAvailableTask}.
     * @param currentVersion the current version of the software.
@@ -52,8 +50,6 @@ public class ReleaseAvailableTask extends TimerTask {
       this.parser = parser;
       this.checker = checker;
       this.observer = observer;
-      
-      this.releases = new ArrayList<>();
    }//End Constructor
    
    /**
@@ -66,13 +62,6 @@ public class ReleaseAvailableTask extends TimerTask {
       }
       
       List< ReleaseDefinition > parsedReleases = parser.parse( downloaded );
-      if ( parsedReleases.equals( releases ) ) {
-         return;
-      }
-      
-      releases.clear();
-      releases.addAll( parsedReleases );
-      
       List< ReleaseDefinition > filtered = checker.filterBasedOnCurrentVersion( parsedReleases );
       observer.releasesAreNowAvailable( filtered );
    }//End Method

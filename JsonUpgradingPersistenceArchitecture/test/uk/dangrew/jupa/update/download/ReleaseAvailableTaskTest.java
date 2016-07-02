@@ -10,6 +10,7 @@
 package uk.dangrew.jupa.update.download;
 
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -96,7 +97,7 @@ public class ReleaseAvailableTaskTest {
       verify( observer ).releasesAreNowAvailable( newReleases );
    }//End Method
    
-   @Test public void shouldNotNotifyObserverWhenReleasesHaveNotChanged() {
+   @Test public void shouldNotifyObserverEvenWhenReleasesHaveNotChanged() {
       List< ReleaseDefinition > expectedReleases = Arrays.asList( releaseA, releaseB );
       whenParsedReturn( expectedReleases );
       
@@ -104,7 +105,7 @@ public class ReleaseAvailableTaskTest {
       verify( observer ).releasesAreNowAvailable( expectedReleases );
       
       systemUnderTest.run();
-      verify( observer ).releasesAreNowAvailable( expectedReleases );
+      verify( observer, times( 2 ) ).releasesAreNowAvailable( expectedReleases );
    }//End Method
    
    @Test public void shouldNotifyObserverWhenReleasesHaveChangedData(){
