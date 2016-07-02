@@ -44,7 +44,8 @@ public class ReleaseNotificationPanel extends NotificationPane implements Releas
       this.summaryPanel = new ReleaseSummaryPanel();
       PlatformImpl.runAndWait( () -> {
          this.summaryStage = new Stage();
-         summaryStage.setScene( new Scene( summaryPanel )  );
+         this.summaryStage.setScene( new Scene( summaryPanel, 400, 600 )  );
+         this.summaryStage.setResizable( false );
          this.summaryStage.hide();
       } );
       
