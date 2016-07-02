@@ -35,7 +35,7 @@ public class NotificationSchedulerTest {
    }//End Method
    
    @Test public void shouldScheduleTaskAppropriately() {
-      verify( timer ).schedule( task, PERIOD );
+      verify( timer ).schedule( task, 0, PERIOD );
    }//End Method
 
    @Test public void shouldStopCorrectlyWhenRequested(){
