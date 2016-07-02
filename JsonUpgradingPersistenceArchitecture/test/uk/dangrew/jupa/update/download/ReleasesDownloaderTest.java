@@ -51,14 +51,14 @@ public class ReleasesDownloaderTest {
    
    @Before public void initialiseSystemUnderTest(){
       MockitoAnnotations.initMocks( this );
-      systemUnderTest = new ReleasesDownloader( client );
+      systemUnderTest = new ReleasesDownloader( "anything", client );
    }//End Method
 
    @Ignore
    @Test public void manual() throws InterruptedException {
-       String content = new ReleasesDownloader().downloadContent( 
+       String content = new ReleasesDownloader(
                 "https://raw.githubusercontent.com/DanGrew/JenkinsTestTracker/master/RELEASES"
-       );
+       ).downloadContent();
        List< ReleaseDefinition > releases = new ReleaseParser().parse( content );
        TestApplication.launch( () -> {
           ReleaseSummaryPanel summary = new ReleaseSummaryPanel();
@@ -70,39 +70,39 @@ public class ReleasesDownloaderTest {
    }//End Method
    
    @Test public void shouldHandleInvalidPath(){
-      assertThat( new ReleasesDownloader().downloadContent( "anything" ), is( nullValue() ) );
+      assertThat( new ReleasesDownloader( "anything" ).downloadContent(), is( nullValue() ) );
    }//End Method
    
    @Test( expected = IllegalArgumentException.class ) public void shouldNotAcceptNullPath(){
-      new ReleasesDownloader().downloadContent( null );
+      new ReleasesDownloader( null );
    }//End Method
    
    @Test public void shouldConnectToValidLinkInRepo(){
-      String result = new ReleasesDownloader().downloadContent( 
+      String result = new ReleasesDownloader( 
                "https://raw.githubusercontent.com/DanGrew/JUPA/master/README.md" 
-      );
+      ).downloadContent();
       System.out.println( result );
       assertThat( result, is( not( nullValue() ) ) );
    }//End Method
    
    @Test public void shouldHandleHttpResponseException() throws ClientProtocolException, IOException{
       when( client.execute( Mockito.< HttpUriRequest >any(), Mockito.< HttpContext >any() ) ).thenThrow( new HttpResponseException( 0, "anything" ) );
-      assertThat( systemUnderTest.downloadContent( "anything" ), is( nullValue() ) );
+      assertThat( systemUnderTest.downloadContent(), is( nullValue() ) );
    }//End Method
    
    @Test public void shouldHandleClientProtocolException() throws ClientProtocolException, IOException{
       when( client.execute( Mockito.< HttpUriRequest >any(), Mockito.< HttpContext >any() ) ).thenThrow( new ClientProtocolException() );
-      assertThat( systemUnderTest.downloadContent( "anything" ), is( nullValue() ) );
+      assertThat( systemUnderTest.downloadContent(), is( nullValue() ) );
    }//End Method
    
    @Test public void shouldHandleIOException() throws ClientProtocolException, IOException{
       when( client.execute( Mockito.< HttpUriRequest >any(), Mockito.< HttpContext >any() ) ).thenThrow( new IOException() );
-      assertThat( systemUnderTest.downloadContent( "anything" ), is( nullValue() ) );
+      assertThat( systemUnderTest.downloadContent(), is( nullValue() ) );
    }//End Method
    
    @Test public void shouldHandleIllegalStateException() throws ClientProtocolException, IOException{
       when( client.execute( Mockito.< HttpUriRequest >any(), Mockito.< HttpContext >any() ) ).thenThrow( new IllegalStateException() );
-      assertThat( systemUnderTest.downloadContent( "anything" ), is( nullValue() ) );
+      assertThat( systemUnderTest.downloadContent(), is( nullValue() ) );
    }//End Method
    
    @Test public void shouldTidyUpResponseBeforeFinishing() throws ClientProtocolException, IOException{
@@ -115,7 +115,7 @@ public class ReleasesDownloaderTest {
       
       when( client.execute( Mockito.< HttpUriRequest >any(), Mockito.< HttpContext >any() ) ).thenReturn( response );
       
-      assertThat( systemUnderTest.downloadContent( "anything" ), is( nullValue() ) );
+      assertThat( systemUnderTest.downloadContent(), is( nullValue() ) );
       verify( entity ).isStreaming();
       verify( stream ).close();
    }//End Method
@@ -126,6 +126,6 @@ public class ReleasesDownloaderTest {
       
       when( client.execute( Mockito.< HttpUriRequest >any(), Mockito.< HttpContext >any() ) ).thenReturn( response );
       
-      assertThat( systemUnderTest.downloadContent( "anything" ), is( nullValue() ) );
+      assertThat( systemUnderTest.downloadContent(), is( nullValue() ) );
    }//End Method
 }//End Class

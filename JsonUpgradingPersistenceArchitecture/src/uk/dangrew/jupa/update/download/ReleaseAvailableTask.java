@@ -23,7 +23,6 @@ import uk.dangrew.jupa.update.model.ReleaseParser;
  */
 public class ReleaseAvailableTask extends TimerTask {
 
-   private final String location;
    private final ReleasesDownloader downloader;
    private final ReleaseParser parser;
    private final ReleaseAvailabilityObserver observer;
@@ -32,22 +31,20 @@ public class ReleaseAvailableTask extends TimerTask {
    
    /**
     * Constructs a new {@link ReleaseAvailableTask}.
-    * @param location the {@link String} location of the releases.
+    * @param downloader the {@link ReleasesDownloader} to use.
     * @param observer the {@link ReleaseAvailabilityObserver} to notify when the releases change.
     */
-   public ReleaseAvailableTask( String location, ReleaseAvailabilityObserver observer ) {
-      this( location, new ReleasesDownloader(), new ReleaseParser(), observer );
+   public ReleaseAvailableTask( ReleasesDownloader downloader, ReleaseAvailabilityObserver observer ) {
+      this( downloader, new ReleaseParser(), observer );
    }//End Constructor
    
    /**
     * Constructs a new {@link ReleaseAvailableTask}.
-    * @param location the {@link String} location of the releases.
     * @param downloader the {@link ReleasesDownloader} to use.
     * @param parser the {@link ReleaseParser} to use.
     * @param observer the {@link ReleaseAvailabilityObserver} to notify when the releases change.
     */
-   public ReleaseAvailableTask( String location, ReleasesDownloader downloader, ReleaseParser parser, ReleaseAvailabilityObserver observer ){
-      this.location = location;
+   public ReleaseAvailableTask( ReleasesDownloader downloader, ReleaseParser parser, ReleaseAvailabilityObserver observer ){
       this.downloader = downloader;
       this.parser = parser;
       this.observer = observer;
@@ -59,7 +56,7 @@ public class ReleaseAvailableTask extends TimerTask {
     * {@inheritDoc}
     */
    @Override public void run() {
-      String downloaded = downloader.downloadContent( location );
+      String downloaded = downloader.downloadContent();
       if ( downloaded == null ) {
          return;
       }

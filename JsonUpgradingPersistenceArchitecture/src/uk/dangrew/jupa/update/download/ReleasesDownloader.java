@@ -30,35 +30,38 @@ import org.apache.http.util.EntityUtils;
 public class ReleasesDownloader {
    
    private final HttpClient client;
+   private final HttpGet get;
+   private final HttpContext getContext;
    
    /**
     * Constructs a new {@link ReleasesDownloader}.
+    * @param url the {@link String} location.
     */
-   public ReleasesDownloader() {
-      this( new DefaultHttpClient( new BasicHttpParams() ) );
+   public ReleasesDownloader( String url ) {
+      this( url, new DefaultHttpClient( new BasicHttpParams() ) );
    }//End Constructor
    
    /**
     * Constructs a new {@link ReleasesDownloader}.
+    * @param url the {@link String} location.
     * @param client the {@link HttpClient} to connect with.
     */
-   ReleasesDownloader( HttpClient client ) {
-      this.client = client;
-   }//End Constructor
-
-   /**
-    * Method to download the {@link String} content from the given file address url.
-    * @param url the {@link String} location.
-    * @return the content downloaded, or null if failed for some reason.
-    */
-   public String downloadContent( String url ){
+   ReleasesDownloader( String url, HttpClient client ) {
       if ( url == null ) {
          throw new IllegalArgumentException( "Must provide non null url." );
       }
       
+      this.client = client;
+      this.get = new HttpGet( url );
+      this.getContext = new BasicHttpContext();
+   }//End Constructor
+
+   /**
+    * Method to download the {@link String} content from the associated file address url.
+    * @return the content downloaded, or null if failed for some reason.
+    */
+   public String downloadContent(){
       try {
-         HttpGet get = new HttpGet( url );
-         HttpContext getContext = new BasicHttpContext();
          HttpResponse response = client.execute( get, getContext );
          return handleResponse( response );
       } catch ( HttpResponseException exception ) {

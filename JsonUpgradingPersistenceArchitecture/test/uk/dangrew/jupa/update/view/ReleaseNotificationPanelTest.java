@@ -51,19 +51,19 @@ public class ReleaseNotificationPanelTest {
       TestApplication.launch( () -> systemUnderTest );
       
       ReleasesDownloader downloader = mock( ReleasesDownloader.class );
-      ReleaseAvailableTask task = new ReleaseAvailableTask( "anything", downloader, new ReleaseParser(), systemUnderTest );
+      ReleaseAvailableTask task = new ReleaseAvailableTask( downloader, new ReleaseParser(), systemUnderTest );
       new NotificationScheduler( task, 3000 );
       
       Thread.sleep( 1000 );
       
-      when( downloader.downloadContent( Mockito.anyString() ) ).thenReturn( 
+      when( downloader.downloadContent() ).thenReturn( 
           "Release, \"1.4.103\"\n"
         + "Download, \"somewhere\"\n"
         + "Description, \"This is the first downloadable for testing purposes.\"\n"
       );
       
       Thread.sleep( 6000 );
-      when( downloader.downloadContent( Mockito.anyString() ) ).thenReturn( 
+      when( downloader.downloadContent() ).thenReturn( 
             "Release, \"1.4.103\"\n"
           + "Download, \"somewhere\"\n"
           + "Description, \"This is the first downloadable for testing purposes.\"\n"

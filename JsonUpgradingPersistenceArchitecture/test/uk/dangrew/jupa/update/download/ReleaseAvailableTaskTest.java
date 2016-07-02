@@ -31,7 +31,6 @@ import uk.dangrew.jupa.update.model.ReleaseParser;
  */
 public class ReleaseAvailableTaskTest {
 
-   private static final String DOWNLOADED_LOCATION = "somewhere special";
    private static final String DOWNLOADED_CONTENT = "anything downloaded";
    
    @Mock private ReleaseDefinition releaseA;
@@ -46,8 +45,8 @@ public class ReleaseAvailableTaskTest {
    @Before public void initialiseSystemUnderTest(){
       MockitoAnnotations.initMocks( this );
       
-      when( downloader.downloadContent( DOWNLOADED_LOCATION ) ).thenReturn( DOWNLOADED_CONTENT );
-      systemUnderTest = new ReleaseAvailableTask( DOWNLOADED_LOCATION, downloader, parser, observer );
+      when( downloader.downloadContent() ).thenReturn( DOWNLOADED_CONTENT );
+      systemUnderTest = new ReleaseAvailableTask( downloader, parser, observer );
    }//End Method
 
    /**
@@ -140,7 +139,7 @@ public class ReleaseAvailableTaskTest {
    }//End Method
    
    @Test public void shouldIgnoreNullDownloadedContent(){
-      when( downloader.downloadContent( DOWNLOADED_LOCATION ) ).thenReturn( null );
+      when( downloader.downloadContent() ).thenReturn( null );
       systemUnderTest.run();
       verify( observer, never() ).releasesAreNowAvailable( Mockito.anyListOf( ReleaseDefinition.class ) );
    }//End Method
