@@ -29,6 +29,7 @@ public class ReleaseButtonTest {
    private static final String RELEASE = "some release";
    private static final String DOWNLOAD = "some download";
    private static final String DESCRIPTION = "some description";
+   private static final String DATE = "some date";
    
    private ReleaseDefinition release;
    private ReleaseButton systemUnderTest;
@@ -67,5 +68,33 @@ public class ReleaseButtonTest {
    
    @Test public void buttonShouldStretchToWidth(){
       assertThat( systemUnderTest.getMaxWidth(), is( Double.MAX_VALUE ) );
+   }//End Method
+   
+   @Test public void releaseWithDateShouldBehaveTheSameAsOneWithout(){
+      systemUnderTest = new ReleaseButton( new ReleaseDefinition( RELEASE, DOWNLOAD, DESCRIPTION, DATE ) );
+      labelsShouldProvideDescriptionOfItem();
+      valueLabelsShouldProvideReleaseInformation();
+      descriptionLabelMustWrapText();
+      buttonShouldStretchToWidth();
+   }//End Method
+   
+   @Test public void dateShouldBeDisplayedBetweenOtherLabels(){
+      systemUnderTest = new ReleaseButton( new ReleaseDefinition( RELEASE, DOWNLOAD, DESCRIPTION, DATE ) );
+      assertThat( systemUnderTest.dateLabel().getText(), is( ReleaseButton.DATE_LABEL ) );
+      assertThat( systemUnderTest.date().getText(), is( DATE ) );
+   }//End Method
+   
+   @Test public void shouldContainElementsToDisplayReleaseWithDate() {
+      systemUnderTest = new ReleaseButton( new ReleaseDefinition( RELEASE, DOWNLOAD, DESCRIPTION, DATE ) );
+      
+      GridPane graphic = ( GridPane ) systemUnderTest.getGraphic();
+      assertThat( graphic.getChildren(), contains( 
+               systemUnderTest.versionLabel(), 
+               systemUnderTest.version(),
+               systemUnderTest.dateLabel(),
+               systemUnderTest.date(),
+               systemUnderTest.descriptionLabel(), 
+               systemUnderTest.description()
+      ) );
    }//End Method
 }//End Class

@@ -24,10 +24,13 @@ import uk.dangrew.jupa.update.model.ReleaseDefinition;
 public class ReleaseButton extends Button {
    
    static final String DESCRIPTION_LABEL = "Description:";
+   static final String DATE_LABEL = "Date:";
    static final String RELEASE_LABEL = "Release:";
    
    private final Label versionLabel;
    private final Label version;
+   private final Label dateLabel;
+   private final Label date;
    private final Label descriptionLabel;
    private final Label description;
    
@@ -43,11 +46,21 @@ public class ReleaseButton extends Button {
       version = new Label( release.getIdentification() );
       graphic.add( version, 0, 1 );
       
+      if ( release.getDate() != null ) {
+         dateLabel = createBoldLabel( DATE_LABEL, 13 );
+         graphic.add( dateLabel, 0, 2 );
+         date = new Label( release.getDate() );
+         graphic.add( date, 0, 3 );
+      } else {
+         dateLabel = null;
+         date = null;
+      }
+      
       descriptionLabel = createBoldLabel( DESCRIPTION_LABEL, 13 );
-      graphic.add( descriptionLabel, 0, 2 );
+      graphic.add( descriptionLabel, 0, 4 );
       description = new Label( release.getDescription() );
       description.setWrapText( true );
-      graphic.add( description, 0, 3 );
+      graphic.add( description, 0, 5 );
       
       setGraphic( graphic );
       setMaxWidth( Double.MAX_VALUE );
@@ -81,5 +94,13 @@ public class ReleaseButton extends Button {
    
    Label description(){
       return description;
+   }//End Method
+
+   Label dateLabel() {
+      return dateLabel;
+   }//End Method
+   
+   Label date() {
+      return date;
    }//End Method
 }//End Class

@@ -66,6 +66,7 @@ public class ReleaseNotificationPanelTest {
           + "Download, \"somewhere\"\n"
           + "Description, \"This is the first downloadable for testing purposes.\"\n"
           + "Release, \"1.4.104\"\n"
+          + "Date, \"Just Now!\"\n"
           + "Download, \"somewhere\"\n"
           + "Description, \"This is the first downloadable for testing purposes.\"\n"
       );
