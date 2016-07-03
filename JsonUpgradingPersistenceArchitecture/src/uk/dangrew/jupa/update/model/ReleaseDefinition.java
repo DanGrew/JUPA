@@ -18,6 +18,7 @@ public class ReleaseDefinition {
    private final String identification;
    private final String downloadLocation;
    private final String description;
+   private final String date;
    
    /**
     * Constructs a new {@link ReleaseDefinition}.
@@ -26,6 +27,17 @@ public class ReleaseDefinition {
     * @param description the description of the release, maybe containing changelog information.
     */
    public ReleaseDefinition( String identification, String downloadLocation, String description ) {
+      this( identification, downloadLocation, description, null );
+   }//End Constructor
+   
+   /**
+    * Constructs a new {@link ReleaseDefinition}.
+    * @param identification the identification of the release, or the version number.
+    * @param downloadLocation the location that the release can be downloaded from.
+    * @param description the description of the release, maybe containing changelog information.
+    * @param date the date associated, can be null.
+    */
+   public ReleaseDefinition( String identification, String downloadLocation, String description, String date ) {
       if ( identification == null || downloadLocation == null || description == null ) {
          throw new IllegalArgumentException( "Must not provide null arguments." );
       }
@@ -33,6 +45,7 @@ public class ReleaseDefinition {
       this.identification = identification;
       this.downloadLocation = downloadLocation;
       this.description = description;
+      this.date = date;
    }//End Constructor
 
    /**
@@ -58,6 +71,14 @@ public class ReleaseDefinition {
    public String getDescription() {
       return description;
    }//End Method
+   
+   /**
+    * Getter for the date associated with the release.
+    * @return the date in no particular format, can be null.
+    */
+   public String getDate() {
+      return date;
+   }//End Method
 
    /**
     * {@inheritDoc}
@@ -65,6 +86,7 @@ public class ReleaseDefinition {
    @Override public int hashCode() {
       final int prime = 31;
       int result = 1;
+      result = prime * result + ( ( date == null ) ? 0 : date.hashCode() );
       result = prime * result + ( ( description == null ) ? 0 : description.hashCode() );
       result = prime * result + ( ( downloadLocation == null ) ? 0 : downloadLocation.hashCode() );
       result = prime * result + ( ( identification == null ) ? 0 : identification.hashCode() );
@@ -85,6 +107,13 @@ public class ReleaseDefinition {
          return false;
       }
       ReleaseDefinition other = ( ReleaseDefinition ) obj;
+      if ( date != other.date ) {
+         if ( date != null && date.equals( other.date ) ) {
+            //equals
+         } else {
+            return false;
+         }
+      }
       if ( !description.equals( other.description ) ) {
          return false;
       }

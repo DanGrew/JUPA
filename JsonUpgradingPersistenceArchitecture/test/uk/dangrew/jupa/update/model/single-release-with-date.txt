@@ -1,0 +1,4 @@
+Release, "release-value"
+Date, "Today"
+Download, "download-value"
+Description, "description-value"

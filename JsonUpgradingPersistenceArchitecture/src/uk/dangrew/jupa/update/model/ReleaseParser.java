@@ -23,6 +23,7 @@ import com.opencsv.CSVReader;
 public class ReleaseParser {
    
    private static final String RELEASE = "Release";
+   private static final String DATE = "Date";
    private static final String DOWNLOAD = "Download";
    private static final String DESCRIPTION = "Description";
 
@@ -77,6 +78,11 @@ public class ReleaseParser {
       }
       
       parsingLine = reader.readNext();
+      String date = parseValue( parsingLine, DATE );
+      if ( date != null ) {
+         parsingLine = reader.readNext();
+      }
+      
       String download = parseValue( parsingLine, DOWNLOAD );
       if ( download == null ) {
          return null;
@@ -88,7 +94,7 @@ public class ReleaseParser {
          return null;
       }
       
-      return new ReleaseDefinition( release, download, description );
+      return new ReleaseDefinition( release, download, description, date );
    }//End Method
    
    /**

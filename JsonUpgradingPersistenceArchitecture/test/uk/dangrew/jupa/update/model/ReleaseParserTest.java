@@ -40,6 +40,14 @@ public class ReleaseParserTest {
       assertThat( definitions.get( 0 ), is( new ReleaseDefinition( "release-value", "download-value", "description-value" ) ) );
    }//End Method
    
+   @Test public void shouldExtractSingleReleaseDefinitionWithDate() {
+      String testCase = TestCommon.readFileIntoString( getClass(), "single-release-with-date.txt" );
+      List< ReleaseDefinition > definitions = systemUnderTest.parse( testCase );
+      
+      assertThat( definitions, hasSize( 1 ) );
+      assertThat( definitions.get( 0 ), is( new ReleaseDefinition( "release-value", "download-value", "description-value", "Today" ) ) );
+   }//End Method
+   
    @Test public void shouldExtractSingleReleaseDefinitionWithCommas() {
       String testCase = TestCommon.readFileIntoString( getClass(), "single-release-using-commas.txt" );
       List< ReleaseDefinition > definitions = systemUnderTest.parse( testCase );
