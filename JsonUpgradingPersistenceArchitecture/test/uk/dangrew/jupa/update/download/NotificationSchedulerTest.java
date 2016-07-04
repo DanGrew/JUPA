@@ -9,6 +9,10 @@
  */
 package uk.dangrew.jupa.update.download;
 
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import java.util.Timer;
@@ -32,6 +36,20 @@ public class NotificationSchedulerTest {
    @Before public void initialiseSystemUnderTest(){
       MockitoAnnotations.initMocks( this );
       systemUnderTest = new NotificationScheduler( timer, task, PERIOD );
+   }//End Method
+   
+   @Test( expected = IllegalArgumentException.class ) public void shouldNotAcceptNullTask(){
+      new NotificationScheduler( null, PERIOD );
+   }//End Method
+   
+   @Test public void shouldProvideGivenPeriod(){
+      assertThat( systemUnderTest.getNotificationPeriod(), is( PERIOD ) );
+      assertThat( systemUnderTest.getNotificationPeriod(), is( not( 102L ) ) );
+   }//End Method
+   
+   @Test public void shouldHaveTaskAssociated(){
+      assertThat( systemUnderTest.isTask( task ), is( true ) );
+      assertThat( systemUnderTest.isTask( mock( ReleaseAvailableTask.class ) ), is( false ) );
    }//End Method
    
    @Test public void shouldScheduleTaskAppropriately() {

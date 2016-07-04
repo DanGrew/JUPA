@@ -18,6 +18,8 @@ import java.util.Timer;
 public class NotificationScheduler {
    
    private final Timer timer;
+   private final ReleaseAvailableTask task;
+   private final long period;
    
    /**
     * Constructs a new {@link NotificationScheduler}.
@@ -35,8 +37,13 @@ public class NotificationScheduler {
     * @param period the period between runs.
     */
    NotificationScheduler( Timer timer, ReleaseAvailableTask task, long period ) {
-      this.timer = timer;
+      if ( task == null ) {
+         throw new IllegalArgumentException( "Must provide non null task." );
+      }
       
+      this.timer = timer;
+      this.task = task;
+      this.period = period;
       timer.schedule( task, 0, period );
    }//End Constructor
    
@@ -45,6 +52,23 @@ public class NotificationScheduler {
     */
    public void stop(){
       timer.cancel();
+   }//End Method
+
+   /**
+    * Method to determine whether the given {@link ReleaseAvailableTask} is associated.
+    * @param task the {@link ReleaseAvailableTask} in question.
+    * @return true if equal, false if different.
+    */
+   public boolean isTask( ReleaseAvailableTask task ) {
+      return this.task.equals( task );
+   }//End Method
+
+   /**
+    * Getter for the period in milliseconds between notifications.
+    * @return the notification period in milliseconds.
+    */
+   public long getNotificationPeriod() {
+      return period;
    }//End Method
 
 }//End Class

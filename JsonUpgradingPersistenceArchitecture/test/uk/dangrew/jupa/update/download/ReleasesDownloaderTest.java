@@ -69,6 +69,11 @@ public class ReleasesDownloaderTest {
        Thread.sleep( 1000000 );
    }//End Method
    
+   @Test public void shouldProvideGivenLocation(){
+      assertThat( systemUnderTest.getDownloadLocation(), is( "anything" ) );
+      assertThat( systemUnderTest.getDownloadLocation(), is( not( "anything else " ) ) );
+   }//End Method
+   
    @Test public void shouldHandleInvalidPath(){
       assertThat( new ReleasesDownloader( "anything" ).downloadContent(), is( nullValue() ) );
    }//End Method

@@ -29,6 +29,7 @@ import org.apache.http.util.EntityUtils;
  */
 public class ReleasesDownloader {
    
+   private final String location;
    private final HttpClient client;
    private final HttpGet get;
    private final HttpContext getContext;
@@ -51,6 +52,7 @@ public class ReleasesDownloader {
          throw new IllegalArgumentException( "Must provide non null url." );
       }
       
+      this.location = url;
       this.client = client;
       this.get = new HttpGet( url );
       this.getContext = new BasicHttpContext();
@@ -91,6 +93,14 @@ public class ReleasesDownloader {
             EntityUtils.consume( response.getEntity() );
          }
       }
+   }//End Method
+
+   /**
+    * Getter for the location to download from.
+    * @return the location constructed with.
+    */
+   public String getDownloadLocation() {
+      return location;
    }//End Method
    
 }//End Class
