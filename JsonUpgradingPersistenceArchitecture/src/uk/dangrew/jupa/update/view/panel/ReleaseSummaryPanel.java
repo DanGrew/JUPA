@@ -16,7 +16,7 @@
  *                 2016
  * ----------------------------------------
  */
-package uk.dangrew.jupa.update.view;
+package uk.dangrew.jupa.update.view.panel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +36,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import uk.dangrew.jupa.update.model.ReleaseDefinition;
+import uk.dangrew.jupa.update.view.button.ReleaseButton;
 
 /**
  * The {@link ReleaseSummaryPanel} is responsible for displaying the {@link ReleaseDefinition}s

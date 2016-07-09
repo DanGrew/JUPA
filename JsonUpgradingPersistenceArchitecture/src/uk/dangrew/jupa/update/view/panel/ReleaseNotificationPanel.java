@@ -7,7 +7,7 @@
  *                 2016
  * ----------------------------------------
  */
-package uk.dangrew.jupa.update.view;
+package uk.dangrew.jupa.update.view.panel;
 
 import java.util.ArrayList;
 import java.util.List;

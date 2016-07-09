@@ -7,7 +7,7 @@
  *                 2016
  * ----------------------------------------
  */
-package uk.dangrew.jupa.update.view;
+package uk.dangrew.jupa.update.view.panel;
 
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasSize;
@@ -26,6 +26,8 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import uk.dangrew.jupa.graphics.launch.TestApplication;
 import uk.dangrew.jupa.update.model.ReleaseDefinition;
+import uk.dangrew.jupa.update.view.button.ReleaseButton;
+import uk.dangrew.jupa.update.view.panel.ReleaseSummaryPanel;
 
 /**
  * {@link ReleaseSummaryPanel} test.

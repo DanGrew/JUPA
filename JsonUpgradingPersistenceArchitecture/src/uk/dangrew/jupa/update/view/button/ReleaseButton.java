@@ -7,7 +7,7 @@
  *                 2016
  * ----------------------------------------
  */
-package uk.dangrew.jupa.update.view;
+package uk.dangrew.jupa.update.view.button;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -84,7 +84,7 @@ public class ReleaseButton extends Button {
       return versionLabel;
    }//End Method
    
-   Label version(){
+   public Label version(){
       return version;
    }//End Method
    

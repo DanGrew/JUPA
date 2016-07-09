@@ -7,7 +7,7 @@
  *                 2016
  * ----------------------------------------
  */
-package uk.dangrew.jupa.update.view;
+package uk.dangrew.jupa.update.view.panel;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -20,6 +20,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import uk.dangrew.jupa.graphics.launch.TestApplication;
+import uk.dangrew.jupa.update.view.panel.ReleaseNotificationPanel;
+import uk.dangrew.jupa.update.view.panel.ReleaseNotificationTimeout;
 
 /**
  * {@link ReleaseNotificationTimeout} test.

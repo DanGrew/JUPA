@@ -7,7 +7,7 @@
  *                 2016
  * ----------------------------------------
  */
-package uk.dangrew.jupa.update.view;
+package uk.dangrew.jupa.update.view.button;
 
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.instanceOf;
@@ -20,6 +20,7 @@ import org.junit.Test;
 import javafx.scene.layout.GridPane;
 import uk.dangrew.jupa.graphics.launch.TestApplication;
 import uk.dangrew.jupa.update.model.ReleaseDefinition;
+import uk.dangrew.jupa.update.view.button.ReleaseButton;
 
 /**
  * {@link ReleaseButton} test.

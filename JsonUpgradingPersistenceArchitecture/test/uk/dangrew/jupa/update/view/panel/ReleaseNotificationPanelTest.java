@@ -7,7 +7,7 @@
  *                 2016
  * ----------------------------------------
  */
-package uk.dangrew.jupa.update.view;
+package uk.dangrew.jupa.update.view.panel;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -31,6 +31,7 @@ import uk.dangrew.jupa.update.download.NotificationScheduler;
 import uk.dangrew.jupa.update.download.ReleaseAvailableTask;
 import uk.dangrew.jupa.update.download.ReleasesDownloader;
 import uk.dangrew.jupa.update.model.ReleaseDefinition;
+import uk.dangrew.jupa.update.view.panel.ReleaseNotificationPanel;
 
 /**
  * {@link ReleaseNotificationPanel} test.
