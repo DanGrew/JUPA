@@ -21,6 +21,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import uk.dangrew.jupa.update.model.ReleaseAvailabilityObserver;
 import uk.dangrew.jupa.update.model.ReleaseDefinition;
+import uk.dangrew.jupa.update.stream.ArtifactLocationGenerator;
 
 /**
  * The {@link ReleaseNotificationPanel} is a wrapper that provides a basic notification of {@link ReleaseDefinition}s
@@ -38,10 +39,11 @@ public class ReleaseNotificationPanel extends NotificationPane implements Releas
    
    /**
     * Constructs a new {@link ReleaseNotificationPanel}.
+    * @param artifactGenerator the {@link ArtifactLocationGenerator} for locating new {@link ReleaseDefinition} locations.
     */
-   public ReleaseNotificationPanel() {
+   public ReleaseNotificationPanel( ArtifactLocationGenerator artifactGenerator ) {
       this.releases = new ArrayList<>();
-      this.summaryPanel = new ReleaseSummaryPanel();
+      this.summaryPanel = new ReleaseSummaryPanel( artifactGenerator );
       PlatformImpl.runAndWait( () -> {
          this.summaryStage = new Stage();
          this.summaryStage.setScene( new Scene( summaryPanel, 400, 600 )  );

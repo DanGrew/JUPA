@@ -91,4 +91,9 @@ public class ReleaseDefinitionTest {
       new ReleaseDefinition( ID, DOWNLOAD, null );
    }//End Method
 
+   @Test public void shouldIdentifyArtifactName(){
+      assertThat( new ReleaseDefinition( "a", "b", "c" ).getArtifactName(), is( "b" ) );
+      assertThat( new ReleaseDefinition( "a", "http://my.page.com/my-artifact.txt", "c" ).getArtifactName(), is( "my-artifact.txt" ) );
+      assertThat( new ReleaseDefinition( "a", "http://my.page.com", "c" ).getArtifactName(), is( "http://my.page.com" ) );
+   }//End Method
 }//End Class

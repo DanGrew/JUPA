@@ -12,6 +12,7 @@ package uk.dangrew.jupa.update.stream;
 import uk.dangrew.sd.core.category.Categories;
 import uk.dangrew.sd.core.message.Messages;
 import uk.dangrew.sd.core.progress.Progresses;
+import uk.dangrew.sd.core.source.Source;
 import uk.dangrew.sd.core.source.SourceImpl;
 import uk.dangrew.sd.digest.object.ObjectDigestImpl;
 
@@ -95,4 +96,10 @@ public class FileStreamerDigest extends ObjectDigestImpl {
       log( Categories.error(), Messages.simpleMessage( CANCELLED_STREAMING ) );
    }//End Method
    
+   /**
+    * {@inheritDoc}
+    */
+   @Override protected Source getSource() {
+      return super.getSource();
+   }//End Method
 }//End Class

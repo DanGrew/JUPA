@@ -31,18 +31,20 @@ import uk.dangrew.jupa.update.download.NotificationScheduler;
 import uk.dangrew.jupa.update.download.ReleaseAvailableTask;
 import uk.dangrew.jupa.update.download.ReleasesDownloader;
 import uk.dangrew.jupa.update.model.ReleaseDefinition;
-import uk.dangrew.jupa.update.view.panel.ReleaseNotificationPanel;
+import uk.dangrew.jupa.update.stream.ArtifactLocationGenerator;
 
 /**
  * {@link ReleaseNotificationPanel} test.
  */
 public class ReleaseNotificationPanelTest {
 
+   private ArtifactLocationGenerator generator;
    private ReleaseNotificationPanel systemUnderTest;
    
    @Before public void initialiseSystemUnderTest(){
       TestApplication.startPlatform();
-      systemUnderTest = new ReleaseNotificationPanel();
+      generator = new ArtifactLocationGenerator( getClass() );
+      systemUnderTest = new ReleaseNotificationPanel( generator );
    }//End Method
    
    @Ignore
@@ -158,5 +160,9 @@ public class ReleaseNotificationPanelTest {
       systemUnderTest.show();
       systemUnderTest.releasesAreNowAvailable( Arrays.asList( new ReleaseDefinition( "a", "b", "c" ) ) );
       assertThat( systemUnderTest.isShowing(), is( true ) );
+   }//End Method
+   
+   @Test public void shouldPassArtifactGeneratorThroughToSummaryPanel(){
+      assertThat( systemUnderTest.summaryPanel().artifactLocationGenerator(), is( generator ) );
    }//End Method
 }//End Class

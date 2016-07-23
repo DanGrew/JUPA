@@ -39,6 +39,7 @@ import org.mockito.MockitoAnnotations;
 import uk.dangrew.jupa.graphics.launch.TestApplication;
 import uk.dangrew.jupa.update.model.ReleaseDefinition;
 import uk.dangrew.jupa.update.model.ReleaseParser;
+import uk.dangrew.jupa.update.stream.ArtifactLocationGenerator;
 import uk.dangrew.jupa.update.view.panel.ReleaseSummaryPanel;
 
 /**
@@ -61,7 +62,7 @@ public class ReleasesDownloaderTest {
        ).downloadContent();
        List< ReleaseDefinition > releases = new ReleaseParser().parse( content );
        TestApplication.launch( () -> {
-          ReleaseSummaryPanel summary = new ReleaseSummaryPanel();
+          ReleaseSummaryPanel summary = new ReleaseSummaryPanel( new ArtifactLocationGenerator( getClass() ) );
           summary.setReleases( releases );
           return summary;
        } );

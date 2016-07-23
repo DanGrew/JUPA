@@ -36,7 +36,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import uk.dangrew.jupa.update.model.ReleaseDefinition;
-import uk.dangrew.jupa.update.view.button.ReleaseButton;
+import uk.dangrew.jupa.update.stream.ArtifactLocationGenerator;
+import uk.dangrew.jupa.update.view.button.InstallerButton;
 
 /**
  * The {@link ReleaseSummaryPanel} is responsible for displaying the {@link ReleaseDefinition}s
@@ -65,12 +66,16 @@ public class ReleaseSummaryPanel extends NotificationPane {
    private final Label descriptionLabel;
    
    private final List< ReleaseDefinition > releases;
+   private final ArtifactLocationGenerator artifactGenerator;
 
    /**
     * Constructs a new {@link ReleaseSummaryPanel}.
+    * @param artifactGenerator the {@link ArtifactLocationGenerator} to generate locations to store
+    * artifacts.
     */
-   public ReleaseSummaryPanel() {
+   public ReleaseSummaryPanel( ArtifactLocationGenerator artifactGenerator ) {
       this.releases = new ArrayList<>();
+      this.artifactGenerator = artifactGenerator;
       
       this.developmentMessage = new Label( DEVELOPMENT_MESSAGE );
       this.developmentMessage.setWrapText( true );
@@ -113,9 +118,8 @@ public class ReleaseSummaryPanel extends NotificationPane {
       
       PlatformImpl.runAndWait( () -> {
          releasesContainer.getChildren().clear();
-         releasesToDisplay.forEach( release -> {
-            ReleaseButton button = new ReleaseButton( release );
-            button.setOnAction( event -> show() );
+         releases.forEach( release -> {
+            InstallerButton button = new InstallerButton( release, artifactGenerator );
             releasesContainer.getChildren().add( button );
          } );
       } );
@@ -156,5 +160,9 @@ public class ReleaseSummaryPanel extends NotificationPane {
    
    BorderPane panelStructure() {
       return panelStructure;
+   }//End Method
+   
+   ArtifactLocationGenerator artifactLocationGenerator(){
+      return artifactGenerator;
    }//End Method
 }//End Class

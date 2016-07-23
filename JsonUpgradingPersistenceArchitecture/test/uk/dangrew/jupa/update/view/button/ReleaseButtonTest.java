@@ -13,14 +13,16 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import javafx.scene.layout.GridPane;
 import uk.dangrew.jupa.graphics.launch.TestApplication;
 import uk.dangrew.jupa.update.model.ReleaseDefinition;
-import uk.dangrew.jupa.update.view.button.ReleaseButton;
 
 /**
  * {@link ReleaseButton} test.
@@ -32,13 +34,15 @@ public class ReleaseButtonTest {
    private static final String DESCRIPTION = "some description";
    private static final String DATE = "some date";
    
+   @Mock private InstallerButtonController controller;
    private ReleaseDefinition release;
    private ReleaseButton systemUnderTest;
    
    @Before public void initialiseSystemUnderTest(){
       TestApplication.startPlatform();
+      MockitoAnnotations.initMocks( this );
       release = new ReleaseDefinition( RELEASE, DOWNLOAD, DESCRIPTION );
-      systemUnderTest = new ReleaseButton( release );
+      systemUnderTest = new ReleaseButton( controller, release );
    }//End Method
    
    @Test public void shouldContainElementsToDisplayRelease() {
@@ -72,7 +76,7 @@ public class ReleaseButtonTest {
    }//End Method
    
    @Test public void releaseWithDateShouldBehaveTheSameAsOneWithout(){
-      systemUnderTest = new ReleaseButton( new ReleaseDefinition( RELEASE, DOWNLOAD, DESCRIPTION, DATE ) );
+      systemUnderTest = new ReleaseButton( controller, new ReleaseDefinition( RELEASE, DOWNLOAD, DESCRIPTION, DATE ) );
       labelsShouldProvideDescriptionOfItem();
       valueLabelsShouldProvideReleaseInformation();
       descriptionLabelMustWrapText();
@@ -80,13 +84,13 @@ public class ReleaseButtonTest {
    }//End Method
    
    @Test public void dateShouldBeDisplayedBetweenOtherLabels(){
-      systemUnderTest = new ReleaseButton( new ReleaseDefinition( RELEASE, DOWNLOAD, DESCRIPTION, DATE ) );
+      systemUnderTest = new ReleaseButton( controller, new ReleaseDefinition( RELEASE, DOWNLOAD, DESCRIPTION, DATE ) );
       assertThat( systemUnderTest.dateLabel().getText(), is( ReleaseButton.DATE_LABEL ) );
       assertThat( systemUnderTest.date().getText(), is( DATE ) );
    }//End Method
    
    @Test public void shouldContainElementsToDisplayReleaseWithDate() {
-      systemUnderTest = new ReleaseButton( new ReleaseDefinition( RELEASE, DOWNLOAD, DESCRIPTION, DATE ) );
+      systemUnderTest = new ReleaseButton( controller, new ReleaseDefinition( RELEASE, DOWNLOAD, DESCRIPTION, DATE ) );
       
       GridPane graphic = ( GridPane ) systemUnderTest.getGraphic();
       assertThat( graphic.getChildren(), contains( 
@@ -97,5 +101,15 @@ public class ReleaseButtonTest {
                systemUnderTest.descriptionLabel(), 
                systemUnderTest.description()
       ) );
+   }//End Method
+   
+   @Test public void shouldBeAssociatedWithCorrectController(){
+      assertThat( systemUnderTest.hasController( controller ), is( true ) );
+      assertThat( systemUnderTest.hasController( mock( InstallerButtonController.class ) ), is( false ) );
+   }//End Method
+   
+   @Test public void shouldBeAssociatedWithCorrectRelease(){
+      assertThat( systemUnderTest.hasRelease( release ), is( true ) );
+      assertThat( systemUnderTest.hasRelease( mock( ReleaseDefinition.class ) ), is( false ) );
    }//End Method
 }//End Class

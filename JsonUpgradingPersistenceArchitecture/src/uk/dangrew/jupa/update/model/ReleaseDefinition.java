@@ -19,6 +19,7 @@ public class ReleaseDefinition {
    private final String downloadLocation;
    private final String description;
    private final String date;
+   private final String artifactName;
    
    /**
     * Constructs a new {@link ReleaseDefinition}.
@@ -46,7 +47,28 @@ public class ReleaseDefinition {
       this.downloadLocation = downloadLocation;
       this.description = description;
       this.date = date;
+      this.artifactName = extractArtifactName( downloadLocation );
    }//End Constructor
+   
+   /**
+    * Method to extract the artifact from the download location.
+    * @param downloadLocation the downloadLocation to extract from.
+    * @return the artifact name.
+    */
+   private static String extractArtifactName( String downloadLocation ){
+      String[] webLinkParts = downloadLocation.split( "//" );
+      if ( webLinkParts.length < 2 ) {
+         return downloadLocation;
+      }
+      
+      String parsingPart = webLinkParts[ webLinkParts.length - 1 ];
+      String[] subFolderSplit = parsingPart.split( "/" );
+      if ( subFolderSplit.length < 2 ) {
+         return downloadLocation;
+      }
+      
+      return subFolderSplit[ subFolderSplit.length - 1 ];
+   }//End Method
 
    /**
     * Getter for the identification of the release, or the version number.
@@ -124,6 +146,14 @@ public class ReleaseDefinition {
          return false;
       }
       return true;
+   }//End Method
+   
+   /**
+    * Method to get the artifact name, extracted from the download location.
+    * @return the artifact name.
+    */
+   public String getArtifactName(){
+      return artifactName;
    }//End Method
 
 }//End Class

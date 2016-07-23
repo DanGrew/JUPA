@@ -41,13 +41,14 @@ import org.mockito.MockitoAnnotations;
 
 import uk.dangrew.jupa.TestCommon;
 import uk.dangrew.jupa.file.utility.IoStreaming;
+import uk.dangrew.sd.core.source.Source;
 import uk.dangrew.sd.logging.io.BasicStringIO;
 import uk.dangrew.sd.logging.location.JarProtocol;
 
 /**
  * {@link FileStreamer} test.
  */
-public class FileStreamerTest {
+public class FileStreamerImplTest {
 
    private static final String DOWNLOAD_LOCATION = "someplace";
    
@@ -67,14 +68,14 @@ public class FileStreamerTest {
    @Before public void initialiseSystemUnderTest(){
       MockitoAnnotations.initMocks( this );
       when( protocol.getSource() ).thenReturn( fileToWriteTo );
-      systemUnderTest = new FileStreamer( client, digest, steamer );
+      systemUnderTest = new FileStreamerImpl( client, digest, steamer );
    }//End Method
    
    @Ignore
    @Test public void manual() throws ClientProtocolException, IOException {
-      new FileStreamer().streamFile( 
+      new FileStreamerImpl().streamFile( 
                "https://dl.bintray.com/dangrew/JenkinsTestTracker/JenkinsTestTracker/JenkinsTestTracker/1.4.119/JenkinsTestTracker-1.4.119-runnable.jar", 
-               new JarProtocol( null, "test.jar", FileStreamer.class )
+               new JarProtocol( null, "test.jar", FileStreamerImpl.class )
       );
    }//End Method
    
@@ -224,9 +225,9 @@ public class FileStreamerTest {
    }//End Method
    
    @Test public void shouldPerformFullDownload() throws IOException{
-      systemUnderTest = new FileStreamer();
+      systemUnderTest = new FileStreamerImpl();
       
-      JarProtocol protocol = new JarProtocol( null, "FileStreamerTest.txt", FileStreamerTest.class );
+      JarProtocol protocol = new JarProtocol( null, "FileStreamerTest.txt", FileStreamerImplTest.class );
       if ( protocol.getSource().exists() ) {
          protocol.getSource().delete();
       }
@@ -241,6 +242,13 @@ public class FileStreamerTest {
       assertThat( new BasicStringIO().read( protocol.getSource() ), is(
                "# JUPA\nJson Upgrading and Persistence Architecture library.\n" 
       ) );
+   }//End Method
+   
+   @Test public void shouldProvideDigestSource(){
+      Source source = mock( Source.class );
+      when( digest.getSource() ).thenReturn( source );
+      
+      assertThat( systemUnderTest.getSourceForProgress(), is( source ) );
    }//End Method
    
 }//End Class

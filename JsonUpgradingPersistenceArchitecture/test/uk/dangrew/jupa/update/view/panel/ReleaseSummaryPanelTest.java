@@ -26,8 +26,8 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import uk.dangrew.jupa.graphics.launch.TestApplication;
 import uk.dangrew.jupa.update.model.ReleaseDefinition;
-import uk.dangrew.jupa.update.view.button.ReleaseButton;
-import uk.dangrew.jupa.update.view.panel.ReleaseSummaryPanel;
+import uk.dangrew.jupa.update.stream.ArtifactLocationGenerator;
+import uk.dangrew.jupa.update.view.button.InstallerButton;
 
 /**
  * {@link ReleaseSummaryPanel} test.
@@ -37,6 +37,7 @@ public class ReleaseSummaryPanelTest {
    private ReleaseDefinition releaseA;
    private ReleaseDefinition releaseB;
    private ReleaseDefinition releaseC;
+   private ArtifactLocationGenerator generator;
    private ReleaseSummaryPanel systemUnderTest;
    
    @Before public void initialiseSystemUnderTest(){
@@ -58,7 +59,8 @@ public class ReleaseSummaryPanelTest {
                + "which you will clearly care about." 
       );
       
-      systemUnderTest = new ReleaseSummaryPanel();
+      generator = new ArtifactLocationGenerator( getClass() );
+      systemUnderTest = new ReleaseSummaryPanel( generator );
       systemUnderTest.setReleases( Arrays.asList( releaseA, releaseB, releaseC ) );
    }//End Method
 
@@ -79,40 +81,20 @@ public class ReleaseSummaryPanelTest {
       assertThat( systemUnderTest.developmentMessage().getPrefHeight(), is( ReleaseSummaryPanel.DEVELOPMENT_MESSAGE_HEIGHT ) );
    }//End Method
    
-   @Test public void shouldProvideReleaseButtonForEachRelease(){
+   @Test public void shouldProvideInstallerButtonForEachRelease(){
       assertThat( systemUnderTest.releaseContainer().getChildren(), hasSize( 3 ) );
       
-      assertThat( systemUnderTest.releaseContainer().getChildren().get( 0 ), is( instanceOf( ReleaseButton.class ) ) );
-      ReleaseButton firstButton = ( ReleaseButton ) systemUnderTest.releaseContainer().getChildren().get( 0 );
-      assertThat( firstButton.version().getText(), is( releaseA.getIdentification() ) );
+      assertThat( systemUnderTest.releaseContainer().getChildren().get( 0 ), is( instanceOf( InstallerButton.class ) ) );
+      InstallerButton firstButton = ( InstallerButton ) systemUnderTest.releaseContainer().getChildren().get( 0 );
+      assertThat( firstButton.hasRelease( releaseA ), is( true ) );
       
-      assertThat( systemUnderTest.releaseContainer().getChildren().get( 1 ), is( instanceOf( ReleaseButton.class ) ) );
-      ReleaseButton secondButton = ( ReleaseButton ) systemUnderTest.releaseContainer().getChildren().get( 1 );
-      assertThat( secondButton.version().getText(), is( releaseB.getIdentification() ) );
+      assertThat( systemUnderTest.releaseContainer().getChildren().get( 1 ), is( instanceOf( InstallerButton.class ) ) );
+      InstallerButton secondButton = ( InstallerButton ) systemUnderTest.releaseContainer().getChildren().get( 1 );
+      assertThat( secondButton.hasRelease( releaseB ), is( true ) );
       
-      assertThat( systemUnderTest.releaseContainer().getChildren().get( 2 ), is( instanceOf( ReleaseButton.class ) ) );
-      ReleaseButton thirdButton = ( ReleaseButton ) systemUnderTest.releaseContainer().getChildren().get( 2 );
-      assertThat( thirdButton.version().getText(), is( releaseC.getIdentification() ) );
-   }//End Method
-   
-   @Test public void buttonShouldTriggerNotification(){
-      assertThat( systemUnderTest.isShowing(), is( false ) );
-      
-      ReleaseButton firstButton = ( ReleaseButton ) systemUnderTest.releaseContainer().getChildren().get( 0 );
-      firstButton.getOnAction().handle( new ActionEvent() );
-      assertThat( systemUnderTest.isShowing(), is( true ) );
-      
-      systemUnderTest.hide();
-      
-      ReleaseButton secondButton = ( ReleaseButton ) systemUnderTest.releaseContainer().getChildren().get( 1 );
-      secondButton.getOnAction().handle( new ActionEvent() );
-      assertThat( systemUnderTest.isShowing(), is( true ) );
-      
-      systemUnderTest.hide();
-      
-      ReleaseButton thirdButton = ( ReleaseButton ) systemUnderTest.releaseContainer().getChildren().get( 2 );
-      thirdButton.getOnAction().handle( new ActionEvent() );
-      assertThat( systemUnderTest.isShowing(), is( true ) );
+      assertThat( systemUnderTest.releaseContainer().getChildren().get( 2 ), is( instanceOf( InstallerButton.class ) ) );
+      InstallerButton thirdButton = ( InstallerButton ) systemUnderTest.releaseContainer().getChildren().get( 2 );
+      assertThat( thirdButton.hasRelease( releaseC ), is( true ) );
    }//End Method
    
    @Test public void shouldHaveGivenReleases(){
@@ -127,9 +109,9 @@ public class ReleaseSummaryPanelTest {
       
       assertThat( systemUnderTest.releaseContainer().getChildren(), hasSize( 1 ) );
       
-      assertThat( systemUnderTest.releaseContainer().getChildren().get( 0 ), is( instanceOf( ReleaseButton.class ) ) );
-      ReleaseButton firstButton = ( ReleaseButton ) systemUnderTest.releaseContainer().getChildren().get( 0 );
-      assertThat( firstButton.version().getText(), is( newRelease.getIdentification() ) );
+      assertThat( systemUnderTest.releaseContainer().getChildren().get( 0 ), is( instanceOf( InstallerButton.class ) ) );
+      InstallerButton firstButton = ( InstallerButton ) systemUnderTest.releaseContainer().getChildren().get( 0 );
+      assertThat( firstButton.hasRelease( newRelease ), is( true ) );
    }//End Method
    
    @Test public void releaseContentShouldBeInScrollPane(){
@@ -153,6 +135,12 @@ public class ReleaseSummaryPanelTest {
    
    @Test public void contentShouldBeStructure(){
       assertThat( systemUnderTest.getContent(), is( systemUnderTest.panelStructure() ) );
+   }//End Method
+   
+   @Test public void shouldPassGneratorThroughToInstallerButtons(){
+      assertThat( systemUnderTest.releaseContainer().getChildren().get( 0 ), is( instanceOf( InstallerButton.class ) ) );
+      InstallerButton firstButton = ( InstallerButton ) systemUnderTest.releaseContainer().getChildren().get( 0 );
+      assertThat( firstButton.hasArtifactLocationGenerator( generator ), is( true ) );
    }//End Method
 
 }//End Class
