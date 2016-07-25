@@ -19,9 +19,9 @@ import com.sun.javafx.application.PlatformImpl;
 
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import uk.dangrew.jupa.update.launch.SystemHandover;
 import uk.dangrew.jupa.update.model.ReleaseAvailabilityObserver;
 import uk.dangrew.jupa.update.model.ReleaseDefinition;
-import uk.dangrew.jupa.update.stream.ArtifactLocationGenerator;
 
 /**
  * The {@link ReleaseNotificationPanel} is a wrapper that provides a basic notification of {@link ReleaseDefinition}s
@@ -39,11 +39,11 @@ public class ReleaseNotificationPanel extends NotificationPane implements Releas
    
    /**
     * Constructs a new {@link ReleaseNotificationPanel}.
-    * @param artifactGenerator the {@link ArtifactLocationGenerator} for locating new {@link ReleaseDefinition} locations.
+    * @param handover the {@link SystemHandover} for managing the handover to the next version.
     */
-   public ReleaseNotificationPanel( ArtifactLocationGenerator artifactGenerator ) {
+   public ReleaseNotificationPanel( SystemHandover handover ) {
       this.releases = new ArrayList<>();
-      this.summaryPanel = new ReleaseSummaryPanel( artifactGenerator );
+      this.summaryPanel = new ReleaseSummaryPanel( handover );
       PlatformImpl.runAndWait( () -> {
          this.summaryStage = new Stage();
          this.summaryStage.setScene( new Scene( summaryPanel, 400, 600 )  );

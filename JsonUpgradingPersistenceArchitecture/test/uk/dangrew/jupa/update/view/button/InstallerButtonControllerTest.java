@@ -14,6 +14,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -29,8 +30,10 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import uk.dangrew.jupa.graphics.launch.TestApplication;
+import uk.dangrew.jupa.javafx.platform.PlatformLifecycle;
+import uk.dangrew.jupa.javafx.platform.PlatformLifecycleImpl;
+import uk.dangrew.jupa.update.launch.SystemHandover;
 import uk.dangrew.jupa.update.model.ReleaseDefinition;
-import uk.dangrew.jupa.update.stream.ArtifactLocationGenerator;
 import uk.dangrew.jupa.update.stream.ThreadedFileStreamer;
 import uk.dangrew.sd.core.source.Source;
 import uk.dangrew.sd.logging.location.JarProtocol;
@@ -47,20 +50,22 @@ public class InstallerButtonControllerTest {
    private ReleaseDefinition release;
    @Mock private InstallerButton subject;
    @Mock private ThreadedFileStreamer streamer;
-   @Mock private ArtifactLocationGenerator locationGenerator;
+   @Mock private SystemHandover handover;
    @Mock private JarProtocol protocol;
    @Mock private File sourceFile;
+   @Mock private PlatformLifecycleImpl lifecyle;
    private InstallerButtonController systemUnderTest;
    
    @Before public void initialiseSystemUnderTest(){
       TestApplication.startPlatform();
       MockitoAnnotations.initMocks( this );
+      PlatformLifecycle.setInstance( lifecyle );
       release = new ReleaseDefinition( RELEASE, DOWNLOAD, DESCRIPTION );
       
       when( protocol.getSource() ).thenReturn( sourceFile );
-      when( locationGenerator.fetchJarLocation( release ) ).thenReturn( protocol );
+      when( handover.fetchJarLocation( release ) ).thenReturn( protocol );
       
-      systemUnderTest = new InstallerButtonController( subject, streamer, locationGenerator );
+      systemUnderTest = new InstallerButtonController( subject, streamer, handover );
    }//End Method
 
    @Test public void startUpdateShouldCallDownloadInitialised() {
@@ -119,9 +124,27 @@ public class InstallerButtonControllerTest {
       verify( subject ).downloadCancelled();
    }//End Method
    
-   @Test public void launchConfirmedShouldCallLaunchConfirmed() {
-      systemUnderTest.launchConfirmed();
+   @Test public void launchConfirmedShouldAttemptToLaunchBeforeShuttingDown() {
+      when( handover.launch( release ) ).thenReturn( true );
+      
+      systemUnderTest.launchConfirmed( release );
       verify( subject ).launchConfirmed();
+      
+      verify( handover ).launch( release );
+      verify( handover ).shutdown();
+      verify( lifecyle ).shutdownPlatform();
+   }//End Method
+   
+   @Test public void launchConfirmedShouldNotShutdownIfLaunchFails() {
+      when( handover.launch( release ) ).thenReturn( false );
+      
+      systemUnderTest.launchConfirmed( release );
+      verify( subject ).launchConfirmed();
+      
+      verify( handover ).launch( release );
+      verify( handover, never() ).shutdown();
+      verify( lifecyle, never() ).shutdownPlatform();
+      verify( subject ).launchFailed();
    }//End Method
    
    @Test public void launchCancelledShouldCallLaunchCancelled() {
@@ -130,8 +153,8 @@ public class InstallerButtonControllerTest {
    }//End Method
    
    @Test public void shouldBeAssociatedWithCorrectGenerator(){
-      assertThat( systemUnderTest.hasArtifactLocationGenerator( locationGenerator ), is( true ) );
-      assertThat( systemUnderTest.hasArtifactLocationGenerator( mock( ArtifactLocationGenerator.class ) ), is( false ) );
+      assertThat( systemUnderTest.hasSystemHandover( handover ), is( true ) );
+      assertThat( systemUnderTest.hasSystemHandover( mock( SystemHandover.class ) ), is( false ) );
    }//End Method
 
 }//End Class

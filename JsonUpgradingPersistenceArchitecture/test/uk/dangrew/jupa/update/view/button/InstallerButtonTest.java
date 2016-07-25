@@ -22,8 +22,10 @@ import org.mockito.MockitoAnnotations;
 
 import javafx.scene.control.Label;
 import uk.dangrew.jupa.graphics.launch.TestApplication;
+import uk.dangrew.jupa.update.launch.BasicSystemHandover;
+import uk.dangrew.jupa.update.launch.SystemHandover;
 import uk.dangrew.jupa.update.model.ReleaseDefinition;
-import uk.dangrew.jupa.update.stream.ArtifactLocationGenerator;
+import uk.dangrew.jupa.update.stream.ArtifactLocationGeneratorImpl;
 import uk.dangrew.sd.core.source.Source;
 
 /**
@@ -32,14 +34,14 @@ import uk.dangrew.sd.core.source.Source;
 public class InstallerButtonTest {
 
    private ReleaseDefinition release;
-   @Mock private ArtifactLocationGenerator generator;
+   @Mock private SystemHandover handover;
    private InstallerButton systemUnderTest;
    
    @Before public void initialiseSystemUnderTest(){
       TestApplication.startPlatform();
       MockitoAnnotations.initMocks( this );
       release = new ReleaseDefinition( "a", "b", "c" );
-      systemUnderTest = new InstallerButton( release, generator );
+      systemUnderTest = new InstallerButton( release, handover );
       
       systemUnderTest.setCenter( new Label() );
    }//End Method
@@ -50,13 +52,13 @@ public class InstallerButtonTest {
                "1.4.119", 
                "https://dl.bintray.com/dangrew/JenkinsTestTracker/JenkinsTestTracker/JenkinsTestTracker/1.4.119/JenkinsTestTracker-1.4.119-runnable.jar", 
                "Testing release" 
-      ), new ArtifactLocationGenerator( getClass() ) ) );
+      ), new BasicSystemHandover( getClass() ) ) );
       
       Thread.sleep( 1000000 );
    }//End Method
    
    @Test public void shouldStartWithReleaseButtonInCenterWithMinHeight(){
-      systemUnderTest = new InstallerButton( release, generator );
+      systemUnderTest = new InstallerButton( release, handover );
       
       assertThat( systemUnderTest.getCenter(), is( instanceOf( ReleaseButton.class ) ) );
       ReleaseButton releaseButton = ( ReleaseButton ) systemUnderTest.getCenter();
@@ -95,7 +97,7 @@ public class InstallerButtonTest {
       assertThat( systemUnderTest.getCenter(), is( instanceOf( LaunchConfirmation.class ) ) );
       LaunchConfirmation button = ( LaunchConfirmation ) systemUnderTest.getCenter();
       assertThat( button.hasController( systemUnderTest.controller() ), is( true ) );
-      assertThat( button.hasRelease( release ), is( false ) );
+      assertThat( button.hasRelease( release ), is( true ) );
    }//End Method
    
    @Test public void launchConfirmedShouldDisplayLaunchingLabel(){
@@ -112,6 +114,14 @@ public class InstallerButtonTest {
       ReleaseButton button = ( ReleaseButton ) systemUnderTest.getCenter();
       assertThat( button.hasController( systemUnderTest.controller() ), is( true ) );
       assertThat( button.hasRelease( release ), is( true ) );
+   }//End Method
+   
+   @Test public void launchFailedShouldDisplayMessage(){
+      systemUnderTest.launchFailed();
+      assertThat( systemUnderTest.getCenter(), is( instanceOf( Label.class ) ) );
+      Label label = ( Label ) systemUnderTest.getCenter();
+      assertThat( label.getText(), is( InstallerButton.FAILED_LAUNCH_LABEL ) );
+      assertThat( label.isWrapText(), is( true ) );
    }//End Method
    
    @Test public void fileExistsShouldDisplayOverwriteConfirmation(){
@@ -136,7 +146,7 @@ public class InstallerButtonTest {
    }//End Method
    
    @Test public void shouldBeAssociatedWithCorrectGenerator(){
-      assertThat( systemUnderTest.hasArtifactLocationGenerator( generator ), is( true ) );
-      assertThat( systemUnderTest.hasArtifactLocationGenerator( mock( ArtifactLocationGenerator.class ) ), is( false ) );
+      assertThat( systemUnderTest.hasSystemHandover( handover ), is( true ) );
+      assertThat( systemUnderTest.hasSystemHandover( mock( SystemHandover.class ) ), is( false ) );
    }//End Method
 }//End Class

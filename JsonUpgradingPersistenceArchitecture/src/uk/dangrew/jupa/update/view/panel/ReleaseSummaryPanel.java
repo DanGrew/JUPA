@@ -19,7 +19,10 @@
 package uk.dangrew.jupa.update.view.panel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.controlsfx.control.NotificationPane;
 
@@ -35,8 +38,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
+import uk.dangrew.jupa.update.launch.SystemHandover;
 import uk.dangrew.jupa.update.model.ReleaseDefinition;
-import uk.dangrew.jupa.update.stream.ArtifactLocationGenerator;
 import uk.dangrew.jupa.update.view.button.InstallerButton;
 
 /**
@@ -65,17 +68,16 @@ public class ReleaseSummaryPanel extends NotificationPane {
    private final Label headerLabel;
    private final Label descriptionLabel;
    
-   private final List< ReleaseDefinition > releases;
-   private final ArtifactLocationGenerator artifactGenerator;
+   private final Map< ReleaseDefinition, InstallerButton > releases;
+   private final SystemHandover handover;
 
    /**
     * Constructs a new {@link ReleaseSummaryPanel}.
-    * @param artifactGenerator the {@link ArtifactLocationGenerator} to generate locations to store
-    * artifacts.
+    * @param handover the {@link SystemHandover} to manage the handover to the new version.
     */
-   public ReleaseSummaryPanel( ArtifactLocationGenerator artifactGenerator ) {
-      this.releases = new ArrayList<>();
-      this.artifactGenerator = artifactGenerator;
+   public ReleaseSummaryPanel( SystemHandover handover ) {
+      this.releases = new LinkedHashMap<>();
+      this.handover = handover;
       
       this.developmentMessage = new Label( DEVELOPMENT_MESSAGE );
       this.developmentMessage.setWrapText( true );
@@ -113,13 +115,18 @@ public class ReleaseSummaryPanel extends NotificationPane {
     * @param releases the {@link List} of {@link ReleaseDefinition}s to display.
     */
    public void setReleases( List< ReleaseDefinition > releasesToDisplay ) {
+      Map< ReleaseDefinition, InstallerButton > previousButtons = new HashMap<>( this.releases );
+      
       this.releases.clear();
-      this.releases.addAll( releasesToDisplay );
       
       PlatformImpl.runAndWait( () -> {
          releasesContainer.getChildren().clear();
-         releases.forEach( release -> {
-            InstallerButton button = new InstallerButton( release, artifactGenerator );
+         releasesToDisplay.forEach( release -> {
+            InstallerButton button = previousButtons.get( release );
+            if ( button == null ) {
+               button = new InstallerButton( release, handover );
+            }
+            this.releases.put( release, button );
             releasesContainer.getChildren().add( button );
          } );
       } );
@@ -131,7 +138,8 @@ public class ReleaseSummaryPanel extends NotificationPane {
     * @return true if identical.
     */
    public boolean hasReleases( List< ReleaseDefinition > checkReleases ) {
-      return this.releases.equals( checkReleases );
+      List< ReleaseDefinition > currentReleases = new ArrayList<>( releases.keySet() );
+      return currentReleases.equals( checkReleases );
    }//End Method
 
    Label developmentMessage(){
@@ -162,7 +170,7 @@ public class ReleaseSummaryPanel extends NotificationPane {
       return panelStructure;
    }//End Method
    
-   ArtifactLocationGenerator artifactLocationGenerator(){
-      return artifactGenerator;
+   SystemHandover artifactLocationGenerator(){
+      return handover;
    }//End Method
 }//End Class

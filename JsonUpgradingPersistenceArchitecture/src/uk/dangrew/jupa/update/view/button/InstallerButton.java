@@ -11,8 +11,8 @@ package uk.dangrew.jupa.update.view.button;
 
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import uk.dangrew.jupa.update.launch.SystemHandover;
 import uk.dangrew.jupa.update.model.ReleaseDefinition;
-import uk.dangrew.jupa.update.stream.ArtifactLocationGenerator;
 import uk.dangrew.sd.core.source.Source;
 
 /**
@@ -22,8 +22,10 @@ import uk.dangrew.sd.core.source.Source;
 public class InstallerButton extends BorderPane {
    
    static final double MIN_HEIGHT = 100;
-   static final String LAUNCHING_LABEL = "You must now launch the new release manually. You'll be able to "
-            + "do this automatically very soon!";
+   static final String LAUNCHING_LABEL = "Your downloaded version will launch when this "
+            + "version has shutdown. Please be patient.";
+   static final String FAILED_LAUNCH_LABEL = "The new version failed to start. This version will "
+            + "continue to function. Please manually launch the new version.";
    
    private final ReleaseDefinition release;
    private final InstallerButtonController controller;
@@ -31,11 +33,11 @@ public class InstallerButton extends BorderPane {
    /**
     * Constructs a new {@link InstallerButton}.
     * @param release the {@link ReleaseDefinition} associated.
-    * @param artifactGenerator the {@link ArtifactLocationGenerator} for identify the artifact location.
+    * @param handover the {@link SystemHandover} for managing the handover.
     */
-   public InstallerButton( ReleaseDefinition release, ArtifactLocationGenerator artifactGenerator ) {
+   public InstallerButton( ReleaseDefinition release, SystemHandover handover ) {
       this.release = release;
-      this.controller = new InstallerButtonController( this, artifactGenerator );
+      this.controller = new InstallerButtonController( this, handover );
       
       ReleaseButton button = new ReleaseButton( controller, release );
       setCenter( button );
@@ -67,7 +69,7 @@ public class InstallerButton extends BorderPane {
     * Method to indicate that the download has finished.
     */
    void downloadFinished(){
-      setCenter( new LaunchConfirmation( controller ) );
+      setCenter( new LaunchConfirmation( controller, release ) );
    }//End Method
    
    /**
@@ -81,10 +83,20 @@ public class InstallerButton extends BorderPane {
    }//End Method
    
    /**
-    * Method to indicare that the launch of the new version has been cancelled.
+    * Method to indicate that the launch of the new version has been cancelled.
     */
    void launchCancelled(){
       setCenter( new ReleaseButton( controller, release ) );
+   }//End Method
+   
+   /**
+    * Method to indicate that the launch of the new version failed.
+    */
+   void launchFailed() {
+      Label launchingLabel = new Label( FAILED_LAUNCH_LABEL );
+      launchingLabel.setWrapText( true );
+               
+      setCenter( launchingLabel );
    }//End Method
 
    /**
@@ -111,12 +123,12 @@ public class InstallerButton extends BorderPane {
    }//End Method
    
    /**
-    * Method to determine whether the given {@link ArtifactLocationGenerator} is associated.
-    * @param generator the {@link ArtifactLocationGenerator} in question.
+    * Method to determine whether the given {@link SystemHandover} is associated.
+    * @param handover the {@link SystemHandover} in question.
     * @return true if associated.
     */
-   public boolean hasArtifactLocationGenerator( ArtifactLocationGenerator generator ) {
-      return controller.hasArtifactLocationGenerator( generator );
+   public boolean hasSystemHandover( SystemHandover handover ) {
+      return controller.hasSystemHandover( handover );
    }//End Method
    
    InstallerButtonController controller(){

@@ -13,8 +13,9 @@ import java.io.IOException;
 
 import com.sun.javafx.application.PlatformImpl;
 
+import uk.dangrew.jupa.javafx.platform.PlatformLifecycle;
+import uk.dangrew.jupa.update.launch.SystemHandover;
 import uk.dangrew.jupa.update.model.ReleaseDefinition;
-import uk.dangrew.jupa.update.stream.ArtifactLocationGenerator;
 import uk.dangrew.jupa.update.stream.ThreadedFileStreamer;
 import uk.dangrew.sd.logging.location.JarProtocol;
 
@@ -26,28 +27,28 @@ class InstallerButtonController {
 
    private final InstallerButton subject;
    private final ThreadedFileStreamer streamer;
-   private final ArtifactLocationGenerator locationGenerator;
+   private final SystemHandover handover;
    
    /**
     * Constructs a new {@link InstallerButtonController}.
     * @param subject the {@link InstallerButton} subject of the calls.
-    * @param locationGenerator the {@link ArtifactLocationGenerator} for producing {@link JarProtocol}s for {@link ReleaseDefinition}s.
+    * @param handover the {@link SystemHandover} for managing the handover.
     */
-   InstallerButtonController( InstallerButton subject, ArtifactLocationGenerator locationGenerator ) {
-      this( subject, new ThreadedFileStreamer(), locationGenerator );
+   InstallerButtonController( InstallerButton subject, SystemHandover handover ) {
+      this( subject, new ThreadedFileStreamer(), handover );
    }//End Constructor
    
    /**
     * Constructs a new {@link InstallerButtonController}.
     * @param subject the {@link InstallerButton} subject of the calls.
     * @param streamer the {@link ThreadedFileStreamer} for streamer files on a separate thread.
-    * @param locationGenerator the {@link ArtifactLocationGenerator} for producing {@link JarProtocol}s for {@link ReleaseDefinition}s.
+    * @param handover the {@link SystemHandover} for managing the handover.
     */
-   InstallerButtonController( InstallerButton subject, ThreadedFileStreamer streamer, ArtifactLocationGenerator locationGenerator ) {
+   InstallerButtonController( InstallerButton subject, ThreadedFileStreamer streamer, SystemHandover handover ) {
       this.subject = subject;
       this.streamer = streamer;
       this.streamer.setOnCompletion( this::streamFinished );
-      this.locationGenerator = locationGenerator;
+      this.handover = handover;
    }//End Constructor
    
    /**
@@ -62,7 +63,7 @@ class InstallerButtonController {
     * @param release the {@link ReleaseDefinition} to check for.
     */
    void checkForArtifactFileClash( ReleaseDefinition release ){
-      JarProtocol artifactProtocol = locationGenerator.fetchJarLocation( release );
+      JarProtocol artifactProtocol = handover.fetchJarLocation( release );
       if ( artifactProtocol.getSource().exists() ) {
          subject.fileExists();
       } else {
@@ -77,7 +78,7 @@ class InstallerButtonController {
    void startDownload( ReleaseDefinition release ) {
       subject.downloadConfirmed( streamer.getSourceForProgress() );
       
-      JarProtocol artifactProtocol = locationGenerator.fetchJarLocation( release );
+      JarProtocol artifactProtocol = handover.fetchJarLocation( release );
       try {
          streamer.streamFile( 
                   release.getDownloadLocation(), 
@@ -97,9 +98,18 @@ class InstallerButtonController {
 
    /**
     * Method to perform the launch of the new version.
+    * @param release the {@link ReleaseDefinition} to launch.
     */
-   void launchConfirmed() {
+   void launchConfirmed( ReleaseDefinition release ) {
       subject.launchConfirmed();
+
+      boolean launched = handover.launch( release );
+      if ( launched ) {
+         handover.shutdown();
+         PlatformLifecycle.shutdown();
+      } else {
+         subject.launchFailed();
+      }
    }//End Method
 
    /**
@@ -121,12 +131,12 @@ class InstallerButtonController {
    }//End Method
    
    /**
-    * Method to determine whether the given {@link ArtifactLocationGenerator} is associated.
-    * @param generator the {@link ArtifactLocationGenerator} in question.
+    * Method to determine whether the given {@link SystemHandover} is associated.
+    * @param handover the {@link SystemHandover} in question.
     * @return true if associated.
     */
-   boolean hasArtifactLocationGenerator( ArtifactLocationGenerator generator ) {
-      return this.locationGenerator == generator;
+   boolean hasSystemHandover( SystemHandover handover ) {
+      return this.handover == handover;
    }//End Method
 
 }//End Class

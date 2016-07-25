@@ -20,16 +20,20 @@ import uk.dangrew.jupa.update.model.ReleaseDefinition;
 import uk.dangrew.sd.logging.location.JarProtocol;
 
 /**
- * {@link ArtifactLocationGenerator} test.
+ * {@link ArtifactLocationGeneratorImpl} test.
  */
-public class ArtifactLocationGeneratorTest {
+public class ArtifactLocationGeneratorImplTest {
 
    private ReleaseDefinition release;
-   private ArtifactLocationGenerator systemUnderTest;
+   private ArtifactLocationGeneratorImpl systemUnderTest;
    
    @Before public void initialiseSystemUnderTest(){
       release = new ReleaseDefinition( "identification", "downloadLocation", "description" );
-      systemUnderTest = new ArtifactLocationGenerator( getClass() );
+      systemUnderTest = new ArtifactLocationGeneratorImpl( getClass() );
+   }//End Method
+   
+   @Test( expected = IllegalArgumentException.class ) public void shouldNotAcceptNullClass(){
+      new ArtifactLocationGeneratorImpl( null );
    }//End Method
    
    @Test public void shouldProduceProtocolAtCorrectLocation() {

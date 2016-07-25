@@ -13,6 +13,7 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
 import java.util.Arrays;
@@ -22,11 +23,11 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import javafx.event.ActionEvent;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import uk.dangrew.jupa.graphics.launch.TestApplication;
+import uk.dangrew.jupa.update.launch.BasicSystemHandover;
+import uk.dangrew.jupa.update.launch.SystemHandover;
 import uk.dangrew.jupa.update.model.ReleaseDefinition;
-import uk.dangrew.jupa.update.stream.ArtifactLocationGenerator;
 import uk.dangrew.jupa.update.view.button.InstallerButton;
 
 /**
@@ -37,7 +38,7 @@ public class ReleaseSummaryPanelTest {
    private ReleaseDefinition releaseA;
    private ReleaseDefinition releaseB;
    private ReleaseDefinition releaseC;
-   private ArtifactLocationGenerator generator;
+   private SystemHandover handover;
    private ReleaseSummaryPanel systemUnderTest;
    
    @Before public void initialiseSystemUnderTest(){
@@ -59,8 +60,8 @@ public class ReleaseSummaryPanelTest {
                + "which you will clearly care about." 
       );
       
-      generator = new ArtifactLocationGenerator( getClass() );
-      systemUnderTest = new ReleaseSummaryPanel( generator );
+      handover = new BasicSystemHandover( getClass() );
+      systemUnderTest = new ReleaseSummaryPanel( handover );
       systemUnderTest.setReleases( Arrays.asList( releaseA, releaseB, releaseC ) );
    }//End Method
 
@@ -140,7 +141,18 @@ public class ReleaseSummaryPanelTest {
    @Test public void shouldPassGneratorThroughToInstallerButtons(){
       assertThat( systemUnderTest.releaseContainer().getChildren().get( 0 ), is( instanceOf( InstallerButton.class ) ) );
       InstallerButton firstButton = ( InstallerButton ) systemUnderTest.releaseContainer().getChildren().get( 0 );
-      assertThat( firstButton.hasArtifactLocationGenerator( generator ), is( true ) );
+      assertThat( firstButton.hasSystemHandover( handover ), is( true ) );
    }//End Method
 
+   @Test public void shouldLeaveInstallerButtonsInTactForExistingReleasesWhenSet(){
+      InstallerButton firstButton = ( InstallerButton ) systemUnderTest.releaseContainer().getChildren().get( 0 );
+      systemUnderTest.setReleases( Arrays.asList( releaseA ) );
+      
+      InstallerButton nextButton = ( InstallerButton ) systemUnderTest.releaseContainer().getChildren().get( 0 );
+      assertThat( nextButton, is( firstButton ) );
+      
+      systemUnderTest.setReleases( Arrays.asList( releaseB ) );
+      InstallerButton finalButton = ( InstallerButton ) systemUnderTest.releaseContainer().getChildren().get( 0 );
+      assertThat( finalButton, is( not( firstButton ) ) );
+   }//End Method
 }//End Class

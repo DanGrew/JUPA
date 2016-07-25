@@ -30,21 +30,22 @@ import uk.dangrew.jupa.graphics.launch.TestApplication;
 import uk.dangrew.jupa.update.download.NotificationScheduler;
 import uk.dangrew.jupa.update.download.ReleaseAvailableTask;
 import uk.dangrew.jupa.update.download.ReleasesDownloader;
+import uk.dangrew.jupa.update.launch.BasicSystemHandover;
+import uk.dangrew.jupa.update.launch.SystemHandover;
 import uk.dangrew.jupa.update.model.ReleaseDefinition;
-import uk.dangrew.jupa.update.stream.ArtifactLocationGenerator;
 
 /**
  * {@link ReleaseNotificationPanel} test.
  */
 public class ReleaseNotificationPanelTest {
 
-   private ArtifactLocationGenerator generator;
+   private SystemHandover handover;
    private ReleaseNotificationPanel systemUnderTest;
    
    @Before public void initialiseSystemUnderTest(){
       TestApplication.startPlatform();
-      generator = new ArtifactLocationGenerator( getClass() );
-      systemUnderTest = new ReleaseNotificationPanel( generator );
+      handover = new BasicSystemHandover( getClass() );
+      systemUnderTest = new ReleaseNotificationPanel( handover );
    }//End Method
    
    @Ignore
@@ -163,6 +164,6 @@ public class ReleaseNotificationPanelTest {
    }//End Method
    
    @Test public void shouldPassArtifactGeneratorThroughToSummaryPanel(){
-      assertThat( systemUnderTest.summaryPanel().artifactLocationGenerator(), is( generator ) );
+      assertThat( systemUnderTest.summaryPanel().artifactLocationGenerator(), is( handover ) );
    }//End Method
 }//End Class

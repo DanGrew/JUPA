@@ -20,19 +20,21 @@ import org.mockito.MockitoAnnotations;
 
 import javafx.event.ActionEvent;
 import uk.dangrew.jupa.graphics.launch.TestApplication;
+import uk.dangrew.jupa.update.model.ReleaseDefinition;
 
 /**
  * {@link LaunchConfirmation} test.
  */
 public class LaunchConfirmationTest {
 
+   @Mock private ReleaseDefinition release;
    @Mock private InstallerButtonController controller;
    private LaunchConfirmation systemUnderTest;
    
    @Before public void initialiseSystemUnderTest(){
       TestApplication.startPlatform();
       MockitoAnnotations.initMocks( this );
-      systemUnderTest = new LaunchConfirmation( controller );
+      systemUnderTest = new LaunchConfirmation( controller, release );
    }//End Method
    
    @Test public void shouldUseSpecificMessage(){
@@ -41,7 +43,7 @@ public class LaunchConfirmationTest {
    
    @Test public void yesShouldPerformAction(){
       systemUnderTest.yesButton().getOnAction().handle( new ActionEvent() );
-      verify( controller ).launchConfirmed();
+      verify( controller ).launchConfirmed( release );
    }//End Method
    
    @Test public void noShouldPerformAction(){
