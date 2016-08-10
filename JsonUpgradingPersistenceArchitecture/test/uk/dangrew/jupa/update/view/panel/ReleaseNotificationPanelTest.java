@@ -11,79 +11,37 @@ package uk.dangrew.jupa.update.view.panel;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import static org.mockito.Mockito.verify;
 
 import org.controlsfx.control.NotificationPane;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import com.sun.javafx.application.PlatformImpl;
 
 import javafx.event.ActionEvent;
 import uk.dangrew.jupa.graphics.launch.TestApplication;
-import uk.dangrew.jupa.update.download.NotificationScheduler;
-import uk.dangrew.jupa.update.download.ReleaseAvailableTask;
-import uk.dangrew.jupa.update.download.ReleasesDownloader;
-import uk.dangrew.jupa.update.launch.BasicSystemHandover;
-import uk.dangrew.jupa.update.launch.SystemHandover;
-import uk.dangrew.jupa.update.model.ReleaseDefinition;
 
 /**
  * {@link ReleaseNotificationPanel} test.
  */
 public class ReleaseNotificationPanelTest {
 
-   private SystemHandover handover;
+   private static final String NOTIFICATION_TEXT = "this is the text";
+   
+   @Mock private Runnable runnable;
    private ReleaseNotificationPanel systemUnderTest;
    
    @Before public void initialiseSystemUnderTest(){
       TestApplication.startPlatform();
-      handover = new BasicSystemHandover( getClass() );
-      systemUnderTest = new ReleaseNotificationPanel( handover );
-   }//End Method
-   
-   @Ignore
-   @Test public void manual() throws InterruptedException {
-      TestApplication.launch( () -> systemUnderTest );
-      
-      ReleasesDownloader downloader = mock( ReleasesDownloader.class );
-      ReleaseAvailableTask task = new ReleaseAvailableTask( "1.3.1", downloader, systemUnderTest );
-      new NotificationScheduler( task, 3000 );
-      
-      Thread.sleep( 1000 );
-      
-      when( downloader.downloadContent() ).thenReturn( 
-          "Release, \"1.4.103\"\n"
-        + "Download, \"somewhere\"\n"
-        + "Description, \"This is the first downloadable for testing purposes.\"\n"
-      );
-      
-      Thread.sleep( 6000 );
-      when( downloader.downloadContent() ).thenReturn( 
-            "Release, \"1.4.103\"\n"
-          + "Download, \"somewhere\"\n"
-          + "Description, \"This is the first downloadable for testing purposes.\"\n"
-          + "Release, \"1.4.104\"\n"
-          + "Date, \"Just Now!\"\n"
-          + "Download, \"somewhere\"\n"
-          + "Description, \"This is the first downloadable for testing purposes.\"\n"
-      );
-      
-      Thread.sleep( 1000000 );
+      MockitoAnnotations.initMocks( this );
+      systemUnderTest = new ReleaseNotificationPanel( NOTIFICATION_TEXT, runnable );
    }//End Method
    
    private void triggerActionOnInstallButton(){
       PlatformImpl.runAndWait( () -> systemUnderTest.install().handle( new ActionEvent() ) );
-   }//End Method
-   
-   @Test public void summaryShouldInitiallyBeHidden(){
-      assertThat( systemUnderTest.summaryStage().isShowing(), is( false ) );
    }//End Method
    
    @Test public void notificationShouldUseDarkTheme(){
@@ -91,79 +49,12 @@ public class ReleaseNotificationPanelTest {
    }//End Method
    
    @Test public void notificationShouldUseCorrectText(){
-      assertThat( systemUnderTest.getText(), is( ReleaseNotificationPanel.NEW_VERSIONS_MESSAGE ) );
+      assertThat( systemUnderTest.getText(), is( NOTIFICATION_TEXT ) );
    }//End Method
    
-   @Test public void installButtonShouldBePresentAndShouldTriggerSummaryPanelToShow(){
-      assertThat( systemUnderTest.getActions().contains( systemUnderTest.install() ), is( true ) );
-      
+   @Test public void buttonShouldTriggerRunnable(){
       triggerActionOnInstallButton();
-      assertThat( systemUnderTest.summaryStage().isShowing(), is( true ) );
+      verify( runnable ).run();
    }//End Method
    
-   @Test public void installButtonShouldHideNotification(){
-      systemUnderTest.show();
-      assertThat( systemUnderTest.isShowing(), is( true ) );
-      triggerActionOnInstallButton();
-      assertThat( systemUnderTest.isShowing(), is( false ) );
-   }//End Method
-
-   @Test public void whenReleasesAreAvailableShouldShowNotificationAndClearWhenNoneAreAvailable(){
-      List< ReleaseDefinition > releases = new ArrayList<>();
-      systemUnderTest.releasesAreNowAvailable( releases );
-      
-      assertThat( systemUnderTest.isShowing(), is( false ) );
-      
-      releases.add( new ReleaseDefinition( "a", "b", "c" ) );
-      systemUnderTest.releasesAreNowAvailable( releases );
-      
-      triggerActionOnInstallButton();
-      assertThat( systemUnderTest.summaryPanel().hasReleases( releases ), is( true ) );
-      assertThat( systemUnderTest.isShowing(), is( false ) );
-      
-      releases.clear();
-      systemUnderTest.releasesAreNowAvailable( releases );
-      
-      assertThat( systemUnderTest.summaryPanel().hasReleases( releases ), is( true ) );
-      assertThat( systemUnderTest.isShowing(), is( false ) );
-   }//End Method
-   
-   @Test public void shouldDisplayCorrectReleasesWhenGiven(){
-      List< ReleaseDefinition > releases = new ArrayList<>();
-      systemUnderTest.releasesAreNowAvailable( releases );
-      
-      assertThat( systemUnderTest.summaryStage().getScene().getRoot(), is( systemUnderTest.summaryPanel() ) );
-      
-      releases.add( new ReleaseDefinition( "a", "b", "c" ) );
-      systemUnderTest.releasesAreNowAvailable( releases );
-      
-      triggerActionOnInstallButton();
-      assertThat( systemUnderTest.summaryPanel().hasReleases( releases ), is( true ) );
-   }//End Method
-   
-   @Test public void shouldHideNotificationWhenThereAreNoNewReleases(){
-      systemUnderTest.show();
-      assertThat( systemUnderTest.isShowing(), is( true ) );
-      systemUnderTest.releasesAreNowAvailable( new ArrayList<>() );
-      assertThat( systemUnderTest.isShowing(), is( false ) );
-   }//End Method
-   
-   @Test public void shouldHideNotificationWhenThereAreNewReleasesAndSummaryIsShowing(){
-      systemUnderTest.show();
-      PlatformImpl.runAndWait( () -> {
-         systemUnderTest.summaryStage().show();
-         systemUnderTest.releasesAreNowAvailable( Arrays.asList( new ReleaseDefinition( "a", "b", "c" ) ) );
-      } );
-      assertThat( systemUnderTest.isShowing(), is( false ) );
-   }//End Method
-   
-   @Test public void shouldShowNotificationWhenThereAreNewReleasesAndSummaryIsHiding(){
-      systemUnderTest.show();
-      systemUnderTest.releasesAreNowAvailable( Arrays.asList( new ReleaseDefinition( "a", "b", "c" ) ) );
-      assertThat( systemUnderTest.isShowing(), is( true ) );
-   }//End Method
-   
-   @Test public void shouldPassArtifactGeneratorThroughToSummaryPanel(){
-      assertThat( systemUnderTest.summaryPanel().artifactLocationGenerator(), is( handover ) );
-   }//End Method
 }//End Class
