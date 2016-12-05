@@ -39,7 +39,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import uk.dangrew.jupa.TestCommon;
 import uk.dangrew.jupa.file.utility.IoStreaming;
 import uk.dangrew.sd.core.source.Source;
 import uk.dangrew.sd.logging.io.BasicStringIO;

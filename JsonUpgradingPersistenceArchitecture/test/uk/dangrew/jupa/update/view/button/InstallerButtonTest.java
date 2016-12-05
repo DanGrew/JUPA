@@ -25,7 +25,6 @@ import uk.dangrew.jupa.graphics.launch.TestApplication;
 import uk.dangrew.jupa.update.launch.BasicSystemHandover;
 import uk.dangrew.jupa.update.launch.SystemHandover;
 import uk.dangrew.jupa.update.model.ReleaseDefinition;
-import uk.dangrew.jupa.update.stream.ArtifactLocationGeneratorImpl;
 import uk.dangrew.sd.core.source.Source;
 
 /**

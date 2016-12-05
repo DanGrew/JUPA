@@ -162,14 +162,14 @@ public class JsonStructureCompatibilityTest {
       assertThat( systemUnderTest.isCompatible( object ), is( false ) );
    }//End Method
    
-   @Test public void shouldRejectMissingNestedArray(){
+   @Test public void shouldRAllowMissingElementsInArray(){
       structureTree.addArray( CHILDA, structureTree.getRoot(), SIZE_RETRIEVER );
       structureTree.addArray( CHILDB, CHILDA, SIZE_RETRIEVER );
       
       JSONArray childA = new JSONArray();
       object.put( CHILDA, childA );
       
-      assertThat( systemUnderTest.isCompatible( object ), is( false ) );      
+      assertThat( systemUnderTest.isCompatible( object ), is( true ) );      
    }//End Method
    
    @Test public void shouldAcceptArrayWithAnyNumberOfElementsSoLongAsOneIsPresent(){
@@ -221,7 +221,7 @@ public class JsonStructureCompatibilityTest {
       
       JSONArray array = new JSONArray();
       childA.put( CHILDB, array );
-      assertThat( systemUnderTest.isCompatible( object ), is( false ) );
+      assertThat( systemUnderTest.isCompatible( object ), is( true ) );
       
       JSONObject childC3 = new JSONObject();
       array.put( childC3 );

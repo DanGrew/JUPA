@@ -81,8 +81,8 @@ class JsonStructureCompatibility {
       
       JSONArray jsonArray = ( JSONArray ) object;
       if ( jsonArray.length() == 0 ) {
-         //definitely require one element, must have children
-         return false;
+         //used to return false, but if there are no elements then it shouldn't be invalid?
+         return true;
       }
       
       String onlyChild = rootElements.iterator().next();

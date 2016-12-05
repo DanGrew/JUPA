@@ -16,7 +16,9 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener.Change;
 import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import uk.dangrew.jupa.json.marshall.ModelMarshaller;
 
@@ -66,6 +68,19 @@ public class SessionManager {
          return;
       }
       property.addListener( ( MapChangeListener.Change< ? extends K, ? extends V > change ) -> queue.offer( new Object() ) );
+      registeredProperties.add( property );
+   }//End Method
+   
+   /**
+    * Method to register an {@link ObservableList} that, when changes, triggers a new session
+    * write.
+    * @param property the {@link ObservableList} to listen to.
+    */
+   public < V > void triggerWriteOnChange( ObservableList< V > property ) {
+      if ( registeredProperties.contains( property ) ) {
+         return;
+      }
+      property.addListener( ( Change< ? extends V > c ) -> queue.offer( new Object() ) );
       registeredProperties.add( property );
    }//End Method
    

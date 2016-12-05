@@ -31,7 +31,9 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import uk.dangrew.jupa.json.marshall.ModelMarshaller;
 import uk.dangrew.jupa.mockito.NoResponseAnswer;
@@ -110,6 +112,10 @@ public class SessionManagerTest {
       systemUnderTest.triggerWriteOnChange( ( ObservableMap< ?, ? > )null );
    }//End Method
    
+   @Test( expected = NullPointerException.class ) public void shouldNotAcceptNullListTrigger(){
+      systemUnderTest.triggerWriteOnChange( ( ObservableList< ? > )null );
+   }//End Method
+   
    @Test public void shouldIgnoreSameValueTriggerMultipleTimes() throws InterruptedException{
       ObjectProperty< String > property = new SimpleObjectProperty< String >( "anything" );
       systemUnderTest.triggerWriteOnChange( property );
@@ -140,6 +146,21 @@ public class SessionManagerTest {
       verify( marshaller ).write();
    }//End Method
    
+   @Test public void shouldIgnoreSameListTriggerMultipleTimes() throws InterruptedException{
+      ObservableList< String > property = FXCollections.observableArrayList();
+      systemUnderTest.triggerWriteOnChange( property );
+      systemUnderTest.triggerWriteOnChange( property );
+      systemUnderTest.triggerWriteOnChange( property );
+      verifyZeroInteractions( marshaller );
+      
+      writeLatch = new CountDownLatch( 1 );
+      doAnswer( new NoResponseAnswer<>( writeLatch::countDown ) ).when( marshaller ).write();
+      property.add( "something" );
+      writeLatch.await();
+      
+      verify( marshaller ).write();
+   }//End Method
+   
    @Test public void shouldHaveNoFurtherInteractionsWithAlreadyRegisteredValue(){
       @SuppressWarnings("unchecked") //mocking genericized objects
       ObjectProperty< Object > property = mock( ObjectProperty.class );
@@ -158,6 +179,16 @@ public class SessionManagerTest {
       systemUnderTest.triggerWriteOnChange( property );
       systemUnderTest.triggerWriteOnChange( property );
       verify( property, times( 1 ) ).addListener( Mockito.< MapChangeListener< Object, Object > >any() ); 
+   }//End Method
+   
+   @Test public void shouldHaveNoFurtherInteractionsWithAlreadyRegisteredList(){
+      @SuppressWarnings("unchecked") //mocking genericized objects
+      ObservableList< Object > property = mock( ObservableList.class );
+      
+      systemUnderTest.triggerWriteOnChange( property );
+      systemUnderTest.triggerWriteOnChange( property );
+      systemUnderTest.triggerWriteOnChange( property );
+      verify( property, times( 1 ) ).addListener( Mockito.< ListChangeListener< Object > >any() ); 
    }//End Method
    
    @Test public void shouldQueueOnlyOneWriteToAvoidRepeatingTheSameWrite() throws InterruptedException{
