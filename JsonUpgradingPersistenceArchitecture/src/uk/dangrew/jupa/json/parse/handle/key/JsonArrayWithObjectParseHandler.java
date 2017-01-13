@@ -40,7 +40,7 @@ public class JsonArrayWithObjectParseHandler< HandledTypeT > extends JsonKeyPars
     * {@inheritDoc}
     */
    @Override public void handle( String key, HandledTypeT value ) {
-      throw new IllegalStateException( key + NO_VALUES_EXPECTED );
+      //do nothing, the element is not present i.e. null
    }//End Method
 
 }//End Class
