@@ -73,6 +73,16 @@ public class JsonStructure {
    }//End Method
 
    /**
+    * Method to record a child relationship to a parent, specifically a {@link JSONObject}
+    * child within the parent with the given key, that is optional and is not enforced.
+    * @param child the unique id for the child, used to refer to throughout construction.
+    * @param parent the unique id for the parent, used to refer to throughout construction.
+    */
+   public void optionalChild( String child, String parent ) {
+      tree.addOptionalChild( child, parent );
+   }//End Method
+   
+   /**
     * Method to record a value relationship to a parent, specifically a value rather than child
     * within the parent with the given key.
     * @param value the unique id for the vale, used to refer to throughout construction.

@@ -27,7 +27,7 @@ import java.nio.charset.StandardCharsets;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.dangrew.jupa.TestCommon;
+import uk.dangrew.kode.TestCommon;
 
 /**
  * {@link IoStreaming} test.

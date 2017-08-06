@@ -87,5 +87,23 @@ public class JsonStructureTreeTest {
       assertThat( systemUnderTest.getChildrenOf( ROOT ), contains( CHILD ) );
       assertThat( systemUnderTest.getChildrenOf( CHILD ), contains( ANOTHER_CHILD ) );
    }//End Method
+   
+   @Test public void shouldAllowOptionalChildren(){
+      assertThat( systemUnderTest.getChildrenOf( ROOT ), is( empty() ) );
+      systemUnderTest.addOptionalChild( CHILD, ROOT );
+      systemUnderTest.addChild( ANOTHER_CHILD, ROOT );
+      assertThat( systemUnderTest.getChildrenOf( ROOT ), hasSize( 2 ) );
+      assertThat( systemUnderTest.getChildrenOf( ROOT ), contains( CHILD, ANOTHER_CHILD ) );
+      
+      systemUnderTest.addOptionalChild( ANOTHER_CHILD, CHILD );
+      assertThat( systemUnderTest.getChildrenOf( CHILD ), hasSize( 1 ) );
+      assertThat( systemUnderTest.getChildrenOf( CHILD ), contains( ANOTHER_CHILD ) );
+      
+      assertThat( systemUnderTest.isOptional( CHILD, ROOT ), is( true ) );
+      assertThat( systemUnderTest.isOptional( ANOTHER_CHILD, ROOT ), is( false ) );
+      assertThat( systemUnderTest.isOptional( ANOTHER_CHILD, CHILD ), is( true ) );
+      
+      assertThat( systemUnderTest.isOptional( "anything", ROOT ), is( false ) );
+   }//End Method
 
 }//End Class

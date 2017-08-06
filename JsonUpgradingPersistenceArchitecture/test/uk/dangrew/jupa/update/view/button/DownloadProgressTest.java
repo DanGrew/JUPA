@@ -17,7 +17,7 @@ import static org.mockito.Mockito.mock;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.dangrew.jupa.graphics.launch.TestApplication;
+import uk.dangrew.kode.launch.TestApplication;
 import uk.dangrew.sd.core.message.Messages;
 import uk.dangrew.sd.core.progress.Progresses;
 import uk.dangrew.sd.core.source.Source;

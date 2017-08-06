@@ -116,12 +116,15 @@ class JsonStructureCompatibility {
       JSONObject jsonObject = ( JSONObject ) object;
       
       for ( String element : rootElements ) {
-         if ( !jsonObject.has( element ) ) {
+         if ( !jsonObject.has( element ) && !structureTree.isOptional( element, nodeName ) ) {
             return false;
          }
       }
       
       for ( String element : rootElements ) {
+         if ( !jsonObject.has( element ) ) {
+            continue;
+         }
          boolean successful = isCompatible( jsonObject.get( element ), element );
          if ( !successful ) {
             return false;

@@ -20,7 +20,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import uk.dangrew.jupa.graphics.launch.TestApplication;
+import uk.dangrew.kode.launch.TestApplication;
 import uk.dangrew.sd.core.category.Categories;
 import uk.dangrew.sd.core.lockdown.DigestMessageReceiver;
 import uk.dangrew.sd.core.lockdown.DigestMessageReceiverImpl;

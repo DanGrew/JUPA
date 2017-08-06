@@ -22,7 +22,7 @@ import org.mockito.MockitoAnnotations;
 import com.sun.javafx.application.PlatformImpl;
 
 import javafx.event.ActionEvent;
-import uk.dangrew.jupa.graphics.launch.TestApplication;
+import uk.dangrew.kode.launch.TestApplication;
 
 /**
  * {@link ReleaseNotificationPanel} test.

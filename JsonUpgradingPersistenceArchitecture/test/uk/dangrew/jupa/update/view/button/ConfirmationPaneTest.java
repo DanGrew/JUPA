@@ -19,7 +19,7 @@ import org.junit.Test;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.layout.GridPane;
-import uk.dangrew.jupa.graphics.launch.TestApplication;
+import uk.dangrew.kode.launch.TestApplication;
 
 /**
  * {@link ConfirmationPane} test.

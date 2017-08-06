@@ -36,11 +36,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import uk.dangrew.jupa.graphics.launch.TestApplication;
 import uk.dangrew.jupa.update.launch.BasicSystemHandover;
 import uk.dangrew.jupa.update.model.ReleaseDefinition;
 import uk.dangrew.jupa.update.model.ReleaseParser;
 import uk.dangrew.jupa.update.view.panel.ReleaseSummaryPanel;
+import uk.dangrew.kode.launch.TestApplication;
 
 /**
  * {@link ReleasesDownloader} test.

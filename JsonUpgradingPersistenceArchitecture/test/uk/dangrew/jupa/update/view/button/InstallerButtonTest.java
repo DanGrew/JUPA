@@ -21,10 +21,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import javafx.scene.control.Label;
-import uk.dangrew.jupa.graphics.launch.TestApplication;
 import uk.dangrew.jupa.update.launch.BasicSystemHandover;
 import uk.dangrew.jupa.update.launch.SystemHandover;
 import uk.dangrew.jupa.update.model.ReleaseDefinition;
+import uk.dangrew.kode.launch.TestApplication;
 import uk.dangrew.sd.core.source.Source;
 
 /**

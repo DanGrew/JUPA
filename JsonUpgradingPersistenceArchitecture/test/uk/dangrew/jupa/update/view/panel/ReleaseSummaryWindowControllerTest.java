@@ -10,7 +10,7 @@
 package uk.dangrew.jupa.update.view.panel;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,10 +18,10 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.dangrew.jupa.graphics.launch.TestApplication;
 import uk.dangrew.jupa.update.launch.BasicSystemHandover;
 import uk.dangrew.jupa.update.launch.SystemHandover;
 import uk.dangrew.jupa.update.model.ReleaseDefinition;
+import uk.dangrew.kode.launch.TestApplication;
 
 /**
  * {@link ReleaseSummaryWindowController} test.

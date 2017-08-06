@@ -19,8 +19,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import uk.dangrew.jupa.graphics.launch.TestApplication;
 import uk.dangrew.jupa.update.model.ReleaseDefinition;
+import uk.dangrew.kode.launch.TestApplication;
 
 /**
  * {@link ConfirmationWithControllerAction} test.

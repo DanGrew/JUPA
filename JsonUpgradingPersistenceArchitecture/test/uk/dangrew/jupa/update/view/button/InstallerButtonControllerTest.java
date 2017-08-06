@@ -29,12 +29,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import uk.dangrew.jupa.graphics.launch.TestApplication;
 import uk.dangrew.jupa.javafx.platform.PlatformLifecycle;
 import uk.dangrew.jupa.javafx.platform.PlatformLifecycleImpl;
 import uk.dangrew.jupa.update.launch.SystemHandover;
 import uk.dangrew.jupa.update.model.ReleaseDefinition;
 import uk.dangrew.jupa.update.stream.ThreadedFileStreamer;
+import uk.dangrew.kode.launch.TestApplication;
 import uk.dangrew.sd.core.source.Source;
 import uk.dangrew.sd.logging.location.JarProtocol;
 

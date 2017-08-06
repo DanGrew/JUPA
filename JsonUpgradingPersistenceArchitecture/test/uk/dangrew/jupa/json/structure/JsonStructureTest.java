@@ -118,6 +118,11 @@ public class JsonStructureTest {
       systemUnderTest.value( PERSON, PEOPLE );
       verify( tree ).addChild( PERSON, PEOPLE );
    }//End Method
+   
+   @Test public void optionalChildShouldCallThroughToTree() {
+      systemUnderTest.optionalChild( PERSON, PEOPLE );
+      verify( tree ).addOptionalChild( PERSON, PEOPLE );
+   }//End Method
 
    @Test public void arrayShouldCallThroughToTree() {
       systemUnderTest.array( CHILDREN, PERSON, ARRAY_SIZE_FUNCTION );

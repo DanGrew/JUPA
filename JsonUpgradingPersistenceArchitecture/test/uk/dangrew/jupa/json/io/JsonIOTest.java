@@ -34,7 +34,7 @@ import org.mockito.MockitoAnnotations;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import uk.dangrew.jupa.TestCommon;
+import uk.dangrew.kode.TestCommon;
 import uk.dangrew.sd.core.lockdown.DigestMessageReceiver;
 import uk.dangrew.sd.core.lockdown.DigestMessageReceiverImpl;
 

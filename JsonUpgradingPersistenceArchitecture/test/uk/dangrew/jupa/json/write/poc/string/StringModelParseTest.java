@@ -19,8 +19,8 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.dangrew.jupa.TestCommon;
 import uk.dangrew.jupa.json.parse.JsonParser;
+import uk.dangrew.kode.TestCommon;
 
 /**
  * Proof of concept test to prove that a simple string model can be parsed in.

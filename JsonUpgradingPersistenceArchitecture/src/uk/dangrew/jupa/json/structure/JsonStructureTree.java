@@ -26,6 +26,7 @@ class JsonStructureTree {
    
    private final Map< String, Set< String > > parentToChildren;
    private final HashMap< String, Function< String, Integer > > arrays;
+   private final Map< String, Set< String > > optionals;
 
    /**
     * Constructs a new {@link JsonStructureTree}.
@@ -33,6 +34,7 @@ class JsonStructureTree {
    JsonStructureTree() {
       this.parentToChildren = new HashMap<>();
       this.arrays = new HashMap<>();
+      this.optionals = new HashMap<>();
    }//End Constructor
 
    /**
@@ -76,6 +78,23 @@ class JsonStructureTree {
       
       children.add( child );
    }//End Method
+   
+   /**
+    * Method to add a child relationship to the given parent. Note that arrays can have values
+    * or {@link org.json.JSONObject}s therefore 0 or 1 children, no more. This relationship is 
+    * optional and is not enforced.
+    * @param child the child name to add.
+    * @param parent the parent the child is for.
+    */
+   void addOptionalChild( String child, String parent ) {
+      addChild( child, parent );
+      Set< String > optionalSet = optionals.get( parent );
+      if ( optionalSet == null ) {
+         optionalSet = new LinkedHashSet<>();
+         optionals.put( parent, optionalSet );
+      }
+      optionalSet.add( child );
+   }//End Method
 
    /**
     * Method to add an array to the given parent.
@@ -108,6 +127,15 @@ class JsonStructureTree {
    Integer getArraySize( String child ) {
       Function< String, Integer > arraySizeFunction = arrays.get( child );
       return arraySizeFunction.apply( child );
+   }//End Method
+
+   boolean isOptional( String child, String parent ) {
+      Set< String > optionalSet = optionals.get( parent );
+      if ( optionalSet == null ) {
+         return false;
+      }
+      
+      return optionalSet.contains( child );
    }//End Method
 
 }//End Class

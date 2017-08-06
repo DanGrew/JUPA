@@ -19,9 +19,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import uk.dangrew.jupa.graphics.launch.TestApplication;
-import uk.dangrew.jupa.update.view.panel.ReleaseNotificationPanel;
-import uk.dangrew.jupa.update.view.panel.ReleaseNotificationTimeout;
+import uk.dangrew.kode.launch.TestApplication;
 
 /**
  * {@link ReleaseNotificationTimeout} test.

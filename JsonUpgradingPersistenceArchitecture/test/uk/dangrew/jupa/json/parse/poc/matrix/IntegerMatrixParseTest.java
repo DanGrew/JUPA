@@ -18,10 +18,10 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.dangrew.jupa.TestCommon;
 import uk.dangrew.jupa.json.parse.JsonParser;
 import uk.dangrew.jupa.json.parse.handle.key.JsonArrayParseHandler;
 import uk.dangrew.jupa.json.parse.handle.type.IntegerParseHandle;
+import uk.dangrew.kode.TestCommon;
 
 /**
  * Proof of concept test to prove matrices can be parsed when only one global key present.

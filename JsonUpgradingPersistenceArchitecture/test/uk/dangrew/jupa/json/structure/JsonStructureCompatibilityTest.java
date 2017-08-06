@@ -67,6 +67,23 @@ public class JsonStructureCompatibilityTest {
       assertThat( systemUnderTest.isCompatible( object ), is( true ) );
    }//End Method
    
+   @Test public void shouldAcceptObjectThatMissesOptionalKeys() {
+      structureTree.addChild( CHILDA, structureTree.getRoot() );
+      structureTree.addChild( CHILDB, CHILDA );
+      structureTree.addChild( CHILDC, CHILDA );
+      structureTree.addOptionalChild( CHILDD, CHILDC );
+      
+      JSONObject childA = new JSONObject();
+      object.put( CHILDA, childA );
+      
+      JSONObject childB = new JSONObject();
+      childA.put( CHILDB, childB );
+      JSONObject childC = new JSONObject();
+      childA.put( CHILDC, childC );
+      
+      assertThat( systemUnderTest.isCompatible( object ), is( true ) );
+   }//End Method
+   
    @Test public void shouldAcceptObjectThatContainsAllKeysWithPlaceholders() {
       structureTree.addChild( CHILDA, structureTree.getRoot() );
       structureTree.addChild( CHILDB, structureTree.getRoot() );

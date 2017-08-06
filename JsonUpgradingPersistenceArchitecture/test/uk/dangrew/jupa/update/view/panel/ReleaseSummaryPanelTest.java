@@ -24,11 +24,11 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
-import uk.dangrew.jupa.graphics.launch.TestApplication;
 import uk.dangrew.jupa.update.launch.BasicSystemHandover;
 import uk.dangrew.jupa.update.launch.SystemHandover;
 import uk.dangrew.jupa.update.model.ReleaseDefinition;
 import uk.dangrew.jupa.update.view.button.InstallerButton;
+import uk.dangrew.kode.launch.TestApplication;
 
 /**
  * {@link ReleaseSummaryPanel} test.
