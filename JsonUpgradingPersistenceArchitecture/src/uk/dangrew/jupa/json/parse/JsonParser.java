@@ -228,4 +228,22 @@ public class JsonParser {
       arrayFinised( key );
    }//End Method
 
+   /**
+    * Method to intercept the existing {@link JsonHandle} if one exists. This will call the given
+    * before the existing for each type of handling. If there is nothing to intercept, this becomes
+    * a {@link #when(String, JsonHandle)} call.
+    * @param key the key to intercept.
+    * @param interceptor the {@link JsonHandle} to intercept with.
+    */
+   public void intercept( String key, JsonHandle interceptor ) {
+      if ( !handles.containsKey( key ) ) {
+         when( key, interceptor );
+         return;
+      }
+      
+      JsonHandle existing = handles.get( key );
+      JsonHandle interceptHandler = new JsonHandleInterceptor( existing, interceptor );
+      when( key, interceptHandler );
+   }//End Method
+
 }//End Class

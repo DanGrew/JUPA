@@ -13,6 +13,9 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThan;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static uk.dangrew.jupa.json.parse.DefaultKeyRecorder.ARRAY_FINISHED;
 import static uk.dangrew.jupa.json.parse.DefaultKeyRecorder.ARRAY_STARTED;
 import static uk.dangrew.jupa.json.parse.DefaultKeyRecorder.OBJECT_FINISHED;
@@ -22,6 +25,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InOrder;
 
 import uk.dangrew.jupa.json.JsonHandle;
 import uk.dangrew.jupa.json.parse.handle.type.StringParseHandle;
@@ -278,6 +282,33 @@ public class JsonParserTest {
       keyRecorder.expect( KEY_A, ARRAY_FINISHED );
       
       keyRecorder.expectKeysFound();
+   }//End Method
+   
+   @Test public void shouldIntercept(){
+      JsonHandle firstHandle = mock( JsonHandle.class );
+      systemUnderTest.when( KEY_A, firstHandle );
+      
+      JSONObject json = new JSONObject();
+      json.put( KEY_A, VALUE_A );
+      
+      JsonHandle secondHandle = mock( JsonHandle.class );
+      systemUnderTest.intercept( KEY_A, secondHandle );
+      
+      systemUnderTest.parse( json );
+      InOrder order = inOrder( firstHandle, secondHandle );
+      order.verify( secondHandle ).handle( KEY_A, json );
+      order.verify( firstHandle ).handle( KEY_A, json );
+   }//End Method
+   
+   @Test public void shouldHandleIfNothingToIntercept(){
+      JSONObject json = new JSONObject();
+      json.put( KEY_A, VALUE_A );
+      
+      JsonHandle secondHandle = mock( JsonHandle.class );
+      systemUnderTest.intercept( KEY_A, secondHandle );
+      
+      systemUnderTest.parse( json );
+      verify( secondHandle ).handle( KEY_A, json );
    }//End Method
    
 }//End Class
