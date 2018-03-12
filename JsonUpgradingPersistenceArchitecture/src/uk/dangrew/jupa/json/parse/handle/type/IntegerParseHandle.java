@@ -10,6 +10,7 @@
 package uk.dangrew.jupa.json.parse.handle.type;
 
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -35,6 +36,14 @@ public class IntegerParseHandle extends JsonParseHandleImpl< Integer >{
     * @param handle the handle to use in a {@link JsonValueParseHandler}.
     */
    public IntegerParseHandle( BiConsumer< String, Integer > handle ) {
+      this( new JsonValueParseHandler<>( handle ) );
+   }//End Constructor
+   
+   /**
+    * Constructs a new {@link IntegerParseHandle} with the given method in a {@link JsonValueParseHandler}.
+    * @param handle the handle to use in a {@link JsonValueParseHandler}.
+    */
+   public IntegerParseHandle( Consumer< Integer > handle ) {
       this( new JsonValueParseHandler<>( handle ) );
    }//End Constructor
 

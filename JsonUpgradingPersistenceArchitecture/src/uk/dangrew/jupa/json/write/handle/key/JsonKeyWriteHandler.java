@@ -1,5 +1,5 @@
 /*
- * ----------------------------------------
+ * -----------k-----------------------------
  *           Json Upgrading and 
  *        Persistence Architecture
  * ----------------------------------------
@@ -12,7 +12,9 @@ package uk.dangrew.jupa.json.write.handle.key;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
+import uk.dangrew.jupa.json.JsonNavigation;
 import uk.dangrew.jupa.json.JsonNavigationHandlerImpl;
 
 /**
@@ -23,6 +25,32 @@ public class JsonKeyWriteHandler extends JsonNavigationHandlerImpl implements Js
 
    private final Function< String, Object > objectRetriever;
    private final BiFunction< String, Integer, Object > arrayRetriever;
+   
+   /** 
+    * Constructs a new {@link JsonKeyWriteHandler}.
+    * @param objectRetriever the method to call when a value for a key is required.
+    * @param startedObject the method to call when a value for an item in an array is required.
+    * @param finishedObject the method to call when an object is finished.
+    * @param startedArray the method to call when an array is started.
+    * @param finishedArray the method to call when an array is finished.
+    */
+   public JsonKeyWriteHandler(
+            Supplier< Object > objectRetriever,
+            Function< Integer, Object > arrayRetriever,
+            Runnable startedObject,
+            Runnable finishedObject,
+            Runnable startedArray,
+            Runnable finishedArray         
+   ) {
+      this( 
+               JsonNavigation.consumeKey( objectRetriever ),
+               JsonNavigation.consumeKey( arrayRetriever ),
+               JsonNavigation.consumeKey( startedObject ), 
+               JsonNavigation.consumeKey( finishedObject ), 
+               JsonNavigation.consumeKey( startedArray ), 
+               JsonNavigation.consumeKey( finishedArray ) 
+      );
+   }//End Constructor
    
    /** 
     * Constructs a new {@link JsonKeyWriteHandler}.

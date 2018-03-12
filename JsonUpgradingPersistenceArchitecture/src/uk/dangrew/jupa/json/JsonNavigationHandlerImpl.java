@@ -17,12 +17,31 @@ import java.util.function.Consumer;
  */
 public class JsonNavigationHandlerImpl implements JsonNavigation {
    
-   protected static final Consumer< String > DO_NOTHING = key -> { /* do nothing */ };
-   
    private final Consumer< String > startedObject;
    private final Consumer< String > finishedObject;
    private final Consumer< String > startedArray;
    private final Consumer< String > finishedArray;
+   
+   /**
+    * Constructs a new {@link JsonNavigationHandlerImpl}.
+    * @param startedObject the method to call when an object is started, can be null.
+    * @param finishedObject the method to call when an object is finished, can be null.
+    * @param startedArray the method to call when an array is started, can be null.
+    * @param finishedArray the method to call when an array is finished, can be null.
+    */
+   public JsonNavigationHandlerImpl(
+            Runnable startedObject,
+            Runnable finishedObject,
+            Runnable startedArray,
+            Runnable finishedArray         
+   ) {
+      this( 
+         JsonNavigation.consumeKey( startedObject ),
+         JsonNavigation.consumeKey( finishedObject ),
+         JsonNavigation.consumeKey( startedArray ),
+         JsonNavigation.consumeKey( finishedArray )
+      );
+   }//End Constructor
    
    /**
     * Constructs a new {@link JsonNavigationHandlerImpl}.
@@ -37,10 +56,10 @@ public class JsonNavigationHandlerImpl implements JsonNavigation {
             Consumer< String > startedArray,
             Consumer< String > finishedArray         
    ) {
-      this.startedObject = startedObject == null ? DO_NOTHING : startedObject;
-      this.finishedObject = finishedObject == null ? DO_NOTHING : finishedObject;
-      this.startedArray = startedArray == null ? DO_NOTHING : startedArray;
-      this.finishedArray = finishedArray == null ? DO_NOTHING : finishedArray;
+      this.startedObject = startedObject == null ? DO_NOTHING_CONSUMER : startedObject;
+      this.finishedObject = finishedObject == null ? DO_NOTHING_CONSUMER : finishedObject;
+      this.startedArray = startedArray == null ? DO_NOTHING_CONSUMER : startedArray;
+      this.finishedArray = finishedArray == null ? DO_NOTHING_CONSUMER : finishedArray;
    }//End Constructor
    
    /**

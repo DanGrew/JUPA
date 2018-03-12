@@ -32,6 +32,18 @@ public class JsonObjectParseHandler< HandledTypeT > extends JsonKeyParseHandler<
       super( null, startedObject, finishedObject, null, null );
    }//End Constructor
    
+   /** 
+    * Constructs a new {@link JsonObjectParseHandler}.
+    * @param startedObject the method to call when an object is started.
+    * @param finishedObject the method to call when an object is finished.
+    */
+   public JsonObjectParseHandler(
+            Runnable startedObject,
+            Runnable finishedObject
+   ) {
+      super( null, startedObject, finishedObject, null, null );
+   }//End Constructor
+   
    /**
     * {@inheritDoc}
     */

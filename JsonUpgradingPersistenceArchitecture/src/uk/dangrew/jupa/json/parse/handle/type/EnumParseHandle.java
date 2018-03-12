@@ -10,6 +10,7 @@
 package uk.dangrew.jupa.json.parse.handle.type;
 
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -44,6 +45,15 @@ public class EnumParseHandle< EnumTypeT extends Enum< EnumTypeT > > extends Json
     * @param handle the handle to use in a {@link JsonValueParseHandler}.
     */
    public EnumParseHandle( Class< EnumTypeT > enumType, BiConsumer< String, EnumTypeT > handle ) {
+      this( enumType, new JsonValueParseHandler<>( handle ) );
+   }//End Constructor
+   
+   /**
+    * Constructs a new {@link EnumParseHandle} with the given method in a {@link JsonValueParseHandler}.
+    * @param enumType the {@link Class} of the {@link Enum}.
+    * @param handle the handle to use in a {@link JsonValueParseHandler}.
+    */
+   public EnumParseHandle( Class< EnumTypeT > enumType, Consumer< EnumTypeT > handle ) {
       this( enumType, new JsonValueParseHandler<>( handle ) );
    }//End Constructor
    

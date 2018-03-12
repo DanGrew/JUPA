@@ -12,6 +12,7 @@ package uk.dangrew.jupa.json.write.handle.key;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * The {@link JsonArrayWriteHandler} provides a {@link JsonKeyWriteHandler} specifically for handling
@@ -20,9 +21,24 @@ import java.util.function.Function;
 public class JsonArrayWriteHandler extends JsonKeyWriteHandler {
 
    private static final String EXPECTED_ARRAY_WITH_VALUES_ONLY = ": expected array with values only.";
-   private static final Function< String, Object > ARRAY_FOUND_HANDLE = key -> null;
+   private static final Function< String, Object > ARRAY_FOUND_FUNCTION_HANDLE = key -> null;
+   private static final Supplier< Object > ARRAY_FOUND_SUPPLIER_HANDLE = () -> null;
    private static final BiFunction< String, Integer, Object > ARRAY_INDEX_HANDLE = ( key, index ) -> null;
 
+   /**
+    * Constructs a new {@link JsonArrayWriteHandler}.
+    * @param arrayItemHandle the method to call when an item in an index has been found.
+    * @param startedArray the method to call when handling the start of an array.
+    * @param finishedArray the method to call when handling the end of an array.
+    */
+   public JsonArrayWriteHandler(
+            Function< Integer, Object > arrayItemHandle,
+            Runnable startedArray,
+            Runnable finishedArray         
+   ) {
+      super( ARRAY_FOUND_SUPPLIER_HANDLE, arrayItemHandle, null, null, startedArray, finishedArray );
+   }//End Constructor
+   
    /**
     * Constructs a new {@link JsonArrayWriteHandler}.
     * @param arrayItemHandle the method to call when an item in an index has been found.
@@ -34,7 +50,7 @@ public class JsonArrayWriteHandler extends JsonKeyWriteHandler {
             Consumer< String > startedArray,
             Consumer< String > finishedArray         
    ) {
-      super( ARRAY_FOUND_HANDLE, arrayItemHandle, null, null, startedArray, finishedArray );
+      super( ARRAY_FOUND_FUNCTION_HANDLE, arrayItemHandle, null, null, startedArray, finishedArray );
    }//End Constructor
    
    /**
@@ -44,7 +60,7 @@ public class JsonArrayWriteHandler extends JsonKeyWriteHandler {
    public JsonArrayWriteHandler(
             BiFunction< String, Integer, Object > arrayItemHandle
    ) {
-      this( arrayItemHandle, DO_NOTHING, DO_NOTHING );
+      this( arrayItemHandle, DO_NOTHING_CONSUMER, DO_NOTHING_CONSUMER );
    }//End Constructor
    
    /**

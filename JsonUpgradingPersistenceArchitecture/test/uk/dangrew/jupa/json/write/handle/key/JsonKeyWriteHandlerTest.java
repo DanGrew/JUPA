@@ -14,6 +14,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +33,9 @@ public class JsonKeyWriteHandlerTest extends JsonNavigationHandlerImplTest {
    
    @Mock protected Function< String, Object > objectRetriever;
    @Mock protected BiFunction< String, Integer, Object > arrayRetriever;
+   
+   @Mock protected Supplier< Object > objectRetrieverWithoutKey;
+   @Mock protected Function< Integer, Object > arrayRetrieverWithoutKey;
    protected JsonKeyWriteHandle systemUnderTest;
    
    @Before public void initialiseSystemUnderTest(){
@@ -54,4 +58,45 @@ public class JsonKeyWriteHandlerTest extends JsonNavigationHandlerImplTest {
       verifyNoMoreInteractions( objectRetriever, arrayRetriever, startedObject, finishedObject, startedArray, finishedArray );
    }//End Method
 
+   @Test public void retrieveObjectShouldDirectAppropriatelyWithKeyConsumption(){
+      systemUnderTest = new JsonKeyWriteHandler( 
+               objectRetrieverWithoutKey, 
+               arrayRetrieverWithoutKey, 
+               startedObjectWithoutKey, 
+               finishedObjectWithoutKey, 
+               startedArrayWithoutKey, 
+               finishedArrayWithoutKey 
+      );
+      systemUnderTest.retrieve( KEY );
+      verify( objectRetrieverWithoutKey ).get();
+      verifyNoMoreInteractions( 
+               objectRetrieverWithoutKey, 
+               arrayRetrieverWithoutKey, 
+               startedObjectWithoutKey, 
+               finishedObjectWithoutKey, 
+               startedArrayWithoutKey, 
+               finishedArrayWithoutKey 
+      );
+   }//End Method
+   
+   @Test public void retrieveArrayShouldDirectAppropriatelyWithKeyConsumption(){
+      systemUnderTest = new JsonKeyWriteHandler( 
+               objectRetrieverWithoutKey, 
+               arrayRetrieverWithoutKey, 
+               startedObjectWithoutKey, 
+               finishedObjectWithoutKey, 
+               startedArrayWithoutKey, 
+               finishedArrayWithoutKey 
+      );
+      systemUnderTest.retrieve( KEY, INDEX );
+      verify( arrayRetrieverWithoutKey ).apply( INDEX );
+      verifyNoMoreInteractions( 
+               objectRetrieverWithoutKey, 
+               arrayRetrieverWithoutKey, 
+               startedObjectWithoutKey, 
+               finishedObjectWithoutKey, 
+               startedArrayWithoutKey, 
+               finishedArrayWithoutKey 
+      );
+   }//End Method
 }//End Class

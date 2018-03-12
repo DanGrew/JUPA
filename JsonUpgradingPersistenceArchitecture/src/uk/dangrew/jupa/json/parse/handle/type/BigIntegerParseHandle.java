@@ -11,6 +11,7 @@ package uk.dangrew.jupa.json.parse.handle.type;
 
 import java.math.BigInteger;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -36,6 +37,14 @@ public class BigIntegerParseHandle extends JsonParseHandleImpl< BigInteger > {
     * @param handle the handle to use in a {@link JsonValueParseHandler}.
     */
    public BigIntegerParseHandle( BiConsumer< String, BigInteger > handle ) {
+      this( new JsonValueParseHandler<>( handle ) );
+   }//End Constructor
+   
+   /**
+    * Constructs a new {@link BigIntegerParseHandle} with the given method in a {@link JsonValueParseHandler}.
+    * @param handle the handle to use in a {@link JsonValueParseHandler}.
+    */
+   public BigIntegerParseHandle( Consumer< BigInteger > handle ) {
       this( new JsonValueParseHandler<>( handle ) );
    }//End Constructor
    

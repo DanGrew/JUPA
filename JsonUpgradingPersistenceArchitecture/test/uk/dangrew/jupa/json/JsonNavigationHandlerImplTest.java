@@ -32,6 +32,11 @@ public class JsonNavigationHandlerImplTest {
    @Mock protected Consumer< String > finishedObject;
    @Mock protected Consumer< String > startedArray;
    @Mock protected Consumer< String > finishedArray;
+   
+   @Mock protected Runnable startedObjectWithoutKey;
+   @Mock protected Runnable finishedObjectWithoutKey;
+   @Mock protected Runnable startedArrayWithoutKey;
+   @Mock protected Runnable finishedArrayWithoutKey;
    protected JsonNavigation systemUnderTest;
    
    @Before public void initialiseSystemUnderTest(){
@@ -66,11 +71,68 @@ public class JsonNavigationHandlerImplTest {
    }//End Method
    
    @Test public void nullsShouldBePermittedByConstructor(){
-      systemUnderTest = new JsonNavigationHandlerImpl( null, null, null, null );
+      startedObjectWithoutKey  = null;
+      finishedObjectWithoutKey = null;
+      startedArrayWithoutKey   = null;
+      finishedArrayWithoutKey  = null;
+      systemUnderTest = new JsonNavigationHandlerImpl( 
+               startedObjectWithoutKey, 
+               finishedObjectWithoutKey, 
+               startedArrayWithoutKey, 
+               finishedArrayWithoutKey 
+      );
       systemUnderTest.startedObject( KEY );
       systemUnderTest.finishedObject( KEY );
       systemUnderTest.startedArray( KEY );
       systemUnderTest.finishedArray( KEY );
+   }//End Method
+   
+   @Test public void startedObjectShouldDirectAppropriatelyWithKeyConsumption() {
+      systemUnderTest = new JsonNavigationHandlerImpl( 
+               startedObjectWithoutKey, 
+               finishedObjectWithoutKey, 
+               startedArrayWithoutKey, 
+               finishedArrayWithoutKey 
+      );
+      systemUnderTest.startedObject( KEY );
+      verify( startedObjectWithoutKey ).run();
+      verifyNoMoreInteractions( startedObjectWithoutKey, finishedObjectWithoutKey, startedArrayWithoutKey, finishedArrayWithoutKey );
+   }//End Method
+   
+   @Test public void finishedObjectShouldDirectAppropriatelyWithKeyConsumption() {
+      systemUnderTest = new JsonNavigationHandlerImpl( 
+               startedObjectWithoutKey, 
+               finishedObjectWithoutKey, 
+               startedArrayWithoutKey, 
+               finishedArrayWithoutKey 
+      );
+      systemUnderTest.finishedObject( KEY );
+      verify( finishedObjectWithoutKey ).run();
+      verifyNoMoreInteractions( startedObjectWithoutKey, finishedObjectWithoutKey, startedArrayWithoutKey, finishedArrayWithoutKey );
+   }//End Method
+   
+   @Test public void startedArrayShouldDirectAppropriatelyWithKeyConsumption() {
+      systemUnderTest = new JsonNavigationHandlerImpl( 
+               startedObjectWithoutKey, 
+               finishedObjectWithoutKey, 
+               startedArrayWithoutKey, 
+               finishedArrayWithoutKey 
+      );
+      systemUnderTest.startedArray( KEY );
+      verify( startedArrayWithoutKey ).run();
+      verifyNoMoreInteractions( startedObjectWithoutKey, finishedObjectWithoutKey, startedArrayWithoutKey, finishedArrayWithoutKey );
+   }//End Method
+   
+   @Test public void finishedArrayShouldDirectAppropriatelyWithKeyConsumption() {
+      systemUnderTest = new JsonNavigationHandlerImpl( 
+               startedObjectWithoutKey, 
+               finishedObjectWithoutKey, 
+               startedArrayWithoutKey, 
+               finishedArrayWithoutKey 
+      );
+      systemUnderTest.finishedArray( KEY );
+      verify( finishedArrayWithoutKey ).run();
+      verifyNoMoreInteractions( startedObjectWithoutKey, finishedObjectWithoutKey, startedArrayWithoutKey, finishedArrayWithoutKey );
    }//End Method
    
 }//End Class

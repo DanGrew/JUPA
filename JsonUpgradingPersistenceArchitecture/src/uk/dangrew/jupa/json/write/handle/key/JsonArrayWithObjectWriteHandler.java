@@ -34,6 +34,22 @@ public class JsonArrayWithObjectWriteHandler extends JsonKeyWriteHandler {
    ) {
       super( null, null, startedObject, finishedObject, startedArray, finishedArray );
    }//End Constructor
+   
+   /** 
+    * Constructs a new {@link JsonKeyParseHandler}.
+    * @param startedObject the method to call when an object is started.
+    * @param finishedObject the method to call when an object is finished.
+    * @param startedArray the method to call when an array is started.
+    * @param finishedArray the method to call when an array is finished.
+    */
+   public JsonArrayWithObjectWriteHandler(
+            Runnable startedObject,
+            Runnable finishedObject,
+            Runnable startedArray,
+            Runnable finishedArray         
+   ) {
+      super( null, null, startedObject, finishedObject, startedArray, finishedArray );
+   }//End Constructor
 
    /**
     * {@inheritDoc}

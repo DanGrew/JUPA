@@ -10,6 +10,7 @@
 package uk.dangrew.jupa.json.write.handle.key;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * The {@link JsonValueWriteHandler} provides a {@link JsonKeyWriteHandler} that only needs to
@@ -24,6 +25,14 @@ public class JsonValueWriteHandler extends JsonKeyWriteHandler {
     * @param handle the method to call when handling a parsed value.
     */
    public JsonValueWriteHandler( Function< String, Object > handle ) {
+      super( handle, null, null, null, null, null );
+   }//End Constructor
+   
+   /** 
+    * Constructs a new {@link JsonValueWriteHandler}.
+    * @param handle the method to call when handling a parsed value.
+    */
+   public JsonValueWriteHandler( Supplier< Object > handle ) {
       super( handle, null, null, null, null, null );
    }//End Constructor
    

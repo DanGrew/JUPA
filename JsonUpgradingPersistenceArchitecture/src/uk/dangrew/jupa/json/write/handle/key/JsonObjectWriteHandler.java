@@ -31,6 +31,18 @@ public class JsonObjectWriteHandler extends JsonKeyWriteHandler {
       super( null, null, startedObject, finishedObject, null, null );
    }//End Constructor
    
+   /** 
+    * Constructs a new {@link JsonObjectWriteHandler}.
+    * @param startedObject the method to call when an object is started.
+    * @param finishedObject the method to call when an object is finished.
+    */
+   public JsonObjectWriteHandler(
+            Runnable startedObject,
+            Runnable finishedObject
+   ) {
+      super( null, null, startedObject, finishedObject, null, null );
+   }//End Constructor
+   
    /**
     * {@inheritDoc}
     */

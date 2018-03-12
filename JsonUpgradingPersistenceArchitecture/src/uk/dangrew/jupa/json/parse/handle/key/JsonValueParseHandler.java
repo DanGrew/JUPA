@@ -10,6 +10,7 @@
 package uk.dangrew.jupa.json.parse.handle.key;
 
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * The {@link JsonValueParseHandler} provides a {@link JsonKeyParseHandler} that only needs to
@@ -25,6 +26,14 @@ public class JsonValueParseHandler< HandledTypeT > extends JsonKeyParseHandler< 
     * @param handle the method to call when handling a parsed value.
     */
    public JsonValueParseHandler( BiConsumer< String, HandledTypeT > handle ) {
+      super( handle, null, null, null, null );
+   }//End Constructor
+   
+   /** 
+    * Constructs a new {@link JsonValueParseHandler}.
+    * @param handle the method to call when handling a parsed value.
+    */
+   public JsonValueParseHandler( Consumer< HandledTypeT > handle ) {
       super( handle, null, null, null, null );
    }//End Constructor
    

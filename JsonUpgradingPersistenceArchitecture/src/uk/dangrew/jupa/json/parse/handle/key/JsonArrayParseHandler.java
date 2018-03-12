@@ -36,6 +36,20 @@ public class JsonArrayParseHandler< HandledTypeT > extends JsonKeyParseHandler< 
    }//End Constructor
    
    /**
+    * Constructs a new {@link JsonArrayParseHandler}.
+    * @param handle the method to call when handling a value.
+    * @param startedArray the method to call when handling the start of an array.
+    * @param finishedArray the method to call when handling the end of an array.
+    */
+   public JsonArrayParseHandler(
+            Consumer< HandledTypeT > handle,
+            Runnable startedArray,
+            Runnable finishedArray         
+   ) {
+      super( handle, null, null, startedArray, finishedArray );
+   }//End Constructor
+   
+   /**
     * {@inheritDoc}
     */
    @Override public void startedObject( String key ) {
