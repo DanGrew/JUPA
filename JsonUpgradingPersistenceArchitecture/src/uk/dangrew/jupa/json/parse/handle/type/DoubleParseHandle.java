@@ -52,6 +52,9 @@ public class DoubleParseHandle extends JsonParseHandleImpl< Double >{
     */
    @Override public void handleKeyPresent( String key, JSONObject object ) {
       double value = object.optDouble( key );
+      if ( Double.isNaN( value ) ) {
+         return;
+      }
       super.handle( key, value );
    }//End Method
    
@@ -60,6 +63,9 @@ public class DoubleParseHandle extends JsonParseHandleImpl< Double >{
     */
    @Override public void handleArrayIndexPresent( String key, JSONArray array, int index ) {
       double value = array.optDouble( index );
+      if ( Double.isNaN( value ) ) {
+         return;
+      }
       super.handle( key, value );
    }//End Method
 }//End Class

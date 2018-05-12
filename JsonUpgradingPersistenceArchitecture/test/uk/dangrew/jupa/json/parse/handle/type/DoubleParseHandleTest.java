@@ -9,7 +9,10 @@
  */
 package uk.dangrew.jupa.json.parse.handle.type;
 
+import static org.mockito.Matchers.anyDouble;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
@@ -97,4 +100,16 @@ public class DoubleParseHandleTest extends JsonParseHandleImplTest< Double > {
       new DoubleParseHandle( ( JsonKeyParseHandle< Double > )null );
    }//End Method
    
-}
+   @Test public void shouldNotSetNaN(){
+      JSONObject object = new JSONObject();
+      object.put( KEY, "anything" );
+      systemUnderTest.handleKeyPresent( KEY, object );
+      verify( handle, never() ).handle( anyString(), anyDouble() );
+      
+      JSONArray array = new JSONArray();
+      array.put( "anything" );
+      systemUnderTest.handleArrayIndexPresent( KEY, array, 0 );
+      verify( handle, never() ).handle( anyString(), anyDouble() );
+   }//End Method
+   
+}//End Class
