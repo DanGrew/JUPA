@@ -10,6 +10,7 @@
 package uk.dangrew.jupa.json.write.handle.type;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -80,15 +81,26 @@ public class JsonWriteHandleImplTest {
       verifyNoMoreInteractions( handle );
    }//End Method
    
-   @Test public void shouldIgnoreNullRetrievedObject() {
+   @Test public void shouldPutNullRetrievedObject() {
       JSONObject object = new JSONObject();
       object.put( KEY, VALUE );
       
       when( handle.retrieve( KEY ) ).thenReturn( null );
       systemUnderTest.handle( KEY, object );
-      assertThat( object.get( KEY ), is( VALUE ) );
+      assertThat( object.get( KEY ), is( JSONObject.NULL ) );
       
       verify( handle ).retrieve( KEY );
+      verifyNoMoreInteractions( handle );
+   }//End Method
+   
+   @Test public void shouldPutNullRetrieveForArray() {
+      JSONArray array = new JSONArray();
+      
+      when( handle.retrieve( KEY, INDEX ) ).thenReturn( null );
+      systemUnderTest.handle( KEY, array, INDEX );
+      assertThat( array.opt( INDEX ), is( nullValue() ) );
+      
+      verify( handle ).retrieve( KEY, INDEX );
       verifyNoMoreInteractions( handle );
    }//End Method
    

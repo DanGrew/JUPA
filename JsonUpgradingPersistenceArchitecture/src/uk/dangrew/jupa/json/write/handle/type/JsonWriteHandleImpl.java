@@ -69,9 +69,10 @@ public class JsonWriteHandleImpl implements JsonHandle {
    @Override public void handle( String key, JSONObject object ) {
       Object valueToPut = keyHandle.retrieve( key );
       if ( valueToPut == null ) {
-         return;
+         object.put( key, JSONObject.NULL );
+      } else {
+         object.put( key, valueToPut );
       }
-      object.put( key, valueToPut );
    }//End Method
    
    /**
@@ -80,9 +81,10 @@ public class JsonWriteHandleImpl implements JsonHandle {
    @Override public void handle( String key, JSONArray array, int index ) {
       Object valueToPut = keyHandle.retrieve( key, index );
       if ( valueToPut == null ) {
-         return;
+         array.put( JSONObject.NULL );
+      } else {
+         array.put( index, valueToPut );
       }
-      array.put( index, valueToPut );
    }//End Method
    
 }//End Class
