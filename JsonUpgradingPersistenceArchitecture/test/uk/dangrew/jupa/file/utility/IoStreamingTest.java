@@ -27,7 +27,6 @@ import java.nio.charset.StandardCharsets;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.dangrew.kode.TestCommon;
 import uk.dangrew.kode.utility.io.IoCommon;
 
 /**

@@ -12,9 +12,18 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 public class JsonNavigationTest {
+
+   @Mock private Consumer< Object > consumer;
+   
+   @Before public void initialiseSystemUnderTest() {
+      MockitoAnnotations.initMocks( this );
+   }//End Method
 
    @Test public void shouldConsumeKeyForRunnable() {
       Runnable runnable = mock( Runnable.class );
@@ -24,7 +33,6 @@ public class JsonNavigationTest {
    }//End Method
    
    @Test public void shouldConsumeKeyForConsumer() {
-      Consumer< Object > consumer = mock( Consumer.class );
       BiConsumer< String, Object > biConsumer = JsonNavigation.consumeKey( consumer );
       
       Object value = new Object();
