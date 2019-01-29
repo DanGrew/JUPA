@@ -21,7 +21,7 @@ import org.junit.Test;
 import uk.dangrew.jupa.json.parse.JsonParser;
 import uk.dangrew.jupa.json.parse.handle.key.JsonArrayParseHandler;
 import uk.dangrew.jupa.json.parse.handle.type.IntegerParseHandle;
-import uk.dangrew.kode.TestCommon;
+import uk.dangrew.kode.utility.io.IoCommon;
 
 /**
  * Proof of concept test to prove matrices can be parsed when only one global key present.
@@ -43,7 +43,7 @@ public class IntegerMatrixParseTest {
    }//End Method
 
    @Test public void proofOfConceptTest() {
-      String input = TestCommon.readFileIntoString( getClass(), "matrix-model.json" );
+      String input = new IoCommon().readFileIntoString( getClass(), "matrix-model.json" );
       JSONObject inputObject = new JSONObject( input );
       
       parser.parse( inputObject );

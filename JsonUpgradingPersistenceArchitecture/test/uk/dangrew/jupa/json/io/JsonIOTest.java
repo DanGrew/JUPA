@@ -34,7 +34,7 @@ import org.mockito.MockitoAnnotations;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import uk.dangrew.kode.TestCommon;
+import uk.dangrew.kode.utility.io.IoCommon;
 import uk.dangrew.sd.core.lockdown.DigestMessageReceiver;
 import uk.dangrew.sd.core.lockdown.DigestMessageReceiverImpl;
 
@@ -143,7 +143,7 @@ public class JsonIOTest {
       jsonObject = systemUnderTest.read( file );
       assertThat( jsonObject.toString(), is( writeObject.toString() ) );
       
-      assertThat( TestCommon.readFileIntoString( getClass(), filename ), is( writeObject.toString( 3 ) ) );
+      assertThat( new IoCommon().readFileIntoString( getClass(), filename ), is( writeObject.toString( 3 ) ) );
    }//End Method
    
    @Parameters( { POPULATING_FILE, SUB_FOLDER_FILE } )

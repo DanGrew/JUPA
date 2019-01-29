@@ -18,8 +18,6 @@ import java.util.function.Consumer;
  */
 public class JsonArrayWithObjectParseHandler< HandledTypeT > extends JsonKeyParseHandler< HandledTypeT > implements JsonKeyParseHandle< HandledTypeT >{
 
-   private static final String NO_VALUES_EXPECTED = ": no values expected.";
-   
    /** 
     * Constructs a new {@link JsonKeyParseHandler}.
     * @param startedObject the method to call when an object is started.

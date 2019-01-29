@@ -20,7 +20,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import uk.dangrew.jupa.json.parse.JsonParser;
-import uk.dangrew.kode.TestCommon;
+import uk.dangrew.kode.utility.io.IoCommon;
 
 /**
  * Proof of concept test to prove that a simple string model can be parsed in.
@@ -36,7 +36,7 @@ public class StringModelParseTest {
    }//End Method
    
    @Test public void proofOfConceptTest() {
-      String input = TestCommon.readFileIntoString( getClass(), "string-model.json" );
+      String input = new IoCommon().readFileIntoString( getClass(), "string-model.json" );
       JSONObject inputObject = new JSONObject( input );
       parser.parse( inputObject );
       

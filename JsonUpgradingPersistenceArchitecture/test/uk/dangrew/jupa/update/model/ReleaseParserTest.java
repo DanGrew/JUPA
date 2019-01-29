@@ -19,21 +19,23 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.dangrew.kode.TestCommon;
+import uk.dangrew.kode.utility.io.IoCommon;
 
 /**
  * {@link ReleaseParser} test.
  */
 public class ReleaseParserTest {
    
+   private IoCommon ioCommon;
    private ReleaseParser systemUnderTest;
    
    @Before public void initialiseSystemUnderTest(){
+      ioCommon = new IoCommon();
       systemUnderTest = new ReleaseParser();
    }//End Method
 
    @Test public void shouldExtractSingleReleaseDefinition() {
-      String testCase = TestCommon.readFileIntoString( getClass(), "single-release.txt" );
+      String testCase = ioCommon.readFileIntoString( getClass(), "single-release.txt" );
       List< ReleaseDefinition > definitions = systemUnderTest.parse( testCase );
       
       assertThat( definitions, hasSize( 1 ) );
@@ -41,7 +43,7 @@ public class ReleaseParserTest {
    }//End Method
    
    @Test public void shouldExtractSingleReleaseDefinitionWithDate() {
-      String testCase = TestCommon.readFileIntoString( getClass(), "single-release-with-date.txt" );
+      String testCase = ioCommon.readFileIntoString( getClass(), "single-release-with-date.txt" );
       List< ReleaseDefinition > definitions = systemUnderTest.parse( testCase );
       
       assertThat( definitions, hasSize( 1 ) );
@@ -49,7 +51,7 @@ public class ReleaseParserTest {
    }//End Method
    
    @Test public void shouldExtractSingleReleaseDefinitionWithCommas() {
-      String testCase = TestCommon.readFileIntoString( getClass(), "single-release-using-commas.txt" );
+      String testCase = ioCommon.readFileIntoString( getClass(), "single-release-using-commas.txt" );
       List< ReleaseDefinition > definitions = systemUnderTest.parse( testCase );
       
       assertThat( definitions, hasSize( 1 ) );
@@ -61,14 +63,14 @@ public class ReleaseParserTest {
    }//End Method
    
    @Test public void shouldIgnoreSingleReleaseDefinitionWithMoreThanTwoItemsOnALine() {
-      String testCase = TestCommon.readFileIntoString( getClass(), "single-release-invalid-description.txt" );
+      String testCase = ioCommon.readFileIntoString( getClass(), "single-release-invalid-description.txt" );
       List< ReleaseDefinition > definitions = systemUnderTest.parse( testCase );
       
       assertThat( definitions, is( empty() ) );
    }//End Method
    
    @Test public void shouldExtractMultipleReleaseDefinitions() {
-      String testCase = TestCommon.readFileIntoString( getClass(), "multiple-releases.txt" );
+      String testCase = ioCommon.readFileIntoString( getClass(), "multiple-releases.txt" );
       List< ReleaseDefinition > definitions = systemUnderTest.parse( testCase );
       
       assertThat( definitions, hasSize( 3 ) );
@@ -78,28 +80,28 @@ public class ReleaseParserTest {
    }//End Method
    
    @Test public void shouldIgnoreMissingReleaseIdentification() {
-      String testCase = TestCommon.readFileIntoString( getClass(), "single-release-missing-identification.txt" );
+      String testCase = ioCommon.readFileIntoString( getClass(), "single-release-missing-identification.txt" );
       List< ReleaseDefinition > definitions = systemUnderTest.parse( testCase );
       
       assertThat( definitions, is( empty() ) );
    }//End Method
    
    @Test public void shouldIgnoreMissingDownloadLocation() {
-      String testCase = TestCommon.readFileIntoString( getClass(), "single-release-missing-download.txt" );
+      String testCase = ioCommon.readFileIntoString( getClass(), "single-release-missing-download.txt" );
       List< ReleaseDefinition > definitions = systemUnderTest.parse( testCase );
       
       assertThat( definitions, is( empty() ) );
    }//End Method
    
    @Test public void shouldIgnoreMissingDescription() {
-      String testCase = TestCommon.readFileIntoString( getClass(), "single-release-missing-description.txt" );
+      String testCase = ioCommon.readFileIntoString( getClass(), "single-release-missing-description.txt" );
       List< ReleaseDefinition > definitions = systemUnderTest.parse( testCase );
       
       assertThat( definitions, is( empty() ) );
    }//End Method
    
    @Test public void shouldIgnoreInvalidReleasesAndParseValid() {
-      String testCase = TestCommon.readFileIntoString( getClass(), "complete-release-list-with-invalid.txt" );
+      String testCase = ioCommon.readFileIntoString( getClass(), "complete-release-list-with-invalid.txt" );
       List< ReleaseDefinition > definitions = systemUnderTest.parse( testCase );
       
       assertThat( definitions, hasSize( 1 ) );

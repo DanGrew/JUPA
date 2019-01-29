@@ -28,6 +28,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import uk.dangrew.kode.TestCommon;
+import uk.dangrew.kode.utility.io.IoCommon;
 
 /**
  * {@link IoStreaming} test.
@@ -71,7 +72,7 @@ public class IoStreamingTest {
       );
       writer.close();
       
-      String data = TestCommon.readFileIntoString( getClass(), "IoStreamingTest.txt" );
+      String data = new IoCommon().readFileIntoString( getClass(), "IoStreamingTest.txt" );
       assertThat( data, is( "lots of streams and writers" ) );
    }//End Method
    
