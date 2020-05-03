@@ -36,7 +36,7 @@ public class WorkspaceJsonPersistingProtocol implements JsonPersistingProtocol {
    @Override public boolean writeToLocation( JSONObject object ) {
       throw new UnsupportedOperationException( "Not implemented. Current practice is to write into new JSON Objects rather than files." );
    }//End Method
-   
+
    @Override public String getLocation() {
       return filename;
    }//End Method
