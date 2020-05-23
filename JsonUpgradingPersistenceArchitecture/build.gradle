@@ -4,6 +4,7 @@
 plugins {
     id "com.jfrog.bintray" version "1.8.1"
   	id "info.solidsoft.pitest" version "1.1.4"
+    id 'org.openjfx.javafxplugin' version '0.0.8'
 }
 
 allprojects { 
@@ -26,8 +27,13 @@ version = buildNumberForThisEnvironment
 /*
  * SOURCE: source specific configuration
  */
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 14
+targetCompatibility = 14
+
+javafx {
+    version = "14"
+    modules = [ 'javafx.base', 'javafx.controls', 'javafx.media', 'javafx.graphics']
+}
 
 sourceSets {
     main {
