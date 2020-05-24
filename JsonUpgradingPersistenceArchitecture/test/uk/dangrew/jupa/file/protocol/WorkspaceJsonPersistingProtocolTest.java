@@ -11,7 +11,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import uk.dangrew.kode.launch.TestApplication;
 import uk.dangrew.kode.utility.io.IoCommon;
 
 public class WorkspaceJsonPersistingProtocolTest {
@@ -22,7 +21,7 @@ public class WorkspaceJsonPersistingProtocolTest {
    private WorkspaceJsonPersistingProtocol systemUnderTest;
 
    @Before public void initialiseSystemUnderTest() {
-      TestApplication.startPlatform();
+      uk.dangrew.kode.launch.TestApplication.startPlatform();
       MockitoAnnotations.initMocks( this );
       systemUnderTest = new WorkspaceJsonPersistingProtocol( ioCommon, FILENAME, getClass() );
    }//End Method
