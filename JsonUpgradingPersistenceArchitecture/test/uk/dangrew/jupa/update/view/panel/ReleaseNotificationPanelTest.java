@@ -19,9 +19,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.sun.javafx.application.PlatformImpl;
-
 import javafx.event.ActionEvent;
+import uk.dangrew.kode.javafx.platform.JavaFxThreading;
 import uk.dangrew.kode.launch.TestApplication;
 
 /**
@@ -41,7 +40,7 @@ public class ReleaseNotificationPanelTest {
    }//End Method
    
    private void triggerActionOnInstallButton(){
-      PlatformImpl.runAndWait( () -> systemUnderTest.install().handle( new ActionEvent() ) );
+      JavaFxThreading.runAndWait( () -> systemUnderTest.install().handle( new ActionEvent() ) );
    }//End Method
    
    @Test public void notificationShouldUseDarkTheme(){

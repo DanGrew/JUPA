@@ -29,8 +29,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import uk.dangrew.jupa.javafx.platform.PlatformLifecycle;
-import uk.dangrew.jupa.javafx.platform.PlatformLifecycleImpl;
+import uk.dangrew.kode.javafx.platform.PlatformLifecycle;
+import uk.dangrew.kode.javafx.platform.PlatformLifecycleImpl;
 import uk.dangrew.jupa.update.launch.SystemHandover;
 import uk.dangrew.jupa.update.model.ReleaseDefinition;
 import uk.dangrew.jupa.update.stream.ThreadedFileStreamer;

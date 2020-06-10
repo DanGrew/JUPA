@@ -26,8 +26,6 @@ import java.util.Map;
 
 import org.controlsfx.control.NotificationPane;
 
-import com.sun.javafx.application.PlatformImpl;
-
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -41,6 +39,7 @@ import javafx.scene.text.FontWeight;
 import uk.dangrew.jupa.update.launch.SystemHandover;
 import uk.dangrew.jupa.update.model.ReleaseDefinition;
 import uk.dangrew.jupa.update.view.button.InstallerButton;
+import uk.dangrew.kode.javafx.platform.JavaFxThreading;
 
 /**
  * The {@link ReleaseSummaryPanel} is responsible for displaying the {@link ReleaseDefinition}s
@@ -112,14 +111,14 @@ public class ReleaseSummaryPanel extends NotificationPane {
    
    /**
     * Method to set the {@link ReleaseDefinition}s to display.
-    * @param releases the {@link List} of {@link ReleaseDefinition}s to display.
+    * @param releasesToDisplay the {@link List} of {@link ReleaseDefinition}s to display.
     */
    public void setReleases( List< ReleaseDefinition > releasesToDisplay ) {
       Map< ReleaseDefinition, InstallerButton > previousButtons = new HashMap<>( this.releases );
       
       this.releases.clear();
-      
-      PlatformImpl.runAndWait( () -> {
+
+      JavaFxThreading.runAndWait( () -> {
          releasesContainer.getChildren().clear();
          releasesToDisplay.forEach( release -> {
             InstallerButton button = previousButtons.get( release );

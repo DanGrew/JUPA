@@ -11,12 +11,11 @@ package uk.dangrew.jupa.update.view.panel;
 
 import java.util.List;
 
-import com.sun.javafx.application.PlatformImpl;
-
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import uk.dangrew.jupa.update.launch.SystemHandover;
 import uk.dangrew.jupa.update.model.ReleaseDefinition;
+import uk.dangrew.kode.javafx.platform.JavaFxThreading;
 
 /**
  * {@link ReleaseSummaryWindowController} provides a controller for a {@link Stage} containing
@@ -33,7 +32,7 @@ public class ReleaseSummaryWindowController {
     */
    public ReleaseSummaryWindowController( SystemHandover handover ) {
       this.summaryPanel = new ReleaseSummaryPanel( handover );
-      PlatformImpl.runAndWait( () -> {
+      JavaFxThreading.runAndWait( () -> {
          this.summaryStage = new Stage();
          this.summaryStage.setScene( new Scene( summaryPanel, 400, 600 )  );
          this.summaryStage.setResizable( false );
@@ -54,14 +53,14 @@ public class ReleaseSummaryWindowController {
     * Method to show the summary panel.
     */
    public void show(){
-      PlatformImpl.runAndWait( summaryStage::show );
+      JavaFxThreading.runAndWait( summaryStage::show );
    }//End Method
    
    /**
     * Method to hide the summary panel.
     */
    public void hide(){
-      PlatformImpl.runAndWait( summaryStage::hide );
+      JavaFxThreading.runAndWait( summaryStage::hide );
    }//End Method
 
    Stage summaryStage() {

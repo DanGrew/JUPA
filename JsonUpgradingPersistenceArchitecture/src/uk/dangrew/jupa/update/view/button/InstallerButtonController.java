@@ -11,12 +11,11 @@ package uk.dangrew.jupa.update.view.button;
 
 import java.io.IOException;
 
-import com.sun.javafx.application.PlatformImpl;
-
-import uk.dangrew.jupa.javafx.platform.PlatformLifecycle;
 import uk.dangrew.jupa.update.launch.SystemHandover;
 import uk.dangrew.jupa.update.model.ReleaseDefinition;
 import uk.dangrew.jupa.update.stream.ThreadedFileStreamer;
+import uk.dangrew.kode.javafx.platform.JavaFxThreading;
+import uk.dangrew.kode.javafx.platform.PlatformLifecycle;
 import uk.dangrew.sd.logging.location.JarProtocol;
 
 /**
@@ -124,9 +123,9 @@ class InstallerButtonController {
     */
    void streamFinished(){
       if ( streamer.wasSuccessful() ) {
-         PlatformImpl.runAndWait( subject::downloadFinished );
+         JavaFxThreading.runAndWait( subject::downloadFinished );
       } else {
-         PlatformImpl.runAndWait( subject::downloadFailed );
+         JavaFxThreading.runAndWait( subject::downloadFailed );
       }
    }//End Method
    
