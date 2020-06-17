@@ -27,11 +27,11 @@ version = buildNumberForThisEnvironment
 /*
  * SOURCE: source specific configuration
  */
-sourceCompatibility = 14
-targetCompatibility = 14
+sourceCompatibility = 11
+targetCompatibility = 11
 
 javafx {
-    version = "14"
+    version = "11"
     modules = [ 'javafx.base', 'javafx.controls', 'javafx.media', 'javafx.graphics']
 }
 
@@ -68,14 +68,16 @@ dependencies {
 	compile group: 'org.apache.httpcomponents', name: 'httpclient', version:'4.1.2'
     compile group: 'org.json', name: 'json', version: '20151123'
     compile group: 'com.opencsv', name: 'opencsv', version: '3.8'
-    compile group: 'SystemDigest', name: 'SystemDigest', version: '1.3.12'
-    compile group: 'uk.dangrew', name: 'dag-kode', version: '1.0.66'
-    
+
+    compile group: 'uk.dangrew', name: 'dag-kode', version: '1.1.69'
+    compile group: 'SystemDigest', name: 'SystemDigest', version: '1.3.14'
+
     testCompile group: 'junit', name: 'junit', version:'4.12'
     testCompile group: 'pl.pragmatists', name: 'JUnitParams', version:'0.3.6'
     testCompile group: 'org.hamcrest', name: 'hamcrest-all', version:'1.3'
     testCompile group: 'org.mockito', name: 'mockito-all', version:'1.9.5'
-    testCompile group: 'uk.dangrew', name: 'dag-kode', version: '1.0.66', classifier: 'tests'
+
+    testCompile group: 'uk.dangrew', name: 'dag-kode', version: '1.1.69', classifier: 'tests'
 }
 
 pitest {

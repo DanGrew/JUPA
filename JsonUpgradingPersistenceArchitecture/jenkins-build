@@ -1,7 +1,7 @@
 env.VERSION_NUMBER = "1.2.${BUILD_NUMBER}"
 
 node {
-  jdk = tool name: 'jdk 14'
+  jdk = tool name: 'jdk 11'
   env.JAVA_HOME = "${jdk}"
 
   echo "jdk installation path is: ${jdk}"
