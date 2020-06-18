@@ -14,7 +14,7 @@
  *                 2016
  * ----------------------------------------
  */
-package uk.dangrew.jtt.connection.data.json.conversion;
+package uk.dangrew.jupa.json.io;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -29,8 +29,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import uk.dangrew.jtt.connection.data.json.conversion.ApiResponseToJsonConverter;
-import uk.dangrew.jtt.connection.data.json.conversion.ApiResponseToJsonConverterDigest;
+import uk.dangrew.jupa.json.io.ApiResponseToJsonConverter;
+import uk.dangrew.jupa.json.io.ApiResponseToJsonConverterDigest;
 
 /**
  * {@link ApiResponseToJsonConverter} test.

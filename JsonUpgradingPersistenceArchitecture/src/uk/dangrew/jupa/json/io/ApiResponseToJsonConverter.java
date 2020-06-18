@@ -6,7 +6,7 @@
  *                 2016
  * ----------------------------------------
  */
-package uk.dangrew.jtt.connection.data.json.conversion;
+package uk.dangrew.jupa.json.io;
 
 import org.json.JSONException;
 import org.json.JSONObject;
